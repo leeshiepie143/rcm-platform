@@ -657,10 +657,10 @@
     const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNjbGdseGp5eXh0dWt1ZW9oaGV3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ1NTEzODUsImV4cCI6MjA5MDEyNzM4NX0.H5NJrenWQplid_MmtwvHbR6kc2fe405_0T2oYV3HqCU';
 
     // Initialize Supabase client
-    // The Supabase UMD exposes createClient on the global 'supabase' object
-    // We use a different variable name to avoid shadowing the library global
-    const _sbLib = window.supabase || self.supabase;
-    window.supabaseClient = _sbLib.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    // IMPORTANT: Babel standalone compiles text/babel scripts and may hoist 'var supabase'
+    // declarations that overwrite window.supabase (the library). We save a reference first.
+    const _supabaseLib = window.supabase;
+    window.supabaseClient = _supabaseLib.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
     // ========== SUPABASE STORAGE MANAGER ==========
     // Shortcut reference to the Supabase client for this script block
@@ -900,7 +900,10 @@
 
     <script type="text/babel">
     // Access Supabase client from the global scope (initialized in prior script block)
-    const supabase = window.supabaseClient;
+    // IMPORTANT: Do NOT use 'supabase' as the variable name here — Babel standalone compiles
+    // const/let to var in global scope, which would overwrite window.supabase (the library)
+    // before the initialization script block runs.
+    const sbClient = window.supabaseClient;
 
     // ========== HYBRID STORAGE MANAGERS (Supabase + LocalStorage Fallback) ==========
     const PracticeStorageManager = {
@@ -1212,7 +1215,7 @@
             setLoading(true);
 
             try {
-                const { data, error: signInError } = await supabase.auth.signInWithPassword({
+                const { data, error: signInError } = await sbClient.auth.signInWithPassword({
                     email,
                     password
                 });
@@ -1343,7 +1346,7 @@
         const fetchUsers = async () => {
             setLoadingUsers(true);
             try {
-                const { data, error } = await supabase
+                const { data, error } = await sbClient
                     .from('user_profiles')
                     .select('*')
                     .order('created_at', { ascending: true });
@@ -1369,7 +1372,7 @@
 
             try {
                 // Create user in Supabase Auth (this triggers the handle_new_user function)
-                const { data, error } = await supabase.auth.signUp({
+                const { data, error } = await sbClient.auth.signUp({
                     email: newUserEmail,
                     password: newUserPassword,
                     options: {
@@ -1387,7 +1390,7 @@
                 if (data.user) {
                     // Small delay for the trigger to create the profile
                     await new Promise(r => setTimeout(r, 1000));
-                    const { error: profileError } = await supabase
+                    const { error: profileError } = await sbClient
                         .from('user_profiles')
                         .update({ role: roleToAssign, full_name: newUserName })
                         .eq('id', data.user.id);
@@ -1416,7 +1419,7 @@
             setSavingEdit(true);
             try {
                 const updates = { role: editRole, full_name: editName, updated_at: new Date().toISOString() };
-                const { error } = await supabase
+                const { error } = await sbClient
                     .from('user_profiles')
                     .update(updates)
                     .eq('id', editingUser.id);
@@ -1439,7 +1442,7 @@
             }
             if (!confirm(`Are you sure you want to remove ${email}? This cannot be undone.`)) return;
             try {
-                const { error } = await supabase
+                const { error } = await sbClient
                     .from('user_profiles')
                     .delete()
                     .eq('id', userId);
@@ -7156,7 +7159,7 @@
         // Fetch user profile (role, name) from Supabase
         const fetchUserProfile = async (userId) => {
             try {
-                const { data, error } = await supabase
+                const { data, error } = await sbClient
                     .from('user_profiles')
                     .select('role, full_name')
                     .eq('id', userId)
@@ -7174,7 +7177,7 @@
         React.useEffect(() => {
             const checkSession = async () => {
                 try {
-                    const { data: { session }, error } = await supabase.auth.getSession();
+                    const { data: { session }, error } = await sbClient.auth.getSession();
                     if (session) {
                         setSession(session);
                         setUserEmail(session.user.email || '');
@@ -7189,7 +7192,7 @@
             checkSession();
 
             // Subscribe to auth state changes
-            const { data: { subscription } } = supabase.auth.onAuthStateChange(
+            const { data: { subscription } } = sbClient.auth.onAuthStateChange(
                 async (event, newSession) => {
                     setSession(newSession);
                     if (newSession) {
@@ -7207,7 +7210,7 @@
         // Handle logout
         const handleLogout = async () => {
             try {
-                await supabase.auth.signOut();
+                await sbClient.auth.signOut();
                 setSession(null);
                 setUserEmail('');
             } catch (e) {
