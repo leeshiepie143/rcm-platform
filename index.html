@@ -5639,7 +5639,7 @@ const App = () => {
   const [page, setPage] = React.useState("dashboard");
   const [sidebarOpen, setSidebarOpen] = React.useState(true);
   const savedConfig = window.RCM_CONFIG || {};
-  const [apiKey, setApiKey] = React.useState(savedConfig.apiKey || "");
+  const [apiKey, setApiKey] = React.useState(savedConfig.apiKey || (function() { try { return localStorage.getItem("rcm_api_key") || ""; } catch(e) { return ""; } })());
   const [showKey, setShowKey] = React.useState(true);
   const [configSaved, setConfigSaved] = React.useState(false);
   const [model, setModel] = React.useState("claude-opus-4-20250514");
