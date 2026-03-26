@@ -656,16 +656,21 @@
     const SUPABASE_URL = 'https://cclglxjyyxtukueohhew.supabase.co';
     const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNjbGdseGp5eXh0dWt1ZW9oaGV3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ1NTEzODUsImV4cCI6MjA5MDEyNzM4NX0.H5NJrenWQplid_MmtwvHbR6kc2fe405_0T2oYV3HqCU';
 
-    // Initialize Supabase client (use window.supabaseClient to share across script blocks)
-    window.supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-    const supabase = window.supabaseClient;
+    // Initialize Supabase client
+    // The Supabase UMD exposes createClient on the global 'supabase' object
+    // We use a different variable name to avoid shadowing the library global
+    const _sbLib = window.supabase || self.supabase;
+    window.supabaseClient = _sbLib.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
     // ========== SUPABASE STORAGE MANAGER ==========
+    // Shortcut reference to the Supabase client for this script block
+    const _sb = window.supabaseClient;
+
     const SupabaseStorageManager = {
         // Practices methods
         getPractices: async (userId) => {
             try {
-                const { data, error } = await supabase
+                const { data, error } = await _sb
                     .from('practices')
                     .select('*');
                 if (error) throw error;
@@ -679,7 +684,7 @@
         savePractices: async (practices, userId) => {
             try {
                 for (const practice of practices) {
-                    const { data, error } = await supabase
+                    const { data, error } = await _sb
                         .from('practices')
                         .upsert({
                             id: practice.id || 'practice_' + Date.now(),
@@ -697,7 +702,7 @@
         addPractice: async (practice, userId) => {
             try {
                 practice.id = practice.id || 'practice_' + Date.now();
-                const { data, error } = await supabase
+                const { data, error } = await _sb
                     .from('practices')
                     .insert({
                         id: practice.id,
@@ -716,7 +721,7 @@
 
         updatePractice: async (id, practice, userId) => {
             try {
-                const { data, error } = await supabase
+                const { data, error } = await _sb
                     .from('practices')
                     .update({
                         data: { ...practice, id },
@@ -733,7 +738,7 @@
 
         deletePractice: async (id) => {
             try {
-                const { error } = await supabase
+                const { error } = await _sb
                     .from('practices')
                     .delete()
                     .eq('id', id);
@@ -746,7 +751,7 @@
         // Claims Queue methods
         getQueue: async (userId) => {
             try {
-                const { data, error } = await supabase
+                const { data, error } = await _sb
                     .from('claims_queue')
                     .select('*');
                 if (error) throw error;
@@ -760,7 +765,7 @@
         saveQueue: async (claims, userId) => {
             try {
                 for (const claim of claims) {
-                    const { error } = await supabase
+                    const { error } = await _sb
                         .from('claims_queue')
                         .upsert({
                             id: claim.id || 'claim_' + Date.now(),
@@ -780,7 +785,7 @@
                 claim.id = claim.id || 'claim_' + Date.now();
                 claim.status = claim.status || 'queue';
                 claim.createdAt = claim.createdAt || new Date().toISOString();
-                const { error } = await supabase
+                const { error } = await _sb
                     .from('claims_queue')
                     .insert({
                         id: claim.id,
@@ -799,14 +804,14 @@
 
         updateClaim: async (id, updates, userId) => {
             try {
-                const { data, error } = await supabase
+                const { data, error } = await _sb
                     .from('claims_queue')
                     .select('data')
                     .eq('id', id)
                     .single();
                 if (error) throw error;
                 const updated = { ...data.data, ...updates };
-                const { error: updateError } = await supabase
+                const { error: updateError } = await _sb
                     .from('claims_queue')
                     .update({
                         data: updated,
@@ -823,7 +828,7 @@
 
         removeFromQueue: async (id) => {
             try {
-                const { error } = await supabase
+                const { error } = await _sb
                     .from('claims_queue')
                     .delete()
                     .eq('id', id);
@@ -835,7 +840,7 @@
 
         clearQueue: async (userId) => {
             try {
-                const { error } = await supabase
+                const { error } = await _sb
                     .from('claims_queue')
                     .delete()
                     .eq('user_id', userId);
@@ -848,7 +853,7 @@
         // Coding Reports methods
         getReports: async (userId) => {
             try {
-                const { data, error } = await supabase
+                const { data, error } = await _sb
                     .from('coding_reports')
                     .select('*');
                 if (error) throw error;
@@ -862,7 +867,7 @@
         addReport: async (report, userId) => {
             try {
                 report.id = report.id || 'report_' + Date.now();
-                const { error } = await supabase
+                const { error } = await _sb
                     .from('coding_reports')
                     .insert({
                         id: report.id,
@@ -881,7 +886,7 @@
 
         deleteReport: async (id) => {
             try {
-                const { error } = await supabase
+                const { error } = await _sb
                     .from('coding_reports')
                     .delete()
                     .eq('id', id);
