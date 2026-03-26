@@ -5686,14 +5686,29 @@ const App = () => {
   React.useEffect(() => {
     const checkSession = async () => {
       try {
-        const { data: { session: session2 }, error } = await sbClient.auth.getSession();
+        const result = await Promise.race([
+          sbClient.auth.getSession(),
+          new Promise((_, reject) => setTimeout(() => reject(new Error('timeout')), 2000))
+        ]);
+        const { data: { session: session2 }, error } = result;
         if (session2) {
           setSession(session2);
           setUserEmail(session2.user.email || "");
           await fetchUserProfile(session2.user.id);
         }
       } catch (e) {
-        console.error("Error checking session:", e);
+        console.log("getSession timeout, checking localStorage fallback");
+        try {
+          const stored = localStorage.getItem('sb-cclglxjyyxtukueohhew-auth-token');
+          if (stored) {
+            const parsed = JSON.parse(stored);
+            if (parsed && parsed.user) {
+              setSession(parsed);
+              setUserEmail(parsed.user.email || "");
+              await fetchUserProfile(parsed.user.id);
+            }
+          }
+        } catch (e2) { console.error("localStorage fallback failed:", e2); }
       }
       setAuthLoading(false);
     };
