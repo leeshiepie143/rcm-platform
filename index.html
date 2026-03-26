@@ -5642,6 +5642,7 @@ const App = () => {
   const [apiKey, setApiKey] = React.useState(savedConfig.apiKey || "");
   const [showKey, setShowKey] = React.useState(true);
   const [configSaved, setConfigSaved] = React.useState(false);
+  const [model, setModel] = React.useState("claude-opus-4-20250514");
   const saveConfig = () => {
     const configContent = "// RCM Platform Configuration\n// This file stores your API key and settings locally.\n// It is loaded automatically when the platform starts.\nwindow.RCM_CONFIG = " + JSON.stringify({ apiKey, model: "claude-opus-4-20250514" }, null, 4) + ";\n";
     const blob = new Blob([configContent], { type: "application/javascript" });
