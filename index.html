@@ -14,6 +14,74 @@
     <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
     <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script>
+    // === BABEL COMPILATION CACHE ===
+    // Caches compiled JSX in localStorage so Babel only runs once.
+    // Subsequent loads use the cached JS directly (~10x faster).
+    (function() {
+        var CACHE_KEY = 'vrcm_compiled_v1';
+        window._babelCache = {
+            get: function() {
+                try {
+                    var cached = localStorage.getItem(CACHE_KEY);
+                    if (!cached) return null;
+                    var obj = JSON.parse(cached);
+                    return obj;
+                } catch(e) { return null; }
+            },
+            set: function(hash, code) {
+                try {
+                    localStorage.setItem(CACHE_KEY, JSON.stringify({ hash: hash, code: code }));
+                } catch(e) {}
+            },
+            hash: function(str) {
+                // Simple FNV-1a hash
+                var h = 0x811c9dc5;
+                for (var i = 0; i < str.length; i++) {
+                    h ^= str.charCodeAt(i);
+                    h = Math.imul(h, 0x01000193);
+                }
+                return (h >>> 0).toString(36);
+            }
+        };
+
+        // Override Babel's script processing to add caching
+        document.addEventListener('DOMContentLoaded', function() {
+            // Find the text/babel script
+            var babelScripts = document.querySelectorAll('script[type="text/babel"]');
+            if (babelScripts.length === 0) return;
+
+            var jsxSource = babelScripts[0].textContent;
+            var sourceHash = window._babelCache.hash(jsxSource);
+            var cached = window._babelCache.get();
+
+            if (cached && cached.hash === sourceHash) {
+                // Use cached compiled code - skip Babel entirely!
+                console.log('[VanguardRCM] Using cached compiled code');
+                babelScripts[0].remove(); // Remove so Babel standalone doesn't process it
+                var script = document.createElement('script');
+                script.textContent = cached.code;
+                document.body.appendChild(script);
+            } else {
+                // First load or code changed - let Babel compile, then cache the result
+                console.log('[VanguardRCM] Compiling JSX (first load)...');
+                // We'll cache after Babel compiles by hooking into its transform
+                var origTransform = window.Babel && window.Babel.transform;
+                if (origTransform) {
+                    window.Babel.transform = function(code, opts) {
+                        var result = origTransform.call(this, code, opts);
+                        // Cache the compiled output
+                        if (code.length > 10000) { // Only cache the main script
+                            window._babelCache.set(sourceHash, result.code);
+                            console.log('[VanguardRCM] Compiled and cached (' + result.code.length + ' bytes)');
+                        }
+                        return result;
+                    };
+                }
+            }
+        }, { once: true });
+    })();
+    </script>
     <script src="rcm_config.js"></script>
     <script src="payer_knowledge_base.js"></script>
     <script src="mpfs-data.js"></script>
@@ -649,6 +717,22 @@
 </head>
 <body>
     <div id="root"></div>
+
+    <!-- Immediate loading screen (shows before any JS loads) -->
+    <div id="boot-loader" style="position:fixed;inset:0;z-index:99999;display:flex;align-items:center;justify-content:center;flex-direction:column;background:linear-gradient(135deg,#0f0720 0%,#0c1222 40%,#091520 100%)">
+        <div style="width:3.5rem;height:3.5rem;background:linear-gradient(135deg,#a855f7,#6366f1);border-radius:12px;display:flex;align-items:center;justify-content:center;font-weight:800;color:#fff;font-size:1.25rem;letter-spacing:.05em;box-shadow:0 4px 16px rgba(192,132,252,.4);margin-bottom:1.5rem;font-family:Inter,sans-serif">VR</div>
+        <p style="color:#f1f5f9;font-size:1.25rem;font-weight:700;font-family:Inter,sans-serif;margin:0 0 .5rem">VanguardRCM</p>
+        <p style="color:rgba(255,255,255,.4);font-size:.8rem;font-family:Inter,sans-serif;margin:0 0 2rem">Loading platform...</p>
+        <div style="width:200px;height:3px;background:rgba(255,255,255,.08);border-radius:4px;overflow:hidden"><div style="width:30%;height:100%;background:linear-gradient(90deg,#a855f7,#6366f1);border-radius:4px;animation:bootbar 1.5s ease-in-out infinite"></div></div>
+        <style>@keyframes bootbar{0%{width:10%;margin-left:0}50%{width:60%;margin-left:20%}100%{width:10%;margin-left:90%}}</style>
+    </div>
+    <script>
+    // Remove boot loader once the app renders
+    window._removeBoot = function() {
+        var el = document.getElementById('boot-loader');
+        if (el) { el.style.opacity = '0'; el.style.transition = 'opacity .3s'; setTimeout(function() { el.remove(); }, 300); }
+    };
+    </script>
 
     <!-- Supabase Configuration and Client Initialization -->
     <script>
@@ -7550,6 +7634,9 @@
 
     const root = ReactDOM.createRoot(document.getElementById('root'));
     root.render(<App />);
+
+    // Remove the boot loading screen now that the app has rendered
+    if (window._removeBoot) window._removeBoot();
     </script>
 </body>
 </html>
