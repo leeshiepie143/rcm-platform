@@ -5675,7 +5675,11 @@ const App = () => {
   const [userFullName, setUserFullName] = React.useState("");
   const fetchUserProfile = async (userId) => {
     try {
-      const { data, error } = await sbClient.from("user_profiles").select("role, full_name").eq("id", userId).single();
+      const profileResult = await Promise.race([
+        sbClient.from("user_profiles").select("role, full_name").eq("id", userId).single(),
+        new Promise((_, reject) => setTimeout(() => reject(new Error('profile timeout')), 3000))
+      ]);
+      const { data, error } = profileResult;
       if (data) {
         setUserRole(data.role || "member");
         setUserFullName(data.full_name || "");
@@ -5698,7 +5702,7 @@ const App = () => {
           await fetchUserProfile(session2.user.id);
         }
       } catch (e) {
-        console.log("getSession timeout, checking localStorage fallback");
+        console.log("getSession timeout, using localStorage fallback");
         try {
           const stored = localStorage.getItem('sb-cclglxjyyxtukueohhew-auth-token');
           if (stored) {
@@ -5706,7 +5710,12 @@ const App = () => {
             if (parsed && parsed.user) {
               setSession(parsed);
               setUserEmail(parsed.user.email || "");
-              await fetchUserProfile(parsed.user.id);
+              // Set role from stored data if available, skip Supabase call to avoid lock hang
+              if (parsed.user.user_metadata) {
+                setUserFullName(parsed.user.user_metadata.full_name || "");
+              }
+              // Try profile fetch with its own timeout (non-blocking)
+              fetchUserProfile(parsed.user.id).catch(() => {});
             }
           }
         } catch (e2) { console.error("localStorage fallback failed:", e2); }
