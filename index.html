@@ -671,18 +671,16 @@
     const SUPABASE_URL = 'https://cclglxjyyxtukueohhew.supabase.co';
     const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNjbGdseGp5eXh0dWt1ZW9oaGV3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ1NTEzODUsImV4cCI6MjA5MDEyNzM4NX0.H5NJrenWQplid_MmtwvHbR6kc2fe405_0T2oYV3HqCU';
 
-    // Release any orphaned auth locks from previous sessions to prevent 5s delay
-    if (navigator.locks) {
-        navigator.locks.request(
-            'lock:sb-cclglxjyyxtukueohhew-auth-token',
-            { steal: true },
-            function() { return Promise.resolve(); }
-        );
-    }
-
-    // Initialize Supabase client
+    // Initialize Supabase client with custom lock to bypass Web Locks API hang
     const _supabaseLib = window.supabase;
-    window.supabaseClient = _supabaseLib.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    window.supabaseClient = _supabaseLib.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+        auth: {
+            lock: function(name, acquireTimeout, fn) {
+                // Bypass Web Locks API entirely — prevents orphaned lock hangs
+                return fn();
+            }
+        }
+    });
 
     // ========== SUPABASE STORAGE MANAGER ==========
     // Shortcut reference to the Supabase client for this script block
