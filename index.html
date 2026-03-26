@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Opteo Health RCM Platform</title>
+    <title>VanguardRCM Platform</title>
 
     <!-- Google Fonts - Inter for premium typography -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -28,6 +28,8 @@
         document.head.appendChild(s);
     }
     </script>
+    <!-- Supabase JS Client -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 
     <style>
         /* ============================================================
@@ -648,10 +650,253 @@
 <body>
     <div id="root"></div>
 
+    <!-- Supabase Configuration and Client Initialization -->
+    <script>
+    // Supabase credentials (embedded in frontend - use env vars in production)
+    const SUPABASE_URL = 'https://cclglxjyyxtukueohhew.supabase.co';
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNjbGdseGp5eXh0dWt1ZW9oaGV3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ1NTEzODUsImV4cCI6MjA5MDEyNzM4NX0.H5NJrenWQplid_MmtwvHbR6kc2fe405_0T2oYV3HqCU';
+
+    // Initialize Supabase client
+    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    // ========== SUPABASE STORAGE MANAGER ==========
+    const SupabaseStorageManager = {
+        // Practices methods
+        getPractices: async (userId) => {
+            try {
+                const { data, error } = await supabase
+                    .from('practices')
+                    .select('*');
+                if (error) throw error;
+                return data ? data.map(row => row.data) : [];
+            } catch (e) {
+                console.error('Error fetching practices:', e);
+                return [];
+            }
+        },
+
+        savePractices: async (practices, userId) => {
+            try {
+                for (const practice of practices) {
+                    const { data, error } = await supabase
+                        .from('practices')
+                        .upsert({
+                            id: practice.id || 'practice_' + Date.now(),
+                            user_id: userId,
+                            data: practice,
+                            updated_at: new Date().toISOString()
+                        });
+                    if (error) throw error;
+                }
+            } catch (e) {
+                console.error('Error saving practices:', e);
+            }
+        },
+
+        addPractice: async (practice, userId) => {
+            try {
+                practice.id = practice.id || 'practice_' + Date.now();
+                const { data, error } = await supabase
+                    .from('practices')
+                    .insert({
+                        id: practice.id,
+                        user_id: userId,
+                        data: practice,
+                        created_at: new Date().toISOString(),
+                        updated_at: new Date().toISOString()
+                    });
+                if (error) throw error;
+                return practice;
+            } catch (e) {
+                console.error('Error adding practice:', e);
+                return null;
+            }
+        },
+
+        updatePractice: async (id, practice, userId) => {
+            try {
+                const { data, error } = await supabase
+                    .from('practices')
+                    .update({
+                        data: { ...practice, id },
+                        updated_at: new Date().toISOString()
+                    })
+                    .eq('id', id);
+                if (error) throw error;
+                return { ...practice, id };
+            } catch (e) {
+                console.error('Error updating practice:', e);
+                return null;
+            }
+        },
+
+        deletePractice: async (id) => {
+            try {
+                const { error } = await supabase
+                    .from('practices')
+                    .delete()
+                    .eq('id', id);
+                if (error) throw error;
+            } catch (e) {
+                console.error('Error deleting practice:', e);
+            }
+        },
+
+        // Claims Queue methods
+        getQueue: async (userId) => {
+            try {
+                const { data, error } = await supabase
+                    .from('claims_queue')
+                    .select('*');
+                if (error) throw error;
+                return data ? data.map(row => row.data) : [];
+            } catch (e) {
+                console.error('Error fetching claims queue:', e);
+                return [];
+            }
+        },
+
+        saveQueue: async (claims, userId) => {
+            try {
+                for (const claim of claims) {
+                    const { error } = await supabase
+                        .from('claims_queue')
+                        .upsert({
+                            id: claim.id || 'claim_' + Date.now(),
+                            user_id: userId,
+                            data: claim,
+                            updated_at: new Date().toISOString()
+                        });
+                    if (error) throw error;
+                }
+            } catch (e) {
+                console.error('Error saving claims queue:', e);
+            }
+        },
+
+        addClaim: async (claim, userId) => {
+            try {
+                claim.id = claim.id || 'claim_' + Date.now();
+                claim.status = claim.status || 'queue';
+                claim.createdAt = claim.createdAt || new Date().toISOString();
+                const { error } = await supabase
+                    .from('claims_queue')
+                    .insert({
+                        id: claim.id,
+                        user_id: userId,
+                        data: claim,
+                        created_at: new Date().toISOString(),
+                        updated_at: new Date().toISOString()
+                    });
+                if (error) throw error;
+                return claim;
+            } catch (e) {
+                console.error('Error adding claim:', e);
+                return null;
+            }
+        },
+
+        updateClaim: async (id, updates, userId) => {
+            try {
+                const { data, error } = await supabase
+                    .from('claims_queue')
+                    .select('data')
+                    .eq('id', id)
+                    .single();
+                if (error) throw error;
+                const updated = { ...data.data, ...updates };
+                const { error: updateError } = await supabase
+                    .from('claims_queue')
+                    .update({
+                        data: updated,
+                        updated_at: new Date().toISOString()
+                    })
+                    .eq('id', id);
+                if (updateError) throw updateError;
+                return updated;
+            } catch (e) {
+                console.error('Error updating claim:', e);
+                return null;
+            }
+        },
+
+        removeFromQueue: async (id) => {
+            try {
+                const { error } = await supabase
+                    .from('claims_queue')
+                    .delete()
+                    .eq('id', id);
+                if (error) throw error;
+            } catch (e) {
+                console.error('Error removing claim from queue:', e);
+            }
+        },
+
+        clearQueue: async (userId) => {
+            try {
+                const { error } = await supabase
+                    .from('claims_queue')
+                    .delete()
+                    .eq('user_id', userId);
+                if (error) throw error;
+            } catch (e) {
+                console.error('Error clearing queue:', e);
+            }
+        },
+
+        // Coding Reports methods
+        getReports: async (userId) => {
+            try {
+                const { data, error } = await supabase
+                    .from('coding_reports')
+                    .select('*');
+                if (error) throw error;
+                return data ? data.map(row => row.data) : [];
+            } catch (e) {
+                console.error('Error fetching reports:', e);
+                return [];
+            }
+        },
+
+        addReport: async (report, userId) => {
+            try {
+                report.id = report.id || 'report_' + Date.now();
+                const { error } = await supabase
+                    .from('coding_reports')
+                    .insert({
+                        id: report.id,
+                        user_id: userId,
+                        data: report,
+                        created_at: new Date().toISOString(),
+                        updated_at: new Date().toISOString()
+                    });
+                if (error) throw error;
+                return report;
+            } catch (e) {
+                console.error('Error adding report:', e);
+                return null;
+            }
+        },
+
+        deleteReport: async (id) => {
+            try {
+                const { error } = await supabase
+                    .from('coding_reports')
+                    .delete()
+                    .eq('id', id);
+                if (error) throw error;
+            } catch (e) {
+                console.error('Error deleting report:', e);
+            }
+        }
+    };
+    </script>
+
     <script type="text/babel">
-    // ========== LOCALSTORAGE HELPERS ==========
+    // ========== HYBRID STORAGE MANAGERS (Supabase + LocalStorage Fallback) ==========
     const PracticeStorageManager = {
         getPractices: () => {
+            // Synchronous fallback to localStorage for component initialization
             try {
                 const data = window.localStorage.getItem('rcm_practices');
                 return data ? JSON.parse(data) : [];
@@ -659,10 +904,32 @@
                 return [];
             }
         },
+        getPracticesAsync: async (userId) => {
+            // Async version using Supabase
+            try {
+                if (!userId) return PracticeStorageManager.getPractices();
+                return await SupabaseStorageManager.getPractices(userId);
+            } catch (e) {
+                console.error('Error fetching practices from Supabase:', e);
+                return PracticeStorageManager.getPractices();
+            }
+        },
         savePractices: (practices) => {
+            // Keep localStorage in sync
             try {
                 window.localStorage.setItem('rcm_practices', JSON.stringify(practices));
             } catch (e) {}
+        },
+        savePracticesAsync: async (practices, userId) => {
+            // Save to both Supabase and localStorage
+            PracticeStorageManager.savePractices(practices);
+            if (userId) {
+                try {
+                    await SupabaseStorageManager.savePractices(practices, userId);
+                } catch (e) {
+                    console.error('Error saving practices to Supabase:', e);
+                }
+            }
         },
         addPractice: (practice) => {
             const practices = PracticeStorageManager.getPractices();
@@ -670,6 +937,17 @@
             practices.push(practice);
             PracticeStorageManager.savePractices(practices);
             return practice;
+        },
+        addPracticeAsync: async (practice, userId) => {
+            const result = PracticeStorageManager.addPractice(practice);
+            if (userId) {
+                try {
+                    await SupabaseStorageManager.addPractice(practice, userId);
+                } catch (e) {
+                    console.error('Error adding practice to Supabase:', e);
+                }
+            }
+            return result;
         },
         updatePractice: (id, practice) => {
             const practices = PracticeStorageManager.getPractices();
@@ -681,9 +959,30 @@
             }
             return null;
         },
+        updatePracticeAsync: async (id, practice, userId) => {
+            const result = PracticeStorageManager.updatePractice(id, practice);
+            if (userId) {
+                try {
+                    await SupabaseStorageManager.updatePractice(id, practice, userId);
+                } catch (e) {
+                    console.error('Error updating practice in Supabase:', e);
+                }
+            }
+            return result;
+        },
         deletePractice: (id) => {
             const practices = PracticeStorageManager.getPractices().filter(p => p.id !== id);
             PracticeStorageManager.savePractices(practices);
+        },
+        deletePracticeAsync: async (id, userId) => {
+            PracticeStorageManager.deletePractice(id);
+            if (userId) {
+                try {
+                    await SupabaseStorageManager.deletePractice(id);
+                } catch (e) {
+                    console.error('Error deleting practice from Supabase:', e);
+                }
+            }
         },
         exportPractices: () => {
             const practices = PracticeStorageManager.getPractices();
@@ -710,10 +1009,29 @@
                 return [];
             }
         },
+        getQueueAsync: async (userId) => {
+            try {
+                if (!userId) return ClaimsQueueManager.getQueue();
+                return await SupabaseStorageManager.getQueue(userId);
+            } catch (e) {
+                console.error('Error fetching queue from Supabase:', e);
+                return ClaimsQueueManager.getQueue();
+            }
+        },
         saveQueue: (claims) => {
             try {
                 window.localStorage.setItem('rcm_claims_queue', JSON.stringify(claims));
             } catch (e) {}
+        },
+        saveQueueAsync: async (claims, userId) => {
+            ClaimsQueueManager.saveQueue(claims);
+            if (userId) {
+                try {
+                    await SupabaseStorageManager.saveQueue(claims, userId);
+                } catch (e) {
+                    console.error('Error saving queue to Supabase:', e);
+                }
+            }
         },
         addClaim: (claim) => {
             const queue = ClaimsQueueManager.getQueue();
@@ -723,6 +1041,17 @@
             queue.push(claim);
             ClaimsQueueManager.saveQueue(queue);
             return claim;
+        },
+        addClaimAsync: async (claim, userId) => {
+            const result = ClaimsQueueManager.addClaim(claim);
+            if (userId) {
+                try {
+                    await SupabaseStorageManager.addClaim(claim, userId);
+                } catch (e) {
+                    console.error('Error adding claim to Supabase:', e);
+                }
+            }
+            return result;
         },
         updateClaim: (id, updates) => {
             const queue = ClaimsQueueManager.getQueue();
@@ -734,9 +1063,42 @@
             }
             return null;
         },
+        updateClaimAsync: async (id, updates, userId) => {
+            const result = ClaimsQueueManager.updateClaim(id, updates);
+            if (userId) {
+                try {
+                    await SupabaseStorageManager.updateClaim(id, updates, userId);
+                } catch (e) {
+                    console.error('Error updating claim in Supabase:', e);
+                }
+            }
+            return result;
+        },
         removeFromQueue: (id) => {
             const queue = ClaimsQueueManager.getQueue().filter(c => c.id !== id);
             ClaimsQueueManager.saveQueue(queue);
+        },
+        removeFromQueueAsync: async (id, userId) => {
+            ClaimsQueueManager.removeFromQueue(id);
+            if (userId) {
+                try {
+                    await SupabaseStorageManager.removeFromQueue(id);
+                } catch (e) {
+                    console.error('Error removing claim from Supabase:', e);
+                }
+            }
+        },
+        clearQueueAsync: async (userId) => {
+            try {
+                window.localStorage.removeItem('rcm_claims_queue');
+            } catch (e) {}
+            if (userId) {
+                try {
+                    await SupabaseStorageManager.clearQueue(userId);
+                } catch (e) {
+                    console.error('Error clearing queue in Supabase:', e);
+                }
+            }
         },
         exportQueue: (format = 'json') => {
             const queue = ClaimsQueueManager.getQueue();
@@ -778,6 +1140,15 @@
                 return data ? JSON.parse(data) : [];
             } catch (e) { return []; }
         },
+        getReportsAsync: async (userId) => {
+            try {
+                if (!userId) return ReportsStorageManager.getReports();
+                return await SupabaseStorageManager.getReports(userId);
+            } catch (e) {
+                console.error('Error fetching reports from Supabase:', e);
+                return ReportsStorageManager.getReports();
+            }
+        },
         saveReports: (reports) => {
             try { window.localStorage.setItem('rcm_coding_reports', JSON.stringify(reports)); } catch (e) {}
         },
@@ -789,13 +1160,477 @@
             ReportsStorageManager.saveReports(reports);
             return report;
         },
+        addReportAsync: async (report, userId) => {
+            const result = ReportsStorageManager.addReport(report);
+            if (userId) {
+                try {
+                    await SupabaseStorageManager.addReport(report, userId);
+                } catch (e) {
+                    console.error('Error adding report to Supabase:', e);
+                }
+            }
+            return result;
+        },
         deleteReport: (id) => {
             const reports = ReportsStorageManager.getReports().filter(r => r.id !== id);
             ReportsStorageManager.saveReports(reports);
         },
+        deleteReportAsync: async (id, userId) => {
+            ReportsStorageManager.deleteReport(id);
+            if (userId) {
+                try {
+                    await SupabaseStorageManager.deleteReport(id);
+                } catch (e) {
+                    console.error('Error deleting report from Supabase:', e);
+                }
+            }
+        },
         clearAll: () => {
             try { window.localStorage.removeItem('rcm_coding_reports'); } catch (e) {}
         }
+    };
+
+    // ========== LOGIN PAGE COMPONENT ==========
+    const LoginPage = ({ onLoginSuccess }) => {
+        const [email, setEmail] = React.useState('');
+        const [password, setPassword] = React.useState('');
+        const [loading, setLoading] = React.useState(false);
+        const [error, setError] = React.useState('');
+
+        const handleLogin = async (e) => {
+            e.preventDefault();
+            setError('');
+            setLoading(true);
+
+            try {
+                const { data, error: signInError } = await supabase.auth.signInWithPassword({
+                    email,
+                    password
+                });
+
+                if (signInError) {
+                    setError(signInError.message || 'Login failed');
+                    setLoading(false);
+                    return;
+                }
+
+                if (data.session) {
+                    // Login successful, callback to App component
+                    onLoginSuccess(data.session);
+                }
+            } catch (e) {
+                setError('An unexpected error occurred');
+                console.error('Login error:', e);
+                setLoading(false);
+            }
+        };
+
+        return (
+            <div className="flex h-screen items-center justify-center" style={{ background: 'linear-gradient(135deg, #0f0720 0%, #0c1222 40%, #091520 100%)' }}>
+                <div className="w-full max-w-md">
+                    {/* Header */}
+                    <div style={{ textAlign: 'center', marginBottom: '2.5rem' }}>
+                        <div style={{ width: '3.5rem', height: '3.5rem', background: 'var(--gradient-accent)', borderRadius: 'var(--radius-md)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 800, color: '#fff', fontSize: '1.25rem', letterSpacing: '0.05em', boxShadow: '0 4px 16px rgba(192,132,252,0.4)', margin: '0 auto 1.5rem' }}>VR</div>
+                        <h1 style={{ fontSize: '1.875rem', fontWeight: 800, color: '#f1f5f9', letterSpacing: '-0.025em', marginBottom: '0.5rem' }}>VanguardRCM</h1>
+                        <p style={{ fontSize: '0.875rem', color: 'rgba(255,255,255,0.5)' }}>Revenue Cycle Management Platform</p>
+                    </div>
+
+                    {/* Login Card */}
+                    <div className="card-premium" style={{ padding: '2rem', backdropFilter: 'blur(20px)', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.08)' }}>
+                        <h2 style={{ fontSize: '1.25rem', fontWeight: 700, color: '#f1f5f9', marginBottom: '1.5rem', textAlign: 'center' }}>Sign In</h2>
+
+                        <form onSubmit={handleLogin} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                            {error && (
+                                <div style={{ padding: '0.75rem', borderRadius: 'var(--radius-md)', background: 'rgba(248,113,113,0.1)', border: '1px solid rgba(248,113,113,0.2)' }}>
+                                    <p style={{ fontSize: '0.875rem', color: '#fca5a5', margin: 0 }}>{error}</p>
+                                </div>
+                            )}
+
+                            <div>
+                                <label style={{ display: 'block', fontSize: '0.875rem', fontWeight: 500, color: '#f1f5f9', marginBottom: '0.5rem' }}>Email Address</label>
+                                <input
+                                    type="email"
+                                    className="input"
+                                    value={email}
+                                    onChange={(e) => setEmail(e.target.value)}
+                                    placeholder="you@example.com"
+                                    required
+                                    disabled={loading}
+                                    style={{ width: '100%', padding: '0.75rem', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 'var(--radius-md)', color: '#f1f5f9', fontSize: '0.9375rem' }}
+                                />
+                            </div>
+
+                            <div>
+                                <label style={{ display: 'block', fontSize: '0.875rem', fontWeight: 500, color: '#f1f5f9', marginBottom: '0.5rem' }}>Password</label>
+                                <input
+                                    type="password"
+                                    className="input"
+                                    value={password}
+                                    onChange={(e) => setPassword(e.target.value)}
+                                    placeholder="••••••••"
+                                    required
+                                    disabled={loading}
+                                    style={{ width: '100%', padding: '0.75rem', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 'var(--radius-md)', color: '#f1f5f9', fontSize: '0.9375rem' }}
+                                />
+                            </div>
+
+                            <button
+                                type="submit"
+                                disabled={loading || !email || !password}
+                                style={{
+                                    padding: '0.75rem',
+                                    background: loading || !email || !password ? 'rgba(192,132,252,0.3)' : 'var(--gradient-accent)',
+                                    color: '#fff',
+                                    border: 'none',
+                                    borderRadius: 'var(--radius-md)',
+                                    fontSize: '0.9375rem',
+                                    fontWeight: 600,
+                                    cursor: loading || !email || !password ? 'not-allowed' : 'pointer',
+                                    transition: 'all 0.2s',
+                                    opacity: loading || !email || !password ? 0.5 : 1
+                                }}
+                            >
+                                {loading ? 'Signing in...' : 'Sign In'}
+                            </button>
+                        </form>
+
+                        <div style={{ marginTop: '1.5rem', paddingTop: '1.5rem', borderTop: '1px solid rgba(255,255,255,0.08)' }}>
+                            <p style={{ fontSize: '0.8125rem', color: 'rgba(255,255,255,0.4)', textAlign: 'center', margin: 0 }}>
+                                Don't have an account? Contact your administrator.
+                            </p>
+                        </div>
+                    </div>
+
+                    {/* Footer */}
+                    <p style={{ fontSize: '0.7rem', color: 'rgba(255,255,255,0.2)', textAlign: 'center', marginTop: '2rem', margin: '2rem 0 0' }}>
+                        &copy; 2026 VanguardRCM Technologies. All rights reserved.
+                    </p>
+                </div>
+            </div>
+        );
+    };
+
+    // ==================== USER MANAGEMENT PANEL ====================
+    const UserManagementPanel = ({ currentUserRole, currentUserEmail }) => {
+        const [users, setUsers] = React.useState([]);
+        const [loadingUsers, setLoadingUsers] = React.useState(true);
+        const [showAddUser, setShowAddUser] = React.useState(false);
+        const [newUserEmail, setNewUserEmail] = React.useState('');
+        const [newUserPassword, setNewUserPassword] = React.useState('');
+        const [newUserName, setNewUserName] = React.useState('');
+        const [newUserRole, setNewUserRole] = React.useState('member');
+        const [addingUser, setAddingUser] = React.useState(false);
+        const [addError, setAddError] = React.useState('');
+        const [addSuccess, setAddSuccess] = React.useState('');
+        const [editingUser, setEditingUser] = React.useState(null);
+        const [editRole, setEditRole] = React.useState('');
+        const [editName, setEditName] = React.useState('');
+        const [savingEdit, setSavingEdit] = React.useState(false);
+
+        const canManageUsers = currentUserRole === 'global_admin' || currentUserRole === 'user_admin';
+        const isGlobalAdmin = currentUserRole === 'global_admin';
+
+        // Fetch all users from user_profiles
+        const fetchUsers = async () => {
+            setLoadingUsers(true);
+            try {
+                const { data, error } = await supabase
+                    .from('user_profiles')
+                    .select('*')
+                    .order('created_at', { ascending: true });
+                if (error) throw error;
+                setUsers(data || []);
+            } catch (e) {
+                console.error('Error fetching users:', e);
+            }
+            setLoadingUsers(false);
+        };
+
+        React.useEffect(() => { fetchUsers(); }, []);
+
+        // Add new user via Supabase Auth admin signup
+        const handleAddUser = async (e) => {
+            e.preventDefault();
+            setAddError('');
+            setAddSuccess('');
+            setAddingUser(true);
+
+            // user_admin can only add members
+            const roleToAssign = isGlobalAdmin ? newUserRole : 'member';
+
+            try {
+                // Create user in Supabase Auth (this triggers the handle_new_user function)
+                const { data, error } = await supabase.auth.signUp({
+                    email: newUserEmail,
+                    password: newUserPassword,
+                    options: {
+                        data: { full_name: newUserName }
+                    }
+                });
+
+                if (error) {
+                    setAddError(error.message);
+                    setAddingUser(false);
+                    return;
+                }
+
+                // Update the profile with the correct role and name
+                if (data.user) {
+                    // Small delay for the trigger to create the profile
+                    await new Promise(r => setTimeout(r, 1000));
+                    const { error: profileError } = await supabase
+                        .from('user_profiles')
+                        .update({ role: roleToAssign, full_name: newUserName })
+                        .eq('id', data.user.id);
+
+                    if (profileError) {
+                        console.error('Profile update error:', profileError);
+                    }
+                }
+
+                setAddSuccess(`User ${newUserEmail} created successfully as ${roleToAssign.replace('_', ' ')}.`);
+                setNewUserEmail('');
+                setNewUserPassword('');
+                setNewUserName('');
+                setNewUserRole('member');
+                setShowAddUser(false);
+                await fetchUsers();
+            } catch (e) {
+                setAddError('An unexpected error occurred: ' + e.message);
+            }
+            setAddingUser(false);
+        };
+
+        // Update user role/name
+        const handleSaveEdit = async () => {
+            if (!editingUser) return;
+            setSavingEdit(true);
+            try {
+                const updates = { role: editRole, full_name: editName, updated_at: new Date().toISOString() };
+                const { error } = await supabase
+                    .from('user_profiles')
+                    .update(updates)
+                    .eq('id', editingUser.id);
+                if (error) throw error;
+                setEditingUser(null);
+                await fetchUsers();
+            } catch (e) {
+                console.error('Error updating user:', e);
+                alert('Failed to update user: ' + e.message);
+            }
+            setSavingEdit(false);
+        };
+
+        // Delete user (global_admin only)
+        const handleDeleteUser = async (userId, email) => {
+            if (!isGlobalAdmin) return;
+            if (email === currentUserEmail) {
+                alert('You cannot delete your own account.');
+                return;
+            }
+            if (!confirm(`Are you sure you want to remove ${email}? This cannot be undone.`)) return;
+            try {
+                const { error } = await supabase
+                    .from('user_profiles')
+                    .delete()
+                    .eq('id', userId);
+                if (error) throw error;
+                await fetchUsers();
+            } catch (e) {
+                console.error('Error deleting user:', e);
+                alert('Failed to delete user: ' + e.message);
+            }
+        };
+
+        const roleBadge = (role) => {
+            const colors = {
+                global_admin: { bg: 'rgba(192,132,252,0.15)', color: '#c084fc', label: 'Global Admin' },
+                user_admin: { bg: 'rgba(56,189,248,0.15)', color: '#38bdf8', label: 'User Admin' },
+                member: { bg: 'rgba(110,231,183,0.15)', color: '#6ee7b7', label: 'Member' }
+            };
+            const c = colors[role] || colors.member;
+            return <span style={{ padding: '0.25rem 0.75rem', borderRadius: '9999px', fontSize: '0.75rem', fontWeight: 600, background: c.bg, color: c.color }}>{c.label}</span>;
+        };
+
+        // Member view — just show their own info
+        if (!canManageUsers) {
+            return (
+                <div className="card-premium" style={{ padding: '1.75rem' }}>
+                    <h3 style={{ fontSize: '1.1rem', fontWeight: 700, color: '#f1f5f9', marginBottom: '1rem' }}>User Management</h3>
+                    <div style={{ padding: '1rem', background: 'rgba(255,255,255,0.03)', borderRadius: 'var(--radius-md)', border: '1px solid rgba(255,255,255,0.06)' }}>
+                        <p style={{ fontSize: '0.875rem', color: 'rgba(255,255,255,0.6)', margin: 0 }}>
+                            <strong style={{ color: '#f1f5f9' }}>Your Account:</strong> {currentUserEmail}
+                        </p>
+                        <p style={{ fontSize: '0.875rem', color: 'rgba(255,255,255,0.6)', marginTop: '0.5rem', margin: '0.5rem 0 0' }}>
+                            <strong style={{ color: '#f1f5f9' }}>Role:</strong> {roleBadge('member')}
+                        </p>
+                        <p style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.35)', marginTop: '1rem', margin: '1rem 0 0' }}>
+                            Contact your administrator to request role changes or account modifications.
+                        </p>
+                    </div>
+                </div>
+            );
+        }
+
+        return (
+            <div className="card-premium" style={{ padding: '1.75rem' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.25rem' }}>
+                    <div>
+                        <h3 style={{ fontSize: '1.1rem', fontWeight: 700, color: '#f1f5f9', margin: 0 }}>User Management</h3>
+                        <p style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.4)', marginTop: '0.25rem', margin: '0.25rem 0 0' }}>
+                            {isGlobalAdmin ? 'Full access: add, edit, and remove users' : 'Add new member users to the platform'}
+                        </p>
+                    </div>
+                    <button
+                        onClick={() => { setShowAddUser(!showAddUser); setAddError(''); setAddSuccess(''); }}
+                        style={{ padding: '0.5rem 1rem', background: 'var(--gradient-accent)', border: 'none', borderRadius: 'var(--radius-md)', color: '#fff', fontSize: '0.8125rem', fontWeight: 600, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.375rem' }}
+                    >
+                        <span style={{ fontSize: '1rem' }}>+</span> Add User
+                    </button>
+                </div>
+
+                {/* Success message */}
+                {addSuccess && (
+                    <div style={{ padding: '0.75rem 1rem', marginBottom: '1rem', borderRadius: 'var(--radius-md)', background: 'rgba(110,231,183,0.1)', border: '1px solid rgba(110,231,183,0.2)' }}>
+                        <p style={{ fontSize: '0.875rem', color: '#6ee7b7', margin: 0 }}>{addSuccess}</p>
+                    </div>
+                )}
+
+                {/* Add User Form */}
+                {showAddUser && (
+                    <div style={{ padding: '1.25rem', marginBottom: '1.25rem', borderRadius: 'var(--radius-md)', background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.08)' }}>
+                        <h4 style={{ fontSize: '0.9375rem', fontWeight: 600, color: '#f1f5f9', marginBottom: '1rem' }}>Add New User</h4>
+                        {addError && (
+                            <div style={{ padding: '0.5rem 0.75rem', marginBottom: '0.75rem', borderRadius: 'var(--radius-md)', background: 'rgba(248,113,113,0.1)', border: '1px solid rgba(248,113,113,0.2)' }}>
+                                <p style={{ fontSize: '0.8125rem', color: '#fca5a5', margin: 0 }}>{addError}</p>
+                            </div>
+                        )}
+                        <form onSubmit={handleAddUser} style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem' }}>
+                            <div>
+                                <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: 500, color: 'rgba(255,255,255,0.6)', marginBottom: '0.375rem' }}>Full Name</label>
+                                <input type="text" value={newUserName} onChange={e => setNewUserName(e.target.value)} placeholder="John Doe" required
+                                    style={{ width: '100%', padding: '0.625rem', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 'var(--radius-md)', color: '#f1f5f9', fontSize: '0.875rem' }} />
+                            </div>
+                            <div>
+                                <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: 500, color: 'rgba(255,255,255,0.6)', marginBottom: '0.375rem' }}>Email Address</label>
+                                <input type="email" value={newUserEmail} onChange={e => setNewUserEmail(e.target.value)} placeholder="user@example.com" required
+                                    style={{ width: '100%', padding: '0.625rem', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 'var(--radius-md)', color: '#f1f5f9', fontSize: '0.875rem' }} />
+                            </div>
+                            <div>
+                                <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: 500, color: 'rgba(255,255,255,0.6)', marginBottom: '0.375rem' }}>Password</label>
+                                <input type="password" value={newUserPassword} onChange={e => setNewUserPassword(e.target.value)} placeholder="Min 6 characters" required minLength={6}
+                                    style={{ width: '100%', padding: '0.625rem', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 'var(--radius-md)', color: '#f1f5f9', fontSize: '0.875rem' }} />
+                            </div>
+                            <div>
+                                <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: 500, color: 'rgba(255,255,255,0.6)', marginBottom: '0.375rem' }}>Role</label>
+                                {isGlobalAdmin ? (
+                                    <select value={newUserRole} onChange={e => setNewUserRole(e.target.value)}
+                                        style={{ width: '100%', padding: '0.625rem', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 'var(--radius-md)', color: '#f1f5f9', fontSize: '0.875rem' }}>
+                                        <option value="member">Member</option>
+                                        <option value="user_admin">User Admin</option>
+                                        <option value="global_admin">Global Admin</option>
+                                    </select>
+                                ) : (
+                                    <div style={{ padding: '0.625rem', background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.06)', borderRadius: 'var(--radius-md)', color: 'rgba(255,255,255,0.5)', fontSize: '0.875rem' }}>
+                                        Member <span style={{ fontSize: '0.7rem', color: 'rgba(255,255,255,0.3)' }}>(User Admins can only add members)</span>
+                                    </div>
+                                )}
+                            </div>
+                            <div style={{ gridColumn: '1 / -1', display: 'flex', gap: '0.5rem', justifyContent: 'flex-end', marginTop: '0.25rem' }}>
+                                <button type="button" onClick={() => setShowAddUser(false)}
+                                    style={{ padding: '0.5rem 1rem', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 'var(--radius-md)', color: 'rgba(255,255,255,0.6)', fontSize: '0.8125rem', cursor: 'pointer' }}>
+                                    Cancel
+                                </button>
+                                <button type="submit" disabled={addingUser}
+                                    style={{ padding: '0.5rem 1.25rem', background: addingUser ? 'rgba(192,132,252,0.3)' : 'var(--gradient-accent)', border: 'none', borderRadius: 'var(--radius-md)', color: '#fff', fontSize: '0.8125rem', fontWeight: 600, cursor: addingUser ? 'not-allowed' : 'pointer', opacity: addingUser ? 0.6 : 1 }}>
+                                    {addingUser ? 'Creating...' : 'Create User'}
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                )}
+
+                {/* Users Table */}
+                {loadingUsers ? (
+                    <div style={{ textAlign: 'center', padding: '2rem', color: 'rgba(255,255,255,0.4)' }}>Loading users...</div>
+                ) : (
+                    <div style={{ overflowX: 'auto' }}>
+                        <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+                            <thead>
+                                <tr style={{ borderBottom: '2px solid rgba(255,255,255,0.08)' }}>
+                                    <th style={{ padding: '0.625rem 0.75rem', textAlign: 'left', fontSize: '0.75rem', fontWeight: 600, color: 'rgba(255,255,255,0.5)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>User</th>
+                                    <th style={{ padding: '0.625rem 0.75rem', textAlign: 'left', fontSize: '0.75rem', fontWeight: 600, color: 'rgba(255,255,255,0.5)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Email</th>
+                                    <th style={{ padding: '0.625rem 0.75rem', textAlign: 'left', fontSize: '0.75rem', fontWeight: 600, color: 'rgba(255,255,255,0.5)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Role</th>
+                                    <th style={{ padding: '0.625rem 0.75rem', textAlign: 'left', fontSize: '0.75rem', fontWeight: 600, color: 'rgba(255,255,255,0.5)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Joined</th>
+                                    {isGlobalAdmin && <th style={{ padding: '0.625rem 0.75rem', textAlign: 'right', fontSize: '0.75rem', fontWeight: 600, color: 'rgba(255,255,255,0.5)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Actions</th>}
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {users.map(user => (
+                                    <tr key={user.id} style={{ borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
+                                        <td style={{ padding: '0.75rem', display: 'flex', alignItems: 'center', gap: '0.625rem' }}>
+                                            <div style={{ width: '2rem', height: '2rem', borderRadius: 'var(--radius-md)', background: user.role === 'global_admin' ? 'linear-gradient(135deg, #a855f7, #6366f1)' : user.role === 'user_admin' ? 'linear-gradient(135deg, #38bdf8, #6366f1)' : 'linear-gradient(135deg, #6ee7b7, #38bdf8)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 700, color: '#fff', fontSize: '0.7rem' }}>
+                                                {(user.full_name || user.email || '?').charAt(0).toUpperCase()}
+                                            </div>
+                                            <span style={{ fontSize: '0.875rem', fontWeight: 500, color: '#f1f5f9' }}>
+                                                {user.full_name || '—'}
+                                                {user.email === currentUserEmail && <span style={{ fontSize: '0.65rem', color: 'rgba(255,255,255,0.3)', marginLeft: '0.5rem' }}>(you)</span>}
+                                            </span>
+                                        </td>
+                                        <td style={{ padding: '0.75rem', fontSize: '0.8125rem', color: 'rgba(255,255,255,0.6)' }}>{user.email}</td>
+                                        <td style={{ padding: '0.75rem' }}>
+                                            {editingUser?.id === user.id ? (
+                                                <select value={editRole} onChange={e => setEditRole(e.target.value)}
+                                                    style={{ padding: '0.375rem 0.5rem', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.15)', borderRadius: 'var(--radius-sm)', color: '#f1f5f9', fontSize: '0.8125rem' }}>
+                                                    <option value="member">Member</option>
+                                                    <option value="user_admin">User Admin</option>
+                                                    <option value="global_admin">Global Admin</option>
+                                                </select>
+                                            ) : roleBadge(user.role)}
+                                        </td>
+                                        <td style={{ padding: '0.75rem', fontSize: '0.75rem', color: 'rgba(255,255,255,0.4)' }}>{user.created_at ? new Date(user.created_at).toLocaleDateString() : '—'}</td>
+                                        {isGlobalAdmin && (
+                                            <td style={{ padding: '0.75rem', textAlign: 'right' }}>
+                                                {editingUser?.id === user.id ? (
+                                                    <div style={{ display: 'flex', gap: '0.375rem', justifyContent: 'flex-end' }}>
+                                                        <button onClick={handleSaveEdit} disabled={savingEdit}
+                                                            style={{ padding: '0.25rem 0.625rem', background: 'rgba(110,231,183,0.15)', border: '1px solid rgba(110,231,183,0.3)', borderRadius: 'var(--radius-sm)', color: '#6ee7b7', fontSize: '0.75rem', cursor: 'pointer' }}>
+                                                            {savingEdit ? '...' : 'Save'}
+                                                        </button>
+                                                        <button onClick={() => setEditingUser(null)}
+                                                            style={{ padding: '0.25rem 0.625rem', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 'var(--radius-sm)', color: 'rgba(255,255,255,0.5)', fontSize: '0.75rem', cursor: 'pointer' }}>
+                                                            Cancel
+                                                        </button>
+                                                    </div>
+                                                ) : (
+                                                    <div style={{ display: 'flex', gap: '0.375rem', justifyContent: 'flex-end' }}>
+                                                        <button onClick={() => { setEditingUser(user); setEditRole(user.role); setEditName(user.full_name || ''); }}
+                                                            style={{ padding: '0.25rem 0.625rem', background: 'rgba(56,189,248,0.1)', border: '1px solid rgba(56,189,248,0.2)', borderRadius: 'var(--radius-sm)', color: '#38bdf8', fontSize: '0.75rem', cursor: 'pointer' }}>
+                                                            Edit
+                                                        </button>
+                                                        {user.email !== currentUserEmail && (
+                                                            <button onClick={() => handleDeleteUser(user.id, user.email)}
+                                                                style={{ padding: '0.25rem 0.625rem', background: 'rgba(248,113,113,0.1)', border: '1px solid rgba(248,113,113,0.2)', borderRadius: 'var(--radius-sm)', color: '#fca5a5', fontSize: '0.75rem', cursor: 'pointer' }}>
+                                                                Remove
+                                                            </button>
+                                                        )}
+                                                    </div>
+                                                )}
+                                            </td>
+                                        )}
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                        <div style={{ marginTop: '1rem', padding: '0.75rem', borderRadius: 'var(--radius-md)', background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.05)' }}>
+                            <p style={{ fontSize: '0.7rem', color: 'rgba(255,255,255,0.3)', margin: 0 }}>
+                                <strong>Roles:</strong> Global Admin — full access, manage all users & settings · User Admin — use platform, add member users · Member — use platform only
+                            </p>
+                        </div>
+                    </div>
+                )}
+            </div>
+        );
     };
 
     // Shared PDF report generator — Premium Modern Clinical (Canva-quality)
@@ -1419,7 +2254,7 @@
             // Footer text
             doc.setDrawColor.apply(doc, C.d2); doc.setLineWidth(0.2); doc.line(m, ph - 11, pw - m, ph - 11);
             doc.setFontSize(6.5); doc.setTextColor.apply(doc, C.d4); doc.setFont('helvetica', 'normal');
-            doc.text('Opteo Health RCM Platform  \u00B7  Comprehensive Medical Coding Report  \u00B7  CONFIDENTIAL', m, ph - 7);
+            doc.text('VanguardRCM Platform  \u00B7  Comprehensive Medical Coding Report  \u00B7  CONFIDENTIAL', m, ph - 7);
             doc.text('Page ' + p + ' of ' + totalPages, pw - m, ph - 7, { align: 'right' });
         }
 
@@ -5799,7 +6634,7 @@
                 recs.forEach((r, i) => L.push('  ' + (i + 1) + '. ' + r));
                 L.push('');
                 L.push('═══════════════════════════════════════════════════════════════');
-                L.push('Opteo Health RCM Platform  |  CONFIDENTIAL');
+                L.push('VanguardRCM Platform  |  CONFIDENTIAL');
                 const blob = new Blob([L.join('\n')], { type: 'text/plain' });
                 const url = URL.createObjectURL(blob);
                 const a = document.createElement('a');
@@ -6302,6 +7137,99 @@
         React.useEffect(() => { try { if (apiKey) { window.localStorage.setItem('rcm_api_key', apiKey); } else { window.localStorage.removeItem('rcm_api_key'); } } catch(e) {} }, [apiKey]);
         const [practices, setPractices] = React.useState(() => PracticeStorageManager.getPractices());
 
+        // Authentication state
+        const [session, setSession] = React.useState(null);
+        const [authLoading, setAuthLoading] = React.useState(true);
+        const [userEmail, setUserEmail] = React.useState('');
+        const [userRole, setUserRole] = React.useState('member');
+        const [userFullName, setUserFullName] = React.useState('');
+
+        // Fetch user profile (role, name) from Supabase
+        const fetchUserProfile = async (userId) => {
+            try {
+                const { data, error } = await supabase
+                    .from('user_profiles')
+                    .select('role, full_name')
+                    .eq('id', userId)
+                    .single();
+                if (data) {
+                    setUserRole(data.role || 'member');
+                    setUserFullName(data.full_name || '');
+                }
+            } catch (e) {
+                console.error('Error fetching user profile:', e);
+            }
+        };
+
+        // Check auth session on mount
+        React.useEffect(() => {
+            const checkSession = async () => {
+                try {
+                    const { data: { session }, error } = await supabase.auth.getSession();
+                    if (session) {
+                        setSession(session);
+                        setUserEmail(session.user.email || '');
+                        await fetchUserProfile(session.user.id);
+                    }
+                } catch (e) {
+                    console.error('Error checking session:', e);
+                }
+                setAuthLoading(false);
+            };
+
+            checkSession();
+
+            // Subscribe to auth state changes
+            const { data: { subscription } } = supabase.auth.onAuthStateChange(
+                async (event, newSession) => {
+                    setSession(newSession);
+                    if (newSession) {
+                        setUserEmail(newSession.user.email || '');
+                        await fetchUserProfile(newSession.user.id);
+                    }
+                }
+            );
+
+            return () => {
+                subscription?.unsubscribe();
+            };
+        }, []);
+
+        // Handle logout
+        const handleLogout = async () => {
+            try {
+                await supabase.auth.signOut();
+                setSession(null);
+                setUserEmail('');
+            } catch (e) {
+                console.error('Error logging out:', e);
+            }
+        };
+
+        // Handle successful login
+        const handleLoginSuccess = async (newSession) => {
+            setSession(newSession);
+            setUserEmail(newSession.user.email || '');
+            await fetchUserProfile(newSession.user.id);
+        };
+
+        // If auth is still loading, show loading screen
+        if (authLoading) {
+            return (
+                <div className="flex h-screen items-center justify-center" style={{ background: 'linear-gradient(135deg, #0f0720 0%, #0c1222 40%, #091520 100%)' }}>
+                    <div style={{ textAlign: 'center' }}>
+                        <div style={{ fontSize: '2rem', marginBottom: '1rem' }}>⏳</div>
+                        <p style={{ color: 'rgba(255,255,255,0.6)' }}>Loading application...</p>
+                    </div>
+                </div>
+            );
+        }
+
+        // If not logged in, show login page
+        if (!session) {
+            return <LoginPage onLoginSuccess={handleLoginSuccess} />;
+        }
+
         const nav = [
             { id: 'dashboard', label: 'Dashboard', icon: '📊' },
             { id: 'practice', label: 'Practice Profile', icon: '🏢' },
@@ -6375,7 +7303,7 @@
                                 <div className="space-y-4">
                                     <div>
                                         <label className="text-sm font-medium text-gray-700 mb-2" style={{ display: 'block' }}>Platform Name</label>
-                                        <input className="input" defaultValue="Opteo Health RCM Platform" />
+                                        <input className="input" defaultValue="VanguardRCM Platform" />
                                     </div>
                                     <div>
                                         <label className="text-sm font-medium text-gray-700 mb-2" style={{ display: 'block' }}>Default Payer</label>
@@ -6540,6 +7468,7 @@
                                 )}
                             </div>
                         </div>
+                        <UserManagementPanel currentUserRole={userRole} currentUserEmail={userEmail} />
                     </div>
                 );
                 default: return <Dashboard />;
@@ -6552,8 +7481,8 @@
                     <div style={{ padding: '1.25rem 1rem', borderBottom: '1px solid rgba(255,255,255,0.08)' }}>
                         <div className="flex items-center justify-between">
                             <div className="flex items-center gap-3" style={{ justifyContent: !sidebarOpen ? 'center' : undefined, width: !sidebarOpen ? '100%' : undefined }}>
-                                <div style={{ width: '2.5rem', height: '2.5rem', background: 'var(--gradient-accent)', borderRadius: 'var(--radius-md)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 800, color: '#fff', fontSize: '.7rem', letterSpacing: '0.05em', boxShadow: '0 2px 10px rgba(192,132,252,0.4)' }}>OH</div>
-                                {sidebarOpen && <div><p style={{ fontWeight: 700, fontSize: '.875rem', color: '#fff', letterSpacing: '-0.01em' }}>Opteo Health</p><p style={{ fontSize: '.7rem', color: 'rgba(255,255,255,0.45)', fontWeight: 500, marginTop: '1px' }}>Revenue Cycle Platform</p></div>}
+                                <div style={{ width: '2.5rem', height: '2.5rem', background: 'var(--gradient-accent)', borderRadius: 'var(--radius-md)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 800, color: '#fff', fontSize: '.7rem', letterSpacing: '0.05em', boxShadow: '0 2px 10px rgba(192,132,252,0.4)' }}>VR</div>
+                                {sidebarOpen && <div><p style={{ fontWeight: 700, fontSize: '.875rem', color: '#fff', letterSpacing: '-0.01em' }}>VanguardRCM</p><p style={{ fontSize: '.7rem', color: 'rgba(255,255,255,0.45)', fontWeight: 500, marginTop: '1px' }}>Revenue Cycle Platform</p></div>}
                             </div>
                             {sidebarOpen && <button onClick={() => setSidebarOpen(false)} style={{ background: 'rgba(255,255,255,0.06)', border: 'none', color: 'rgba(255,255,255,0.4)', cursor: 'pointer', borderRadius: 'var(--radius-sm)', width: '1.75rem', height: '1.75rem', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '.75rem', transition: 'all .2s' }}>‹</button>}
                         </div>
@@ -6576,7 +7505,7 @@
                             <div className="flex items-center gap-4">
                                 {!sidebarOpen && <button onClick={() => setSidebarOpen(true)} style={{ background: 'rgba(255,255,255,0.05)', border: 'none', color: 'rgba(255,255,255,0.6)', cursor: 'pointer', borderRadius: 'var(--radius-sm)', width: '2rem', height: '2rem', display: 'flex', alignItems: 'center', justifyContent: 'center', transition: 'all .2s' }}>›</button>}
                                 <div>
-                                    <h1 style={{ fontSize: '1.25rem', fontWeight: 700, color: '#f1f5f9', letterSpacing: '-0.02em' }}>Opteo Health RCM Platform</h1>
+                                    <h1 style={{ fontSize: '1.25rem', fontWeight: 700, color: '#f1f5f9', letterSpacing: '-0.02em' }}>VanguardRCM Platform</h1>
                                     <p style={{ fontSize: '.8rem', color: 'rgba(255,255,255,0.3)', marginTop: '1px' }}>Multi-Agent Revenue Cycle Automation</p>
                                 </div>
                             </div>
@@ -6587,10 +7516,11 @@
                                 </div>
                                 <button className="relative transition" style={{ background: 'rgba(255,255,255,0.05)', border: 'none', cursor: 'pointer', borderRadius: 'var(--radius-md)', width: '2.25rem', height: '2.25rem', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1rem' }}>🔔<span className="absolute" style={{ top: '.375rem', right: '.375rem', width: '.45rem', height: '.45rem', background: '#ef4444', borderRadius: '50%', border: '2px solid white' }}></span></button>
                                 <div style={{ width: '1px', height: '1.5rem', background: 'rgba(255,255,255,0.07)' }} />
-                                <div className="flex items-center gap-2" style={{ cursor: 'pointer' }}>
-                                    <div style={{ width: '2.25rem', height: '2.25rem', background: 'var(--gradient-accent)', borderRadius: 'var(--radius-md)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 700, color: '#fff', fontSize: '.75rem', boxShadow: '0 2px 8px rgba(99,102,241,0.25)' }}>AW</div>
-                                    <div><span style={{ fontSize: '.8125rem', fontWeight: 600, color: '#f1f5f9', display: 'block', lineHeight: 1.2 }}>Alicia Walker</span><span style={{ fontSize: '.7rem', color: 'rgba(255,255,255,0.3)' }}>Administrator</span></div>
+                                <div className="flex items-center gap-2">
+                                    <div style={{ width: '2.25rem', height: '2.25rem', background: 'var(--gradient-accent)', borderRadius: 'var(--radius-md)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 700, color: '#fff', fontSize: '.75rem', boxShadow: '0 2px 8px rgba(99,102,241,0.25)' }}>{userEmail ? userEmail.charAt(0).toUpperCase() : 'U'}</div>
+                                    <div><span style={{ fontSize: '.8125rem', fontWeight: 600, color: '#f1f5f9', display: 'block', lineHeight: 1.2 }}>{userFullName || userEmail || 'User'}</span><span style={{ fontSize: '.7rem', color: 'rgba(255,255,255,0.3)' }}>{userRole === 'global_admin' ? 'Global Admin' : userRole === 'user_admin' ? 'User Admin' : 'Member'}</span></div>
                                 </div>
+                                <button onClick={handleLogout} style={{ marginLeft: '1rem', padding: '.5rem 1rem', background: 'rgba(248,113,113,0.1)', border: '1px solid rgba(248,113,113,0.2)', borderRadius: 'var(--radius-md)', color: '#fca5a5', fontSize: '.75rem', fontWeight: 600, cursor: 'pointer', transition: 'all .2s' }}>Logout</button>
                             </div>
                         </div>
                     </div>
@@ -6598,7 +7528,7 @@
                     <div className="flex-1 overflow-auto" style={{ background: 'linear-gradient(135deg, #0f0720 0%, #0c1222 40%, #091520 100%)' }}><div style={{ padding: '1.75rem 2rem' }}>{renderPage()}</div></div>
                     {/* === PREMIUM FOOTER === */}
                     <div style={{ padding: '.75rem 2rem', borderTop: '1px solid rgba(255,255,255,0.05)', background: 'rgba(15,20,35,0.95)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                        <p style={{ fontSize: '.7rem', color: 'rgba(255,255,255,0.3)' }}>&copy; 2026 Opteo Health Technologies. All rights reserved.</p>
+                        <p style={{ fontSize: '.7rem', color: 'rgba(255,255,255,0.3)' }}>&copy; 2026 VanguardRCM Technologies. All rights reserved.</p>
                         <p style={{ fontSize: '.7rem', color: 'rgba(255,255,255,0.1)' }}>Last synced: {new Date().toLocaleTimeString()}</p>
                     </div>
                 </div>
