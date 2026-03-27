@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up - VanguardRCM</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html, body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F2EFE2;
+            color: #4A5253;
+        }
+
+        header {
+            background-color: #FFFFFF;
+            border-bottom: 1px solid #DDD9CD;
+            padding: 1rem 2rem;
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo-group {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .logo-circle {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: #697C70;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #FFFFFF;
+            font-weight: 600;
+            font-size: 18px;
+        }
+
+        .logo-text {
+            font-size: 16px;
+            font-weight: 500;
+            color: #2D3536;
+            letter-spacing: -0.02em;
+        }
+
+        .header-right a {
+            font-size: 14px;
+            color: #7A8486;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .header-right a:hover {
+            color: #697C70;
+        }
+
+        .signup-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 3rem 2rem;
+        }
+
+        .pricing-section {
+            margin-bottom: 5rem;
+        }
+
+        .section-heading {
+            font-size: 44px;
+            font-weight: 300;
+            color: #2D3536;
+            text-align: center;
+            margin-bottom: 1rem;
+            letter-spacing: -0.02em;
+        }
+
+        .section-subheading {
+            font-size: 16px;
+            color: #4A5253;
+            text-align: center;
+            max-width: 600px;
+            margin: 0 auto 1.5rem;
+        }
+
+        .billing-toggle {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 3rem;
+        }
+
+        .toggle-label {
+            font-size: 14px;
+            color: #4A5253;
+            font-weight: 500;
+        }
+
+        .toggle-switch {
+            position: relative;
+            width: 50px;
+            height: 28px;
+            background-color: #DDD9CD;
+            border-radius: 14px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .toggle-switch.active {
+            background-color: #697C70;
+        }
+
+        .toggle-switch-knob {
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            width: 24px;
+            height: 24px;
+            background-color: #FFFFFF;
+            border-radius: 12px;
+            transition: left 0.3s ease;
+            box-shadow: 0 2px 4px rgba(45, 53, 54, 0.1);
+        }
+
+        .toggle-switch.active .toggle-switch-knob {
+            left: 24px;
+        }
+
+        .save-badge {
+            background-color: #B3C9D6;
+            color: #2D3536;
+            padding: 0.4rem 0.8rem;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .pricing-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2.5rem;
+            margin-bottom: 3rem;
+        }
+
+        .pricing-card {
+            background-color: #FFFFFF;
+            border: 1.5px solid #DDD9CD;
+            border-radius: 14px;
+            padding: 2.5rem;
+            position: relative;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .pricing-card:hover {
+            border-color: #98AA9D;
+            box-shadow: 0 8px 20px rgba(45, 53, 54, 0.06);
+        }
+
+        .pricing-card.selected {
+            border-color: #697C70;
+            box-shadow: 0 8px 24px rgba(105, 124, 112, 0.12);
+            background-color: #F8F7F2;
+        }
+
+        .pricing-card.popular {
+            border-color: #B3C9D6;
+            box-shadow: 0 8px 24px rgba(179, 201, 214, 0.2);
+            transform: scale(1.02);
+        }
+
+        .pricing-card.popular.selected {
+            box-shadow: 0 12px 32px rgba(179, 201, 214, 0.25);
+        }
+
+        .pricing-badge {
+            position: absolute;
+            top: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #B3C9D6;
+            color: #2D3536;
+            padding: 0.4rem 1rem;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        .pricing-radio {
+            position: absolute;
+            top: 2rem;
+            right: 2rem;
+            width: 24px;
+            height: 24px;
+            border: 2px solid #DDD9CD;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background-color: #FFFFFF;
+        }
+
+        .pricing-card.selected .pricing-radio {
+            border-color: #697C70;
+            background-color: #697C70;
+        }
+
+        .pricing-radio::after {
+            content: "";
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 8px;
+            height: 8px;
+            background-color: #FFFFFF;
+            border-radius: 50%;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .pricing-card.selected .pricing-radio::after {
+            opacity: 1;
+        }
+
+        .pricing-name {
+            font-size: 18px;
+            font-weight: 600;
+            color: #2D3536;
+            margin-bottom: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .pricing-price {
+            font-size: 32px;
+            font-weight: 600;
+            color: #697C70;
+            margin-bottom: 0.25rem;
+        }
+
+        .pricing-price-term {
+            font-size: 13px;
+            color: #7A8486;
+            margin-bottom: 2rem;
+        }
+
+        .pricing-features {
+            list-style: none;
+            margin-bottom: 2rem;
+        }
+
+        .pricing-features li {
+            font-size: 14px;
+            color: #4A5253;
+            padding: 0.7rem 0;
+            border-bottom: 1px solid #EBE8DC;
+        }
+
+        .pricing-features li:last-child {
+            border-bottom: none;
+        }
+
+        .form-section {
+            background-color: #FFFFFF;
+            border-radius: 14px;
+            padding: 3rem;
+            border: 1px solid #DDD9CD;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .form-section h2 {
+            font-size: 28px;
+            font-weight: 300;
+            color: #2D3536;
+            margin-bottom: 2rem;
+            text-align: center;
+            letter-spacing: -0.02em;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 13px;
+            font-weight: 500;
+            color: #2D3536;
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 0.9rem 1.2rem;
+            border: 1px solid #DDD9CD;
+            border-radius: 8px;
+            background-color: #FFFFFF;
+            font-family: 'Inter', sans-serif;
+            font-size: 14px;
+            color: #4A5253;
+            transition: all 0.3s ease;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #697C70;
+            box-shadow: 0 0 0 3px rgba(105, 124, 112, 0.08);
+        }
+
+        .form-group input::placeholder {
+            color: #98AA9D;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+        }
+
+        .btn-create {
+            width: 100%;
+            padding: 1rem;
+            background-color: #697C70;
+            color: #FFFFFF;
+            border: none;
+            border-radius: 10px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .btn-create:hover {
+            background-color: #586B60;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(105, 124, 112, 0.2);
+        }
+
+        .form-footer {
+            text-align: center;
+            font-size: 12px;
+            color: #7A8486;
+            border-top: 1px solid #DDD9CD;
+            padding-top: 1.5rem;
+        }
+
+        .form-footer a {
+            color: #697C70;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .form-footer a:hover {
+            color: #586B60;
+        }
+
+        .login-link {
+            text-align: center;
+            margin-top: 1.5rem;
+            font-size: 14px;
+            color: #4A5253;
+        }
+
+        .login-link a {
+            color: #697C70;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .login-link a:hover {
+            color: #586B60;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        @media (max-width: 768px) {
+            .signup-container {
+                padding: 2rem 1.5rem;
+            }
+
+            .section-heading {
+                font-size: 32px;
+            }
+
+            .pricing-cards {
+                grid-template-columns: 1fr;
+            }
+
+            .pricing-card.popular {
+                transform: scale(1);
+            }
+
+            .form-section {
+                padding: 2rem 1.5rem;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <div class="logo-group">
+                <div class="logo-circle">VR</div>
+                <span class="logo-text">VanguardRCM</span>
+            </div>
+            <div class="header-right">
+                <a href="login.html">Already have an account? Sign in</a>
+            </div>
+        </div>
+    </header>
+
+    <div class="signup-container">
+        <section class="pricing-section">
+            <h2 class="section-heading">Choose your plan</h2>
+            <p class="section-subheading">Start with a 14-day free trial. No credit card required.</p>
+
+            <div class="billing-toggle" style="justify-content: center;">
+                <span class="toggle-label">Monthly</span>
+                <div class="toggle-switch" id="billingToggle" onclick="toggleBilling()">
+                    <div class="toggle-switch-knob"></div>
+                </div>
+                <span class="toggle-label">Annual</span>
+                <span class="save-badge">Save 20%</span>
+            </div>
+
+            <div class="pricing-cards">
+                <div class="pricing-card" onclick="selectPlan(this, 'starter')">
+                    <div class="pricing-radio"></div>
+                    <div class="pricing-name">Starter</div>
+                    <div class="pricing-price" id="starter-price">$499</div>
+                    <div class="pricing-price-term">/month</div>
+                    <ul class="pricing-features">
+                        <li>Up to 500 patient records</li>
+                        <li>Basic eligibility verification</li>
+                        <li>Core claim management</li>
+                        <li>Email support</li>
+                        <li>Monthly reporting</li>
+                    </ul>
+                </div>
+
+                <div class="pricing-card popular selected" onclick="selectPlan(this, 'pro')">
+                    <div class="pricing-badge">Most Popular</div>
+                    <div class="pricing-radio"></div>
+                    <div class="pricing-name">Pro</div>
+                    <div class="pricing-price" id="pro-price">$1,299</div>
+                    <div class="pricing-price-term">/month</div>
+                    <ul class="pricing-features">
+                        <li>Unlimited patient records</li>
+                        <li>Advanced eligibility & cost share</li>
+                        <li>AI-powered coding assistance</li>
+                        <li>Denial management tools</li>
+                        <li>Real-time analytics dashboard</li>
+                        <li>Priority support</li>
+                        <li>Custom integrations</li>
+                    </ul>
+                </div>
+
+                <div class="pricing-card" onclick="selectPlan(this, 'enterprise')">
+                    <div class="pricing-radio"></div>
+                    <div class="pricing-name">Enterprise</div>
+                    <div class="pricing-price" id="enterprise-price">Custom</div>
+                    <div class="pricing-price-term">pricing</div>
+                    <ul class="pricing-features">
+                        <li>Unlimited everything</li>
+                        <li>White-label option</li>
+                        <li>Dedicated account manager</li>
+                        <li>Custom integrations & API</li>
+                        <li>Advanced compliance features</li>
+                        <li>On-premise deployment</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <section class="form-section">
+            <h2>Create your account</h2>
+            <form onsubmit="handleSubmit(event);">
+                <div class="form-group">
+                    <label for="org-name">Organization Name</label>
+                    <input type="text" id="org-name" placeholder="Healthcare Organization Inc." required>
+                </div>
+
+                <div class="form-group">
+                    <label for="full-name">Full Name</label>
+                    <input type="text" id="full-name" placeholder="John Doe" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+                    <input type="email" id="email" placeholder="you@example.com" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" placeholder="Create a secure password" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="confirm-password">Confirm Password</label>
+                    <input type="password" id="confirm-password" placeholder="Confirm your password" required>
+                </div>
+
+                <button type="submit" class="btn-create">Create Account</button>
+
+                <div class="form-footer">
+                    By creating an account, you agree to our <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>
+                </div>
+
+                <div class="login-link">
+                    Already have an account? <a href="login.html">Sign in</a>
+                </div>
+            </form>
+        </section>
+    </div>
+
+    <script>
+        let selectedPlan = 'pro';
+        let isAnnual = false;
+
+        const prices = {
+            monthly: {
+                starter: '$499',
+                pro: '$1,299',
+                enterprise: 'Custom'
+            },
+            annual: {
+                starter: '$4,791',
+                pro: '$12,471',
+                enterprise: 'Custom'
+            }
+        };
+
+        function toggleBilling() {
+            isAnnual = !isAnnual;
+            const toggle = document.getElementById('billingToggle');
+            toggle.classList.toggle('active');
+
+            const mode = isAnnual ? 'annual' : 'monthly';
+            document.getElementById('starter-price').textContent = prices[mode].starter;
+            document.getElementById('pro-price').textContent = prices[mode].pro;
+            document.getElementById('enterprise-price').textContent = prices[mode].enterprise;
+        }
+
+        function selectPlan(element, plan) {
+            document.querySelectorAll('.pricing-card').forEach(card => {
+                card.classList.remove('selected');
+            });
+            element.classList.add('selected');
+            selectedPlan = plan;
+        }
+
+        function handleSubmit(event) {
+            event.preventDefault();
+            const orgName = document.getElementById('org-name').value;
+            const fullName = document.getElementById('full-name').value;
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirm-password').value;
+
+            if (password !== confirmPassword) {
+                alert('Passwords do not match!');
+                return;
+            }
+
+            alert(`Account created!\nPlan: ${selectedPlan.toUpperCase()}\nOrganization: ${orgName}\nWelcome, ${fullName}!`);
+            window.location.href = 'index.html';
+        }
+
+        document.querySelectorAll('.pricing-card')[1].classList.add('selected');
+    </script>
+</body>
+</html>

@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign In - VanguardRCM</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html, body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F2EFE2;
+            color: #4A5253;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        header {
+            background-color: #FFFFFF;
+            border-bottom: 1px solid #DDD9CD;
+            padding: 1rem 2rem;
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo-group {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .logo-circle {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: #697C70;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #FFFFFF;
+            font-weight: 600;
+            font-size: 18px;
+        }
+
+        .logo-text {
+            font-size: 16px;
+            font-weight: 500;
+            color: #2D3536;
+            letter-spacing: -0.02em;
+        }
+
+        .header-right a {
+            font-size: 14px;
+            color: #7A8486;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .header-right a:hover {
+            color: #697C70;
+        }
+
+        .login-container {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+
+        .login-card {
+            background-color: #FFFFFF;
+            border-radius: 16px;
+            padding: 3rem;
+            max-width: 420px;
+            width: 100%;
+            box-shadow: 0 2px 8px rgba(45, 53, 54, 0.04);
+            border: 1px solid #DDD9CD;
+        }
+
+        .login-header {
+            text-align: center;
+            margin-bottom: 2.5rem;
+        }
+
+        .card-logo {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-color: #697C70;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #FFFFFF;
+            font-weight: 600;
+            font-size: 24px;
+            margin: 0 auto 1.5rem;
+        }
+
+        .login-heading {
+            font-size: 24px;
+            font-weight: 300;
+            color: #2D3536;
+            margin-bottom: 0.5rem;
+        }
+
+        .login-subheading {
+            font-size: 14px;
+            color: #7A8486;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 13px;
+            font-weight: 500;
+            color: #2D3536;
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 0.9rem 1.2rem;
+            border: 1px solid #DDD9CD;
+            border-radius: 8px;
+            background-color: #FFFFFF;
+            font-family: 'Inter', sans-serif;
+            font-size: 14px;
+            color: #4A5253;
+            transition: all 0.3s ease;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #697C70;
+            box-shadow: 0 0 0 3px rgba(105, 124, 112, 0.08);
+        }
+
+        .form-group input::placeholder {
+            color: #98AA9D;
+        }
+
+        .password-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .forgot-password {
+            font-size: 13px;
+            color: #B3C9D6;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .forgot-password:hover {
+            color: #8AAFBF;
+        }
+
+        .btn-signin {
+            width: 100%;
+            padding: 1rem;
+            background-color: #697C70;
+            color: #FFFFFF;
+            border: none;
+            border-radius: 10px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: 1.5rem;
+        }
+
+        .btn-signin:hover {
+            background-color: #586B60;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(105, 124, 112, 0.2);
+        }
+
+        .divider {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            color: #98AA9D;
+        }
+
+        .divider::before,
+        .divider::after {
+            content: "";
+            flex: 1;
+            height: 1px;
+            background-color: #DDD9CD;
+        }
+
+        .divider::before {
+            margin-right: 1rem;
+        }
+
+        .divider::after {
+            margin-left: 1rem;
+        }
+
+        .signup-link {
+            text-align: center;
+            font-size: 14px;
+            color: #4A5253;
+        }
+
+        .signup-link a {
+            color: #697C70;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .signup-link a:hover {
+            color: #586B60;
+        }
+
+        .card-footer {
+            text-align: center;
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 1px solid #DDD9CD;
+            font-size: 12px;
+            color: #98AA9D;
+        }
+
+        @media (max-width: 640px) {
+            .login-card {
+                padding: 2rem 1.5rem;
+            }
+
+            .login-heading {
+                font-size: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <div class="logo-group">
+                <div class="logo-circle">VR</div>
+                <span class="logo-text">VanguardRCM</span>
+            </div>
+            <div class="header-right">
+                <a href="signup.html">Don't have an account? Sign up</a>
+            </div>
+        </div>
+    </header>
+
+    <div class="login-container">
+        <div class="login-card">
+            <div class="login-header">
+                <div class="card-logo">VR</div>
+                <h1 class="login-heading">Welcome back</h1>
+                <p class="login-subheading">Sign in to your account</p>
+            </div>
+
+            <form onsubmit="event.preventDefault(); window.location.href='index.html';">
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+                    <input type="email" id="email" placeholder="you@example.com" required>
+                </div>
+
+                <div class="password-row">
+                    <div class="form-group" style="margin-bottom: 0; flex: 1;">
+                        <label for="password">Password</label>
+                        <input type="password" id="password" placeholder="&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;" required>
+                    </div>
+                </div>
+
+                <div style="text-align: right; margin-bottom: 2rem;">
+                    <a href="#" class="forgot-password">Forgot password?</a>
+                </div>
+
+                <button type="submit" class="btn-signin">Sign In</button>
+
+                <div class="divider">or</div>
+
+                <div class="signup-link">
+                    Don't have an account? <a href="signup.html">Sign up</a>
+                </div>
+            </form>
+
+            <div class="card-footer">
+                &copy; 2026 VanguardRCM Technologies. All rights reserved.
+            </div>
+        </div>
+    </div>
+</body>
+</html>

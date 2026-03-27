@@ -1,0 +1,1024 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VanguardRCM - Intelligent Revenue Cycle Automation</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html, body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F2EFE2;
+            color: #4A5253;
+            line-height: 1.7;
+        }
+
+        nav {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 1px solid #DDD9CD;
+            padding: 1.2rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            backdrop-filter: blur(10px);
+            background-color: rgba(242, 239, 226, 0.95);
+        }
+
+        .nav-left {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .logo-circle {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: #697C70;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #FFFFFF;
+            font-weight: 600;
+            font-size: 18px;
+        }
+
+        .logo-text {
+            font-size: 16px;
+            font-weight: 500;
+            color: #2D3536;
+            letter-spacing: -0.02em;
+        }
+
+        .nav-center {
+            display: flex;
+            gap: 3rem;
+        }
+
+        .nav-center a {
+            font-size: 14px;
+            font-weight: 400;
+            color: #7A8486;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .nav-center a:hover {
+            color: #697C70;
+        }
+
+        .nav-right {
+            display: flex;
+            gap: 1.5rem;
+            align-items: center;
+        }
+
+        .nav-right a {
+            font-size: 14px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .sign-in {
+            color: #7A8486;
+        }
+
+        .sign-in:hover {
+            color: #697C70;
+        }
+
+        .btn-outlined {
+            padding: 0.65rem 1.5rem;
+            border: 1.5px solid #697C70;
+            color: #697C70;
+            border-radius: 8px;
+            font-weight: 500;
+            font-size: 14px;
+            background-color: transparent;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-outlined:hover {
+            background-color: rgba(152, 170, 157, 0.12);
+            border-color: #98AA9D;
+            color: #586B60;
+        }
+
+        .hero {
+            padding: 6rem 2rem;
+            text-align: center;
+            background: linear-gradient(135deg, #F2EFE2 0%, #E8E5D8 50%, #E4E9E6 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .hero-label {
+            font-size: 12px;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            color: #98AA9D;
+            margin-bottom: 1.5rem;
+        }
+
+        .hero-heading {
+            font-size: 56px;
+            font-weight: 300;
+            color: #2D3536;
+            margin-bottom: 1.5rem;
+            line-height: 1.2;
+            letter-spacing: -0.02em;
+        }
+
+        .hero-heading strong {
+            font-weight: 600;
+        }
+
+        .hero-subheading {
+            font-size: 18px;
+            font-weight: 400;
+            color: #4A5253;
+            max-width: 700px;
+            margin: 0 auto 3rem;
+            line-height: 1.8;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 1.5rem;
+            justify-content: center;
+            margin-bottom: 4rem;
+        }
+
+        .btn-primary {
+            padding: 1rem 2.5rem;
+            background-color: #697C70;
+            color: #FFFFFF;
+            border: none;
+            border-radius: 10px;
+            font-size: 15px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            background-color: #586B60;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(105, 124, 112, 0.2);
+        }
+
+        .btn-secondary {
+            padding: 1rem 2.5rem;
+            background-color: transparent;
+            color: #697C70;
+            border: 1.5px solid #98AA9D;
+            border-radius: 10px;
+            font-size: 15px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-secondary:hover {
+            background-color: rgba(152, 170, 157, 0.1);
+            border-color: #697C70;
+        }
+
+        .hero-stats {
+            display: flex;
+            gap: 2rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .stat-card {
+            background-color: #FFFFFF;
+            padding: 1.5rem 2rem;
+            border-radius: 12px;
+            min-width: 200px;
+            box-shadow: 0 2px 8px rgba(45, 53, 54, 0.04);
+            border-top: 2px solid #697C70;
+        }
+
+        .stat-value {
+            font-size: 24px;
+            font-weight: 600;
+            color: #697C70;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            font-size: 13px;
+            font-weight: 400;
+            color: #7A8486;
+            letter-spacing: 0.05em;
+        }
+
+        .trusted-by {
+            background-color: #EBE8DC;
+            padding: 3rem 2rem;
+            text-align: center;
+        }
+
+        .trusted-label {
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            color: #98AA9D;
+            margin-bottom: 2rem;
+            font-weight: 500;
+        }
+
+        .trusted-logos {
+            display: flex;
+            gap: 3rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .trusted-name {
+            font-size: 14px;
+            color: #4A5253;
+            font-weight: 500;
+        }
+
+        section {
+            padding: 5rem 2rem;
+        }
+
+        section h2 {
+            font-size: 44px;
+            font-weight: 300;
+            text-align: center;
+            color: #2D3536;
+            margin-bottom: 1rem;
+            letter-spacing: -0.02em;
+        }
+
+        section h2 strong {
+            font-weight: 600;
+        }
+
+        .section-intro {
+            font-size: 16px;
+            color: #4A5253;
+            text-align: center;
+            max-width: 600px;
+            margin: 0 auto 3.5rem;
+        }
+
+        .platform-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2.5rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .platform-card {
+            background-color: #FFFFFF;
+            padding: 2.5rem;
+            border-radius: 14px;
+            border-top: 2px solid #98AA9D;
+            box-shadow: 0 2px 8px rgba(45, 53, 54, 0.04);
+            transition: all 0.3s ease;
+        }
+
+        .platform-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 20px rgba(45, 53, 54, 0.06);
+            border-top-color: #697C70;
+        }
+
+        .platform-card h3 {
+            font-size: 18px;
+            font-weight: 600;
+            color: #2D3536;
+            margin-bottom: 1rem;
+        }
+
+        .platform-card ul {
+            list-style: none;
+        }
+
+        .platform-card li {
+            font-size: 14px;
+            color: #4A5253;
+            margin-bottom: 0.8rem;
+            padding-left: 1.5rem;
+            position: relative;
+        }
+
+        .platform-card li:before {
+            content: "\2022";
+            position: absolute;
+            left: 0;
+            color: #697C70;
+        }
+
+        .use-cases-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .use-case-card {
+            background-color: #FFFFFF;
+            padding: 2.5rem;
+            border-radius: 14px;
+            border: 1px solid #DDD9CD;
+            box-shadow: 0 2px 8px rgba(45, 53, 54, 0.03);
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .use-case-card:hover {
+            border-color: #98AA9D;
+            box-shadow: 0 8px 20px rgba(45, 53, 54, 0.06);
+        }
+
+        .use-case-icon {
+            width: 60px;
+            height: 60px;
+            margin: 0 auto 1.5rem;
+            background-color: #E4E9E6;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+        }
+
+        .use-case-card h3 {
+            font-size: 16px;
+            font-weight: 600;
+            color: #2D3536;
+            margin-bottom: 1rem;
+        }
+
+        .use-case-card p {
+            font-size: 14px;
+            color: #4A5253;
+            line-height: 1.6;
+        }
+
+        .features-section {
+            background-color: #EBE8DC;
+        }
+
+        .feature-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto 5rem;
+        }
+
+        .feature-row:last-child {
+            margin-bottom: 0;
+        }
+
+        .feature-row.reverse {
+            direction: rtl;
+        }
+
+        .feature-row.reverse > * {
+            direction: ltr;
+        }
+
+        .feature-text h3 {
+            font-size: 28px;
+            font-weight: 600;
+            color: #2D3536;
+            margin-bottom: 1rem;
+        }
+
+        .feature-text p {
+            font-size: 15px;
+            color: #4A5253;
+            line-height: 1.8;
+            margin-bottom: 1.5rem;
+        }
+
+        .feature-visual {
+            background: linear-gradient(135deg, #E4E9E6 0%, #DAE3E6 100%);
+            height: 300px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature-visual::before {
+            content: "";
+            position: absolute;
+            width: 200px;
+            height: 200px;
+            background-color: rgba(105, 124, 112, 0.06);
+            border-radius: 50%;
+            opacity: 0.5;
+        }
+
+        .feature-visual::after {
+            content: "";
+            position: absolute;
+            width: 100px;
+            height: 100px;
+            background-color: rgba(179, 201, 214, 0.12);
+            border-radius: 50%;
+            opacity: 0.3;
+            top: 20%;
+            right: 10%;
+        }
+
+        .pricing-section {
+            background-color: #FFFFFF;
+        }
+
+        .pricing-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2.5rem;
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        .pricing-card {
+            background-color: #FFFFFF;
+            border: 1.5px solid #DDD9CD;
+            border-radius: 14px;
+            padding: 2.5rem;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .pricing-card.popular {
+            border-color: #B3C9D6;
+            box-shadow: 0 8px 24px rgba(179, 201, 214, 0.2);
+            transform: scale(1.02);
+        }
+
+        .pricing-card.popular:hover {
+            box-shadow: 0 12px 32px rgba(179, 201, 214, 0.25);
+        }
+
+        .pricing-badge {
+            position: absolute;
+            top: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #B3C9D6;
+            color: #2D3536;
+            padding: 0.4rem 1rem;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        .pricing-name {
+            font-size: 18px;
+            font-weight: 600;
+            color: #2D3536;
+            margin-bottom: 0.5rem;
+        }
+
+        .pricing-price {
+            font-size: 32px;
+            font-weight: 600;
+            color: #697C70;
+            margin-bottom: 0.25rem;
+        }
+
+        .pricing-price-term {
+            font-size: 13px;
+            color: #7A8486;
+            margin-bottom: 2rem;
+        }
+
+        .pricing-features {
+            list-style: none;
+            margin-bottom: 2rem;
+        }
+
+        .pricing-features li {
+            font-size: 14px;
+            color: #4A5253;
+            padding: 0.7rem 0;
+            border-bottom: 1px solid #EBE8DC;
+        }
+
+        .pricing-features li:last-child {
+            border-bottom: none;
+        }
+
+        .pricing-card button {
+            width: 100%;
+            padding: 1rem;
+            border: none;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .pricing-card.popular button {
+            background-color: #697C70;
+            color: #FFFFFF;
+        }
+
+        .pricing-card.popular button:hover {
+            background-color: #586B60;
+        }
+
+        .pricing-card:not(.popular) button {
+            background-color: transparent;
+            border: 1.5px solid #98AA9D;
+            color: #697C70;
+        }
+
+        .pricing-card:not(.popular) button:hover {
+            background-color: rgba(152, 170, 157, 0.08);
+            border-color: #697C70;
+        }
+
+        .cta-section {
+            background: linear-gradient(135deg, #EBE8DC 0%, #E4E9E6 100%);
+            padding: 4rem 2rem;
+            text-align: center;
+        }
+
+        .cta-heading {
+            font-size: 36px;
+            font-weight: 300;
+            color: #2D3536;
+            margin-bottom: 2rem;
+            letter-spacing: -0.02em;
+        }
+
+        .cta-form {
+            display: flex;
+            gap: 1rem;
+            max-width: 500px;
+            margin: 0 auto;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .cta-form input {
+            flex: 1;
+            min-width: 200px;
+            padding: 1rem 1.5rem;
+            border: 1px solid #DDD9CD;
+            border-radius: 10px;
+            background-color: #FFFFFF;
+            font-family: 'Inter', sans-serif;
+            font-size: 14px;
+            color: #4A5253;
+        }
+
+        .cta-form input::placeholder {
+            color: #98AA9D;
+        }
+
+        .cta-form button {
+            padding: 1rem 2rem;
+            background-color: #697C70;
+            color: #FFFFFF;
+            border: none;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+        }
+
+        .cta-form button:hover {
+            background-color: #586B60;
+        }
+
+        footer {
+            background-color: #FFFFFF;
+            border-top: 1px solid #DDD9CD;
+            padding: 3rem 2rem;
+            margin-top: 5rem;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .footer-col h4 {
+            font-size: 14px;
+            font-weight: 600;
+            color: #2D3536;
+            margin-bottom: 1rem;
+        }
+
+        .footer-col ul {
+            list-style: none;
+        }
+
+        .footer-col ul li {
+            margin-bottom: 0.7rem;
+        }
+
+        .footer-col ul li a {
+            font-size: 14px;
+            color: #7A8486;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer-col ul li a:hover {
+            color: #697C70;
+        }
+
+        .footer-bottom {
+            border-top: 1px solid #DDD9CD;
+            padding-top: 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .footer-branding {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        .footer-branding .logo-circle {
+            width: 32px;
+            height: 32px;
+            font-size: 16px;
+        }
+
+        .footer-branding .logo-text {
+            font-size: 14px;
+        }
+
+        .footer-copyright {
+            font-size: 13px;
+            color: #7A8486;
+        }
+
+        @media (max-width: 768px) {
+            nav {
+                flex-direction: column;
+                gap: 1.5rem;
+                padding: 1rem 1.5rem;
+            }
+
+            .nav-center {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .hero {
+                padding: 3rem 1.5rem;
+                min-height: auto;
+            }
+
+            .hero-heading {
+                font-size: 36px;
+            }
+
+            .hero-buttons {
+                flex-direction: column;
+                margin-bottom: 2rem;
+            }
+
+            .hero-stats {
+                flex-direction: column;
+            }
+
+            .feature-row,
+            .feature-row.reverse {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+                direction: ltr;
+            }
+
+            .feature-row.reverse > * {
+                direction: ltr;
+            }
+
+            section {
+                padding: 3rem 1.5rem;
+            }
+
+            section h2 {
+                font-size: 32px;
+            }
+
+            .cta-form {
+                flex-direction: column;
+            }
+
+            .footer-bottom {
+                flex-direction: column;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="nav-left">
+            <div class="logo-circle">VR</div>
+            <span class="logo-text">VanguardRCM</span>
+        </div>
+        <div class="nav-center">
+            <a href="#platform">Platform</a>
+            <a href="#solutions">Solutions</a>
+            <a href="#pricing">Pricing</a>
+            <a href="#about">About</a>
+        </div>
+        <div class="nav-right">
+            <a href="login.html" class="sign-in">Sign In</a>
+            <a href="login.html"><button class="btn-outlined">Request Demo</button></a>
+        </div>
+    </nav>
+
+    <section class="hero">
+        <p class="hero-label">REVENUE CYCLE INTELLIGENCE</p>
+        <h1 class="hero-heading">Intelligent Automation for <strong>Modern Healthcare</strong></h1>
+        <p class="hero-subheading">VanguardRCM combines AI-powered automation with deep payer intelligence to streamline every step of your revenue cycle — from patient intake to final payment.</p>
+        <div class="hero-buttons">
+            <button class="btn-primary" onclick="window.location.href='signup.html'">Request a Demo</button>
+            <button class="btn-secondary">Explore Platform</button>
+        </div>
+        <div class="hero-stats">
+            <div class="stat-card">
+                <div class="stat-value">98.7%</div>
+                <div class="stat-label">Clean Claim Rate</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">$2.4M+</div>
+                <div class="stat-label">Recovered Annually</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">40%</div>
+                <div class="stat-label">Faster Processing</div>
+            </div>
+        </div>
+    </section>
+
+    <section class="trusted-by">
+        <p class="trusted-label">TRUSTED BY LEADING HEALTHCARE ORGANIZATIONS</p>
+        <div class="trusted-logos">
+            <span class="trusted-name">HealthFirst</span>
+            <span class="trusted-name">MedGroup</span>
+            <span class="trusted-name">CarePoint</span>
+            <span class="trusted-name">ProHealth Systems</span>
+            <span class="trusted-name">National ACO Network</span>
+            <span class="trusted-name">PrimeCare</span>
+        </div>
+    </section>
+
+    <section id="platform">
+        <h2>One Platform. <strong>Every Workflow.</strong></h2>
+        <p class="section-intro">Comprehensive revenue cycle management from patient intake through final payment recovery.</p>
+        <div class="platform-cards">
+            <div class="platform-card">
+                <h3>Patient Access</h3>
+                <ul>
+                    <li>Insurance eligibility verification</li>
+                    <li>Interactive voice response (IVR)</li>
+                    <li>Cost share estimation</li>
+                    <li>Digital intake forms</li>
+                    <li>Secure payment processing</li>
+                </ul>
+            </div>
+            <div class="platform-card">
+                <h3>Clinical Revenue</h3>
+                <ul>
+                    <li>AI-powered coding assistance</li>
+                    <li>Automated charge capture</li>
+                    <li>Intelligent claim submission</li>
+                    <li>Real-time claim tracking</li>
+                    <li>Compliance validation</li>
+                </ul>
+            </div>
+            <div class="platform-card">
+                <h3>Revenue Recovery</h3>
+                <ul>
+                    <li>Advanced denial management</li>
+                    <li>Automated appeals workflow</li>
+                    <li>Payer intelligence analytics</li>
+                    <li>Account reconciliation</li>
+                    <li>Collections optimization</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <section id="solutions">
+        <h2>Built for <strong>Every Healthcare Organization.</strong></h2>
+        <div class="use-cases-grid">
+            <div class="use-case-card">
+                <div class="use-case-icon">&#127973;</div>
+                <h3>Health Systems</h3>
+                <p>Multi-facility revenue management with centralized intelligence and compliance controls.</p>
+            </div>
+            <div class="use-case-card">
+                <div class="use-case-icon">&#128101;</div>
+                <h3>Provider Practices</h3>
+                <p>Streamlined workflow automation designed for small and mid-sized medical practices.</p>
+            </div>
+            <div class="use-case-card">
+                <div class="use-case-icon">&#9881;&#65039;</div>
+                <h3>ACOs & Networks</h3>
+                <p>Coordinated revenue cycle management across multiple care delivery organizations.</p>
+            </div>
+            <div class="use-case-card">
+                <div class="use-case-icon">&#128279;</div>
+                <h3>EHR/PM Platforms</h3>
+                <p>Deep integration with existing healthcare software ecosystems and workflows.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="features-section">
+        <h2>Everything You Need. <strong>Nothing You Don't.</strong></h2>
+
+        <div class="feature-row">
+            <div class="feature-text">
+                <h3>Practice Setup & Patient Management</h3>
+                <p>Streamline your operational foundation with intuitive setup wizards, comprehensive patient databases, and secure data management. Organize patient information efficiently with smart segmentation and intelligent workflow routing.</p>
+            </div>
+            <div class="feature-visual"></div>
+        </div>
+
+        <div class="feature-row reverse">
+            <div class="feature-text">
+                <h3>Eligibility & Financial Clearance</h3>
+                <p>Real-time insurance verification and financial responsibility estimation. Our intelligent system pre-authorizes services and collects accurate patient cost shares before the appointment.</p>
+            </div>
+            <div class="feature-visual"></div>
+        </div>
+
+        <div class="feature-row">
+            <div class="feature-text">
+                <h3>AI-Powered Coding & Claims</h3>
+                <p>Machine learning models suggest optimal diagnoses and procedures while our system validates compliance. Submit clean claims on the first attempt with higher accuracy and reduced denials.</p>
+            </div>
+            <div class="feature-visual"></div>
+        </div>
+
+        <div class="feature-row reverse">
+            <div class="feature-text">
+                <h3>Denial Management & Appeals</h3>
+                <p>Automatically identify denial patterns, categorize issues, and generate targeted appeals. Track every case through resolution with intelligent follow-up and prioritization.</p>
+            </div>
+            <div class="feature-visual"></div>
+        </div>
+
+        <div class="feature-row">
+            <div class="feature-text">
+                <h3>Analytics & Intelligence</h3>
+                <p>Comprehensive dashboards give you visibility into every metric. Monitor key performance indicators, benchmark against industry standards, and identify optimization opportunities in real time.</p>
+            </div>
+            <div class="feature-visual"></div>
+        </div>
+    </section>
+
+    <section id="pricing">
+        <h2>Simple, <strong>Transparent Pricing.</strong></h2>
+        <p class="section-intro">Choose the plan that fits your organization. Always transparent, no hidden fees.</p>
+        <div class="pricing-cards">
+            <div class="pricing-card">
+                <div class="pricing-name">Starter</div>
+                <div class="pricing-price">$499</div>
+                <div class="pricing-price-term">/month</div>
+                <ul class="pricing-features">
+                    <li>Up to 500 patient records</li>
+                    <li>Basic eligibility verification</li>
+                    <li>Core claim management</li>
+                    <li>Email support</li>
+                    <li>Monthly reporting</li>
+                </ul>
+                <button onclick="window.location.href='signup.html'">Get Started</button>
+            </div>
+
+            <div class="pricing-card popular">
+                <div class="pricing-badge">Most Popular</div>
+                <div class="pricing-name">Pro</div>
+                <div class="pricing-price">$1,299</div>
+                <div class="pricing-price-term">/month</div>
+                <ul class="pricing-features">
+                    <li>Unlimited patient records</li>
+                    <li>Advanced eligibility & cost share</li>
+                    <li>AI-powered coding assistance</li>
+                    <li>Denial management tools</li>
+                    <li>Real-time analytics dashboard</li>
+                    <li>Priority support</li>
+                    <li>Custom integrations</li>
+                </ul>
+                <button onclick="window.location.href='signup.html'">Get Started</button>
+            </div>
+
+            <div class="pricing-card">
+                <div class="pricing-name">Enterprise</div>
+                <div class="pricing-price">Custom</div>
+                <div class="pricing-price-term">pricing</div>
+                <ul class="pricing-features">
+                    <li>Unlimited everything</li>
+                    <li>White-label option</li>
+                    <li>Dedicated account manager</li>
+                    <li>Custom integrations & API</li>
+                    <li>Advanced compliance features</li>
+                    <li>On-premise deployment</li>
+                </ul>
+                <button onclick="window.location.href='login.html'">Contact Sales</button>
+            </div>
+        </div>
+    </section>
+
+    <section class="cta-section">
+        <h2 class="cta-heading">Ready to Transform Your <strong>Revenue Cycle?</strong></h2>
+        <form class="cta-form" onsubmit="event.preventDefault(); window.location.href='signup.html';">
+            <input type="email" placeholder="your@email.com" required>
+            <button type="submit">Request Demo</button>
+        </form>
+    </section>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-col">
+                <h4>Platform</h4>
+                <ul>
+                    <li><a href="#platform">Eligibility</a></li>
+                    <li><a href="#platform">Claims</a></li>
+                    <li><a href="#platform">Denials</a></li>
+                    <li><a href="#platform">Analytics</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Solutions</h4>
+                <ul>
+                    <li><a href="#solutions">Health Systems</a></li>
+                    <li><a href="#solutions">Practices</a></li>
+                    <li><a href="#solutions">ACOs</a></li>
+                    <li><a href="#solutions">EHR Partners</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Company</h4>
+                <ul>
+                    <li><a href="#about">About Us</a></li>
+                    <li><a href="#about">Blog</a></li>
+                    <li><a href="#about">Careers</a></li>
+                    <li><a href="#about">Contact</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Legal</h4>
+                <ul>
+                    <li><a href="#legal">Privacy Policy</a></li>
+                    <li><a href="#legal">Terms of Service</a></li>
+                    <li><a href="#legal">Security</a></li>
+                    <li><a href="#legal">Compliance</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <div class="footer-branding">
+                <div class="logo-circle">VR</div>
+                <span class="logo-text">VanguardRCM</span>
+            </div>
+            <span class="footer-copyright">&copy; 2026 VanguardRCM Technologies. All rights reserved.</span>
+        </div>
+    </footer>
+</body>
+</html>
