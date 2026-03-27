@@ -124,9 +124,20 @@
         .btn-home:hover { background: rgba(171,138,122,0.08); color: #39463A; }
 
         @media (max-width: 768px) {
+            nav { padding: 0.8rem 1.2rem; }
+            .nav-back { font-size: 12px; }
+            nav .nav-left svg { width: 32px; height: 32px; }
+            .logo-wordmark { font-size: 17px; }
             .demo-layout { grid-template-columns: 1fr; }
             .info-panel { padding: 0; }
+            .info-heading { font-size: 28px; }
+            .page-wrapper { padding: 2rem 1.2rem; }
+            .form-card { padding: 2rem 1.5rem; }
             .form-row { grid-template-columns: 1fr; }
+        }
+        @media (max-width: 480px) {
+            .info-heading { font-size: 24px; }
+            .info-description { font-size: 14px; }
         }
     </style>
 </head>

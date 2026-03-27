@@ -99,6 +99,38 @@
         }
         .confirm-footer a { color: #AB8A7A; text-decoration: none; font-weight: 500; }
         .confirm-footer a:hover { color: #39463A; }
+
+        /* RESPONSIVE */
+        @media (max-width: 768px) {
+            nav { padding: 0.8rem 1.2rem; }
+            svg { width: 32px; height: 32px; }
+            nav svg { width: 32px; height: 32px; }
+            .logo-wordmark { font-size: 17px; }
+            .progress-bar { padding: 1.5rem 1rem 0; }
+            .progress-circle { width: 30px; height: 30px; font-size: 12px; }
+            .progress-line { min-width: 50px; }
+            .progress-label { font-size: 9px; }
+            .confirm-card { padding: 2.5rem 2rem; }
+            .confirm-title { font-size: 24px; }
+        }
+
+        @media (max-width: 640px) {
+            .confirm-card { padding: 2rem 1.5rem; }
+            .next-steps { padding: 1.5rem; }
+            .step-item { gap: 0.8rem; }
+            .step-content h4 { font-size: 13px; }
+            .step-content p { font-size: 12px; }
+            .confirm-actions { flex-direction: column; gap: 0.8rem; }
+            .btn-primary, .btn-outline { width: 100%; justify-content: center; }
+        }
+
+        @media (max-width: 480px) {
+            .progress-line { min-width: 30px; }
+            .confirm-icon { width: 60px; height: 60px; margin-bottom: 1rem; }
+            .confirm-icon svg { width: 30px; height: 30px; }
+            .confirm-title { font-size: 20px; }
+            .confirm-subtitle { font-size: 14px; }
+        }
     </style>
 </head>
 <body>
