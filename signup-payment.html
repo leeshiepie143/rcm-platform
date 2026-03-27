@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="en" style="scroll-behavior: smooth;">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Information — VanguardRCM</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background: #F5F1EB; min-height: 100vh; }
+
+        /* NAV */
+        nav {
+            position: sticky; top: 0; z-index: 100;
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 0.8rem 2.5rem; background: rgba(245,241,235,0.85);
+            backdrop-filter: blur(16px); border-bottom: 1px solid #E0D7C7;
+        }
+        .nav-left { display: flex; align-items: center; gap: 12px; text-decoration: none; }
+        .logo-text-group { display: flex; flex-direction: column; gap: 3px; }
+        .logo-wordmark { font-size: 20px; font-weight: 600; color: #39463A; letter-spacing: 0.5px; line-height: 1; }
+        .logo-wordmark span { font-weight: 300; color: #73868A; }
+        .logo-tagline { font-size: 8px; font-weight: 500; color: #AB8A7A; letter-spacing: 3px; text-transform: uppercase; line-height: 1; }
+        .nav-back { font-size: 14px; color: #73868A; text-decoration: none; transition: color 0.3s; }
+        .nav-back:hover { color: #39463A; }
+
+        /* PROGRESS BAR */
+        .progress-bar {
+            display: flex; align-items: center; justify-content: center;
+            gap: 0; padding: 2rem 2rem 0; max-width: 600px; margin: 0 auto;
+        }
+        .progress-step { display: flex; flex-direction: column; align-items: center; gap: 0.5rem; position: relative; z-index: 1; }
+        .progress-circle {
+            width: 36px; height: 36px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 14px; font-weight: 600;
+        }
+        .progress-circle.active { background: #39463A; color: #F5F1EB; }
+        .progress-circle.inactive { background: #E0D7C7; color: #927C67; }
+        .progress-circle.completed { background: #AB8A7A; color: #F5F1EB; }
+        .progress-label { font-size: 11px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; color: #73868A; }
+        .progress-label.active { color: #39463A; }
+        .progress-line { flex: 1; height: 2px; background: #E0D7C7; min-width: 80px; margin-top: -18px; }
+        .progress-line.completed { background: #AB8A7A; }
+
+        /* FORM CONTAINER */
+        .form-container { max-width: 680px; margin: 2rem auto 3rem; padding: 0 1.5rem; }
+        .form-card {
+            background: #FFFFFF; border-radius: 16px; padding: 3rem;
+            box-shadow: 0 4px 24px rgba(57,70,58,0.06); border: 1px solid #E0D7C7;
+        }
+        .form-title { font-size: 26px; font-weight: 700; color: #39463A; margin-bottom: 0.5rem; letter-spacing: -0.02em; }
+        .form-subtitle { font-size: 14px; color: #73868A; line-height: 1.6; margin-bottom: 2.5rem; }
+
+        /* IMPORTANT NOTICE */
+        .notice-box {
+            background: linear-gradient(135deg, rgba(57,70,58,0.06), rgba(171,138,122,0.06));
+            border: 1px solid rgba(171,138,122,0.2);
+            border-left: 4px solid #AB8A7A;
+            border-radius: 12px; padding: 1.5rem;
+            margin-bottom: 2.5rem;
+        }
+        .notice-title {
+            font-size: 14px; font-weight: 700; color: #39463A; margin-bottom: 0.5rem;
+            display: flex; align-items: center; gap: 0.5rem;
+        }
+        .notice-icon { font-size: 18px; }
+        .notice-text { font-size: 13px; color: #5A5650; line-height: 1.7; }
+        .notice-text strong { color: #39463A; }
+
+        /* FORM FIELDS */
+        .form-section-label {
+            font-size: 11px; font-weight: 700; color: #AB8A7A;
+            letter-spacing: 2px; text-transform: uppercase; margin-bottom: 1.2rem;
+            padding-bottom: 0.6rem; border-bottom: 1px solid #F5F1EB;
+        }
+        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem; }
+        .form-row.full { grid-template-columns: 1fr; }
+        .form-row.thirds { grid-template-columns: 1fr 1fr 1fr; }
+        .form-group { display: flex; flex-direction: column; gap: 0.4rem; margin-bottom: 0.5rem; }
+        .form-group label { font-size: 13px; font-weight: 500; color: #39463A; }
+        .form-group input, .form-group select {
+            padding: 0.75rem 1rem; border: 1.5px solid #E0D7C7; border-radius: 10px;
+            font-family: 'Inter', sans-serif; font-size: 14px; color: #39463A;
+            background: #FAFAF8; transition: all 0.3s; outline: none;
+        }
+        .form-group input:focus, .form-group select:focus {
+            border-color: #AB8A7A; background: #FFFFFF;
+            box-shadow: 0 0 0 3px rgba(171,138,122,0.1);
+        }
+        .form-group input::placeholder { color: #B8B4AE; }
+        .form-group select {
+            cursor: pointer; appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%2373868A' d='M1 1l5 5 5-5'/%3E%3C/svg%3E");
+            background-repeat: no-repeat; background-position: right 1rem center;
+        }
+        .form-divider { height: 1px; background: #F5F1EB; margin: 1.5rem 0 2rem; }
+
+        /* PAYMENT TYPE TOGGLE */
+        .payment-toggle {
+            display: flex; gap: 0; margin-bottom: 1.5rem;
+            background: #F5F1EB; border-radius: 10px; padding: 4px; width: fit-content;
+        }
+        .payment-toggle-btn {
+            padding: 0.6rem 1.5rem; border: none; border-radius: 8px;
+            font-family: 'Inter', sans-serif; font-size: 13px; font-weight: 600;
+            cursor: pointer; transition: all 0.3s; color: #73868A; background: transparent;
+        }
+        .payment-toggle-btn.active { background: #FFFFFF; color: #39463A; box-shadow: 0 1px 4px rgba(0,0,0,0.06); }
+
+        /* ORDER SUMMARY SIDEBAR */
+        .order-summary {
+            background: rgba(57,70,58,0.04); border-radius: 12px; padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        .order-summary-title {
+            font-size: 12px; font-weight: 700; color: #AB8A7A;
+            letter-spacing: 2px; text-transform: uppercase; margin-bottom: 1rem;
+        }
+        .order-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem; }
+        .order-row:last-child { margin-bottom: 0; padding-top: 0.8rem; border-top: 1px solid rgba(57,70,58,0.1); }
+        .order-label { font-size: 13px; color: #73868A; }
+        .order-value { font-size: 13px; color: #39463A; font-weight: 600; }
+        .order-row:last-child .order-label { font-weight: 700; color: #39463A; }
+        .order-row:last-child .order-value { font-size: 16px; font-weight: 700; color: #39463A; }
+
+        /* SECURE BADGE */
+        .secure-badge {
+            display: flex; align-items: center; justify-content: center; gap: 0.5rem;
+            padding: 0.8rem; margin-bottom: 1.5rem;
+            background: rgba(57,70,58,0.03); border-radius: 8px;
+        }
+        .secure-badge svg { width: 16px; height: 16px; }
+        .secure-badge span { font-size: 12px; color: #73868A; font-weight: 500; }
+
+        /* SUBMIT */
+        .btn-submit {
+            width: 100%; padding: 1rem; margin-top: 1rem;
+            background: linear-gradient(135deg, #39463A, #4A5A4B);
+            color: #F5F1EB; border: none; border-radius: 10px;
+            font-family: 'Inter', sans-serif; font-size: 15px; font-weight: 600;
+            cursor: pointer; transition: all 0.3s;
+        }
+        .btn-submit:hover { background: linear-gradient(135deg, #2A332B, #39463A); transform: translateY(-1px); box-shadow: 0 6px 20px rgba(57,70,58,0.3); }
+        .btn-back {
+            display: block; width: 100%; text-align: center; margin-top: 0.8rem;
+            font-size: 14px; color: #73868A; text-decoration: none; padding: 0.6rem;
+            transition: color 0.3s;
+        }
+        .btn-back:hover { color: #39463A; }
+        .form-footer-note { text-align: center; font-size: 12px; color: #73868A; margin-top: 1rem; line-height: 1.6; }
+
+        .hidden { display: none; }
+
+        @media (max-width: 640px) {
+            .form-row, .form-row.thirds { grid-template-columns: 1fr; }
+            .form-card { padding: 2rem 1.5rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- NAV -->
+    <nav>
+        <a href="index.html" class="nav-left">
+            <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" width="40" height="40">
+                <circle cx="100" cy="100" r="96" fill="none" stroke="#73868A" stroke-width="1"/>
+                <circle cx="100" cy="100" r="82" fill="#39463A"/>
+                <circle cx="100" cy="100" r="70" fill="none" stroke="#E0D7C7" stroke-width="0.75" opacity="0.3"/>
+                <text x="100" y="124" font-family="Georgia,serif" font-size="92" fill="#E0D7C7" text-anchor="middle">V</text>
+            </svg>
+            <div class="logo-text-group">
+                <div class="logo-wordmark">Vanguard <span>RCM</span></div>
+                <div class="logo-tagline">Revenue Cycle Intelligence</div>
+            </div>
+        </a>
+        <a href="signup-register.html" class="nav-back">&larr; Back to Account Setup</a>
+    </nav>
+
+    <!-- PROGRESS BAR -->
+    <div class="progress-bar">
+        <div class="progress-step">
+            <div class="progress-circle completed">&#10003;</div>
+            <div class="progress-label">Account Setup</div>
+        </div>
+        <div class="progress-line completed"></div>
+        <div class="progress-step">
+            <div class="progress-circle active">2</div>
+            <div class="progress-label active">Payment Info</div>
+        </div>
+        <div class="progress-line"></div>
+        <div class="progress-step">
+            <div class="progress-circle inactive">3</div>
+            <div class="progress-label">Confirmation</div>
+        </div>
+    </div>
+
+    <!-- FORM -->
+    <div class="form-container">
+        <div class="form-card">
+            <h1 class="form-title">Payment Information</h1>
+            <p class="form-subtitle">Securely store your payment details. You will not be charged at this time.</p>
+
+            <!-- IMPORTANT NOTICE -->
+            <div class="notice-box">
+                <div class="notice-title">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#AB8A7A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                    Important — Please Read
+                </div>
+                <p class="notice-text">
+                    This form is used to <strong>securely store your payment information online only</strong>. You will <strong>not be charged</strong> until a dedicated VanguardRCM onboarding specialist reaches out to you personally to:
+                </p>
+                <ul style="margin: 0.8rem 0 0 1.2rem; font-size: 13px; color: #5A5650; line-height: 2;">
+                    <li>Review and discuss the contractual terms</li>
+                    <li>Send a formal contract for your electronic signature</li>
+                    <li>Ensure you fully understand which pricing tier you selected and what is included</li>
+                    <li>Answer any questions about features, integrations, and onboarding</li>
+                </ul>
+            </div>
+
+            <!-- ORDER SUMMARY -->
+            <div class="order-summary">
+                <div class="order-summary-title">Order Summary</div>
+                <div class="order-row">
+                    <span class="order-label">Plan</span>
+                    <span class="order-value" id="orderPlan">—</span>
+                </div>
+                <div class="order-row">
+                    <span class="order-label">Base fee</span>
+                    <span class="order-value" id="orderBase">—</span>
+                </div>
+                <div class="order-row">
+                    <span class="order-label">Providers (<span id="orderProviderCount">0</span> &times; <span id="orderProviderRate">$0</span>)</span>
+                    <span class="order-value" id="orderProviderTotal">—</span>
+                </div>
+                <div class="order-row">
+                    <span class="order-label">Estimated Monthly Total</span>
+                    <span class="order-value" id="orderTotal">—</span>
+                </div>
+            </div>
+
+            <form id="paymentForm">
+                <!-- PAYMENT METHOD -->
+                <div class="form-section-label">Payment Method</div>
+                <div class="payment-toggle">
+                    <button type="button" class="payment-toggle-btn active" onclick="switchPayment('cc')">Credit Card</button>
+                    <button type="button" class="payment-toggle-btn" onclick="switchPayment('ach')">ACH / Bank Transfer</button>
+                </div>
+
+                <!-- CREDIT CARD FIELDS -->
+                <div id="cc-fields">
+                    <div class="form-row full">
+                        <div class="form-group">
+                            <label>Cardholder Name</label>
+                            <input type="text" placeholder="Name as it appears on card" id="ccName">
+                        </div>
+                    </div>
+                    <div class="form-row full">
+                        <div class="form-group">
+                            <label>Card Number</label>
+                            <input type="text" placeholder="1234 5678 9012 3456" id="ccNumber" maxlength="19">
+                        </div>
+                    </div>
+                    <div class="form-row thirds">
+                        <div class="form-group">
+                            <label>Expiration</label>
+                            <input type="text" placeholder="MM / YY" id="ccExpiry" maxlength="7">
+                        </div>
+                        <div class="form-group">
+                            <label>CVV</label>
+                            <input type="text" placeholder="123" id="ccCvv" maxlength="4">
+                        </div>
+                        <div class="form-group">
+                            <label>ZIP Code</label>
+                            <input type="text" placeholder="75201" id="ccZip" maxlength="10">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ACH FIELDS -->
+                <div id="ach-fields" class="hidden">
+                    <div class="form-row full">
+                        <div class="form-group">
+                            <label>Account Holder Name</label>
+                            <input type="text" placeholder="Name on account" id="achName">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Routing Number</label>
+                            <input type="text" placeholder="021000021" id="achRouting" maxlength="9">
+                        </div>
+                        <div class="form-group">
+                            <label>Account Number</label>
+                            <input type="text" placeholder="123456789" id="achAccount">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Account Type</label>
+                            <select id="achType">
+                                <option value="" disabled selected>Select type</option>
+                                <option>Checking</option>
+                                <option>Savings</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Bank Name</label>
+                            <input type="text" placeholder="First National Bank" id="achBank">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-divider"></div>
+
+                <!-- BILLING ADDRESS -->
+                <div class="form-section-label">Billing Address</div>
+                <div class="form-row full">
+                    <div class="form-group">
+                        <label>Street Address</label>
+                        <input type="text" placeholder="123 Main St, Suite 200" id="billAddress">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>City</label>
+                        <input type="text" placeholder="Dallas" id="billCity">
+                    </div>
+                    <div class="form-group">
+                        <label>State</label>
+                        <select id="billState">
+                            <option value="" disabled selected>Select state</option>
+                            <option>Alabama</option><option>Alaska</option><option>Arizona</option><option>Arkansas</option>
+                            <option>California</option><option>Colorado</option><option>Connecticut</option><option>Delaware</option>
+                            <option>Florida</option><option>Georgia</option><option>Hawaii</option><option>Idaho</option>
+                            <option>Illinois</option><option>Indiana</option><option>Iowa</option><option>Kansas</option>
+                            <option>Kentucky</option><option>Louisiana</option><option>Maine</option><option>Maryland</option>
+                            <option>Massachusetts</option><option>Michigan</option><option>Minnesota</option><option>Mississippi</option>
+                            <option>Missouri</option><option>Montana</option><option>Nebraska</option><option>Nevada</option>
+                            <option>New Hampshire</option><option>New Jersey</option><option>New Mexico</option><option>New York</option>
+                            <option>North Carolina</option><option>North Dakota</option><option>Ohio</option><option>Oklahoma</option>
+                            <option>Oregon</option><option>Pennsylvania</option><option>Rhode Island</option><option>South Carolina</option>
+                            <option>South Dakota</option><option>Tennessee</option><option>Texas</option><option>Utah</option>
+                            <option>Vermont</option><option>Virginia</option><option>Washington</option><option>West Virginia</option>
+                            <option>Wisconsin</option><option>Wyoming</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>ZIP Code</label>
+                        <input type="text" placeholder="75201" id="billZip">
+                    </div>
+                    <div class="form-group"></div>
+                </div>
+
+                <!-- SECURE BADGE -->
+                <div class="secure-badge">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="#73868A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                    <span>256-bit SSL encryption &mdash; your data is secure</span>
+                </div>
+
+                <button type="submit" class="btn-submit">Store Payment &amp; Complete Registration</button>
+                <a href="signup-register.html" class="btn-back">&larr; Back to Account Setup</a>
+                <p class="form-footer-note">By submitting, you agree to securely store your payment information. <strong>No charges will be made</strong> until your onboarding specialist reviews your account and sends a contract for signature.</p>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Load order summary from session storage
+        const data = JSON.parse(sessionStorage.getItem('signupData') || '{}');
+        if (data.packageName) {
+            document.getElementById('orderPlan').textContent = data.packageName;
+            if (data.package === 'enterprise') {
+                document.getElementById('orderBase').textContent = 'Custom';
+                document.getElementById('orderProviderCount').textContent = data.providers;
+                document.getElementById('orderProviderRate').textContent = 'Custom';
+                document.getElementById('orderProviderTotal').textContent = 'Custom';
+                document.getElementById('orderTotal').textContent = 'Contact Sales';
+            } else {
+                const base = data.base;
+                const provTotal = data.perProvider * data.providers;
+                const total = base + provTotal;
+                document.getElementById('orderBase').textContent = '$' + base.toLocaleString('en-US', { minimumFractionDigits: 2 });
+                document.getElementById('orderProviderCount').textContent = data.providers;
+                document.getElementById('orderProviderRate').textContent = '$' + data.perProvider.toFixed(2);
+                document.getElementById('orderProviderTotal').textContent = '$' + provTotal.toLocaleString('en-US', { minimumFractionDigits: 2 });
+                document.getElementById('orderTotal').textContent = '$' + total.toLocaleString('en-US', { minimumFractionDigits: 2 });
+            }
+        }
+
+        // Payment toggle
+        function switchPayment(type) {
+            document.querySelectorAll('.payment-toggle-btn').forEach(b => b.classList.remove('active'));
+            event.target.classList.add('active');
+            document.getElementById('cc-fields').classList.toggle('hidden', type !== 'cc');
+            document.getElementById('ach-fields').classList.toggle('hidden', type !== 'ach');
+        }
+
+        // Format card number
+        document.getElementById('ccNumber')?.addEventListener('input', function(e) {
+            let val = e.target.value.replace(/\D/g, '').substring(0, 16);
+            e.target.value = val.replace(/(.{4})/g, '$1 ').trim();
+        });
+
+        // Format expiry
+        document.getElementById('ccExpiry')?.addEventListener('input', function(e) {
+            let val = e.target.value.replace(/\D/g, '').substring(0, 4);
+            if (val.length > 2) val = val.substring(0, 2) + ' / ' + val.substring(2);
+            e.target.value = val;
+        });
+
+        // Form submit
+        document.getElementById('paymentForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            window.location.href = 'signup-confirmation.html';
+        });
+    </script>
+
+</body>
+</html>

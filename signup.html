@@ -16,13 +16,13 @@
 
         html, body {
             font-family: 'Inter', sans-serif;
-            background-color: #F2EFE2;
-            color: #4A5253;
+            background-color: #F5F1EB;
+            color: #5A5650;
         }
 
         header {
             background-color: #FFFFFF;
-            border-bottom: 1px solid #DDD9CD;
+            border-bottom: 1px solid #E0D7C7;
             padding: 1rem 2rem;
         }
 
@@ -43,32 +43,47 @@
         .logo-circle {
             width: 40px;
             height: 40px;
-            border-radius: 50%;
-            background-color: #697C70;
             display: flex;
             align-items: center;
             justify-content: center;
-            color: #FFFFFF;
-            font-weight: 600;
-            font-size: 18px;
+        }
+        .logo-circle svg {
+            width: 40px;
+            height: 40px;
         }
 
         .logo-text {
-            font-size: 16px;
+            display: flex;
+            flex-direction: column;
+            line-height: 1.2;
+        }
+        .logo-wordmark {
+            font-size: 18px;
+            font-weight: 600;
+            color: #39463A;
+            letter-spacing: 0.5px;
+        }
+        .logo-wordmark span {
+            font-weight: 300;
+            color: #73868A;
+        }
+        .logo-tagline {
+            font-size: 8px;
             font-weight: 500;
-            color: #2D3536;
-            letter-spacing: -0.02em;
+            color: #AB8A7A;
+            letter-spacing: 3px;
+            text-transform: uppercase;
         }
 
         .header-right a {
             font-size: 14px;
-            color: #7A8486;
+            color: #73868A;
             text-decoration: none;
             transition: color 0.3s ease;
         }
 
         .header-right a:hover {
-            color: #697C70;
+            color: #39463A;
         }
 
         .signup-container {
@@ -84,7 +99,7 @@
         .section-heading {
             font-size: 44px;
             font-weight: 300;
-            color: #2D3536;
+            color: #39463A;
             text-align: center;
             margin-bottom: 1rem;
             letter-spacing: -0.02em;
@@ -92,65 +107,10 @@
 
         .section-subheading {
             font-size: 16px;
-            color: #4A5253;
+            color: #5A5650;
             text-align: center;
             max-width: 600px;
-            margin: 0 auto 1.5rem;
-        }
-
-        .billing-toggle {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 1rem;
-            margin-bottom: 3rem;
-        }
-
-        .toggle-label {
-            font-size: 14px;
-            color: #4A5253;
-            font-weight: 500;
-        }
-
-        .toggle-switch {
-            position: relative;
-            width: 50px;
-            height: 28px;
-            background-color: #DDD9CD;
-            border-radius: 14px;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-        }
-
-        .toggle-switch.active {
-            background-color: #697C70;
-        }
-
-        .toggle-switch-knob {
-            position: absolute;
-            top: 2px;
-            left: 2px;
-            width: 24px;
-            height: 24px;
-            background-color: #FFFFFF;
-            border-radius: 12px;
-            transition: left 0.3s ease;
-            box-shadow: 0 2px 4px rgba(45, 53, 54, 0.1);
-        }
-
-        .toggle-switch.active .toggle-switch-knob {
-            left: 24px;
-        }
-
-        .save-badge {
-            background-color: #B3C9D6;
-            color: #2D3536;
-            padding: 0.4rem 0.8rem;
-            border-radius: 6px;
-            font-size: 12px;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
+            margin: 0 auto 3rem;
         }
 
         .pricing-cards {
@@ -162,7 +122,7 @@
 
         .pricing-card {
             background-color: #FFFFFF;
-            border: 1.5px solid #DDD9CD;
+            border: 1.5px solid #E0D7C7;
             border-radius: 14px;
             padding: 2.5rem;
             position: relative;
@@ -171,24 +131,24 @@
         }
 
         .pricing-card:hover {
-            border-color: #98AA9D;
-            box-shadow: 0 8px 20px rgba(45, 53, 54, 0.06);
+            border-color: #AB8A7A;
+            box-shadow: 0 8px 20px rgba(57, 70, 58, 0.06);
         }
 
         .pricing-card.selected {
-            border-color: #697C70;
-            box-shadow: 0 8px 24px rgba(105, 124, 112, 0.12);
-            background-color: #F8F7F2;
+            border-color: #39463A;
+            box-shadow: 0 8px 24px rgba(57, 70, 58, 0.12);
+            background-color: rgba(57, 70, 58, 0.02);
         }
 
         .pricing-card.popular {
-            border-color: #B3C9D6;
-            box-shadow: 0 8px 24px rgba(179, 201, 214, 0.2);
+            border-color: #AB8A7A;
+            box-shadow: 0 8px 24px rgba(171, 138, 122, 0.2);
             transform: scale(1.02);
         }
 
         .pricing-card.popular.selected {
-            box-shadow: 0 12px 32px rgba(179, 201, 214, 0.25);
+            box-shadow: 0 12px 32px rgba(171, 138, 122, 0.25);
         }
 
         .pricing-badge {
@@ -196,8 +156,8 @@
             top: -12px;
             left: 50%;
             transform: translateX(-50%);
-            background-color: #B3C9D6;
-            color: #2D3536;
+            background-color: #AB8A7A;
+            color: #FFFFFF;
             padding: 0.4rem 1rem;
             border-radius: 6px;
             font-size: 12px;
@@ -212,7 +172,7 @@
             right: 2rem;
             width: 24px;
             height: 24px;
-            border: 2px solid #DDD9CD;
+            border: 2px solid #E0D7C7;
             border-radius: 50%;
             cursor: pointer;
             transition: all 0.3s ease;
@@ -220,8 +180,8 @@
         }
 
         .pricing-card.selected .pricing-radio {
-            border-color: #697C70;
-            background-color: #697C70;
+            border-color: #39463A;
+            background-color: #39463A;
         }
 
         .pricing-radio::after {
@@ -245,7 +205,7 @@
         .pricing-name {
             font-size: 18px;
             font-weight: 600;
-            color: #2D3536;
+            color: #39463A;
             margin-bottom: 0.5rem;
             margin-top: 1rem;
         }
@@ -253,14 +213,21 @@
         .pricing-price {
             font-size: 32px;
             font-weight: 600;
-            color: #697C70;
+            color: #39463A;
             margin-bottom: 0.25rem;
         }
 
         .pricing-price-term {
             font-size: 13px;
-            color: #7A8486;
+            color: #73868A;
+            margin-bottom: 0.5rem;
+        }
+
+        .pricing-per-provider {
+            font-size: 13px;
+            color: #AB8A7A;
             margin-bottom: 2rem;
+            font-weight: 500;
         }
 
         .pricing-features {
@@ -270,9 +237,9 @@
 
         .pricing-features li {
             font-size: 14px;
-            color: #4A5253;
+            color: #5A5650;
             padding: 0.7rem 0;
-            border-bottom: 1px solid #EBE8DC;
+            border-bottom: 1px solid #F5F1EB;
         }
 
         .pricing-features li:last-child {
@@ -283,7 +250,7 @@
             background-color: #FFFFFF;
             border-radius: 14px;
             padding: 3rem;
-            border: 1px solid #DDD9CD;
+            border: 1px solid #E0D7C7;
             max-width: 600px;
             margin: 0 auto;
         }
@@ -291,7 +258,7 @@
         .form-section h2 {
             font-size: 28px;
             font-weight: 300;
-            color: #2D3536;
+            color: #39463A;
             margin-bottom: 2rem;
             text-align: center;
             letter-spacing: -0.02em;
@@ -305,7 +272,7 @@
             display: block;
             font-size: 13px;
             font-weight: 500;
-            color: #2D3536;
+            color: #39463A;
             margin-bottom: 0.5rem;
             text-transform: uppercase;
             letter-spacing: 0.05em;
@@ -314,23 +281,23 @@
         .form-group input {
             width: 100%;
             padding: 0.9rem 1.2rem;
-            border: 1px solid #DDD9CD;
+            border: 1px solid #E0D7C7;
             border-radius: 8px;
             background-color: #FFFFFF;
             font-family: 'Inter', sans-serif;
             font-size: 14px;
-            color: #4A5253;
+            color: #5A5650;
             transition: all 0.3s ease;
         }
 
         .form-group input:focus {
             outline: none;
-            border-color: #697C70;
-            box-shadow: 0 0 0 3px rgba(105, 124, 112, 0.08);
+            border-color: #AB8A7A;
+            box-shadow: 0 0 0 3px rgba(171, 138, 122, 0.1);
         }
 
         .form-group input::placeholder {
-            color: #98AA9D;
+            color: #AB8A7A;
         }
 
         .form-row {
@@ -342,7 +309,7 @@
         .btn-create {
             width: 100%;
             padding: 1rem;
-            background-color: #697C70;
+            background: linear-gradient(135deg, #39463A, #4A5A4B);
             color: #FFFFFF;
             border: none;
             border-radius: 10px;
@@ -355,45 +322,45 @@
         }
 
         .btn-create:hover {
-            background-color: #586B60;
+            background: linear-gradient(135deg, #2A332B, #39463A);
             transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(105, 124, 112, 0.2);
+            box-shadow: 0 4px 12px rgba(57, 70, 58, 0.25);
         }
 
         .form-footer {
             text-align: center;
             font-size: 12px;
-            color: #7A8486;
-            border-top: 1px solid #DDD9CD;
+            color: #73868A;
+            border-top: 1px solid #E0D7C7;
             padding-top: 1.5rem;
         }
 
         .form-footer a {
-            color: #697C70;
+            color: #39463A;
             text-decoration: none;
             transition: color 0.3s ease;
         }
 
         .form-footer a:hover {
-            color: #586B60;
+            color: #2A332B;
         }
 
         .login-link {
             text-align: center;
             margin-top: 1.5rem;
             font-size: 14px;
-            color: #4A5253;
+            color: #5A5650;
         }
 
         .login-link a {
-            color: #697C70;
+            color: #39463A;
             text-decoration: none;
             font-weight: 500;
             transition: color 0.3s ease;
         }
 
         .login-link a:hover {
-            color: #586B60;
+            color: #2A332B;
         }
 
         .hidden {
@@ -405,7 +372,7 @@
             display: none;
             position: fixed;
             inset: 0;
-            background-color: rgba(45, 53, 54, 0.4);
+            background-color: rgba(57, 70, 58, 0.4);
             backdrop-filter: blur(4px);
             z-index: 9999;
             align-items: center;
@@ -423,7 +390,7 @@
             max-width: 460px;
             width: 90%;
             text-align: center;
-            box-shadow: 0 20px 40px rgba(45, 53, 54, 0.12);
+            box-shadow: 0 20px 40px rgba(57, 70, 58, 0.12);
             animation: modalSlideUp 0.35s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
@@ -435,7 +402,7 @@
         .modal-icon {
             width: 64px;
             height: 64px;
-            background-color: #E4E9E6;
+            background-color: rgba(57, 70, 58, 0.08);
             border-radius: 50%;
             display: flex;
             align-items: center;
@@ -446,7 +413,7 @@
         .modal-icon svg {
             width: 32px;
             height: 32px;
-            stroke: #697C70;
+            stroke: #39463A;
             fill: none;
             stroke-width: 2.5;
             stroke-linecap: round;
@@ -456,20 +423,20 @@
         .modal h3 {
             font-size: 22px;
             font-weight: 600;
-            color: #2D3536;
+            color: #39463A;
             margin-bottom: 0.75rem;
         }
 
         .modal p {
             font-size: 15px;
-            color: #5A6365;
+            color: #5A5650;
             line-height: 1.6;
             margin-bottom: 2rem;
         }
 
         .modal-btn {
             padding: 0.85rem 2.5rem;
-            background-color: #697C70;
+            background: linear-gradient(135deg, #39463A, #4A5A4B);
             color: #FFFFFF;
             border: none;
             border-radius: 10px;
@@ -480,7 +447,8 @@
         }
 
         .modal-btn:hover {
-            background-color: #586B60;
+            background: linear-gradient(135deg, #2A332B, #39463A);
+            box-shadow: 0 4px 12px rgba(57, 70, 58, 0.25);
         }
 
         @media (max-width: 768px) {
@@ -513,11 +481,15 @@
 <body>
     <header>
         <div class="header-content">
-            <div class="logo-group">
-                <div class="logo-circle">VR</div>
-                <span class="logo-text">VanguardRCM</span>
-            </div>
+            <a href="index.html" class="logo-group" style="text-decoration:none;">
+                <div class="logo-circle"><svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"><circle cx="100" cy="100" r="96" fill="none" stroke="#73868A" stroke-width="1"/><circle cx="100" cy="100" r="82" fill="#39463A"/><circle cx="100" cy="100" r="70" fill="none" stroke="#E0D7C7" stroke-width="0.75" opacity="0.3"/><text x="100" y="124" font-family="Georgia,serif" font-size="92" fill="#E0D7C7" text-anchor="middle">V</text></svg></div>
+                <div class="logo-text-group">
+                    <div class="logo-wordmark">Vanguard <span>RCM</span></div>
+                    <div class="logo-tagline">Revenue Cycle Intelligence</div>
+                </div>
+            </a>
             <div class="header-right">
+                <a href="index.html" style="margin-right:1rem;">Home</a>
                 <a href="login.html">Already have an account? Sign in</a>
             </div>
         </div>
@@ -528,21 +500,13 @@
             <h2 class="section-heading">Choose your plan</h2>
             <p class="section-subheading">Start with a 14-day free trial. No credit card required.</p>
 
-            <div class="billing-toggle" style="justify-content: center;">
-                <span class="toggle-label">Monthly</span>
-                <div class="toggle-switch" id="billingToggle" onclick="toggleBilling()">
-                    <div class="toggle-switch-knob"></div>
-                </div>
-                <span class="toggle-label">Annual</span>
-                <span class="save-badge">Save 20%</span>
-            </div>
-
             <div class="pricing-cards">
                 <div class="pricing-card" onclick="selectPlan(this, 'starter')">
                     <div class="pricing-radio"></div>
                     <div class="pricing-name">Starter</div>
-                    <div class="pricing-price" id="starter-price">$499</div>
-                    <div class="pricing-price-term">/month</div>
+                    <div class="pricing-price">$2,500</div>
+                    <div class="pricing-price-term">practice starter fee</div>
+                    <div class="pricing-per-provider">+ $149.99 per billing provider</div>
                     <ul class="pricing-features">
                         <li>Up to 500 patient records</li>
                         <li>Basic eligibility verification</li>
@@ -555,9 +519,10 @@
                 <div class="pricing-card popular selected" onclick="selectPlan(this, 'pro')">
                     <div class="pricing-badge">Most Popular</div>
                     <div class="pricing-radio"></div>
-                    <div class="pricing-name">Pro</div>
-                    <div class="pricing-price" id="pro-price">$1,299</div>
-                    <div class="pricing-price-term">/month</div>
+                    <div class="pricing-name">Professional</div>
+                    <div class="pricing-price">$5,000</div>
+                    <div class="pricing-price-term">per month</div>
+                    <div class="pricing-per-provider">+ $199.99 per billing provider</div>
                     <ul class="pricing-features">
                         <li>Unlimited patient records</li>
                         <li>Advanced eligibility & cost share</li>
@@ -572,7 +537,7 @@
                 <div class="pricing-card" onclick="selectPlan(this, 'enterprise')">
                     <div class="pricing-radio"></div>
                     <div class="pricing-name">Enterprise</div>
-                    <div class="pricing-price" id="enterprise-price">Custom</div>
+                    <div class="pricing-price">Custom</div>
                     <div class="pricing-price-term">pricing</div>
                     <ul class="pricing-features">
                         <li>Unlimited everything</li>
@@ -641,31 +606,6 @@
 
     <script>
         let selectedPlan = 'pro';
-        let isAnnual = false;
-
-        const prices = {
-            monthly: {
-                starter: '$499',
-                pro: '$1,299',
-                enterprise: 'Custom'
-            },
-            annual: {
-                starter: '$4,791',
-                pro: '$12,471',
-                enterprise: 'Custom'
-            }
-        };
-
-        function toggleBilling() {
-            isAnnual = !isAnnual;
-            const toggle = document.getElementById('billingToggle');
-            toggle.classList.toggle('active');
-
-            const mode = isAnnual ? 'annual' : 'monthly';
-            document.getElementById('starter-price').textContent = prices[mode].starter;
-            document.getElementById('pro-price').textContent = prices[mode].pro;
-            document.getElementById('enterprise-price').textContent = prices[mode].enterprise;
-        }
 
         function selectPlan(element, plan) {
             document.querySelectorAll('.pricing-card').forEach(card => {

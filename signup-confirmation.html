@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registration Complete — VanguardRCM</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background: #F5F1EB; min-height: 100vh; }
+
+        /* NAV */
+        nav {
+            position: sticky; top: 0; z-index: 100;
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 0.8rem 2.5rem; background: rgba(245,241,235,0.85);
+            backdrop-filter: blur(16px); border-bottom: 1px solid #E0D7C7;
+        }
+        .nav-left { display: flex; align-items: center; gap: 12px; text-decoration: none; }
+        .logo-text-group { display: flex; flex-direction: column; gap: 3px; }
+        .logo-wordmark { font-size: 20px; font-weight: 600; color: #39463A; letter-spacing: 0.5px; line-height: 1; }
+        .logo-wordmark span { font-weight: 300; color: #73868A; }
+        .logo-tagline { font-size: 8px; font-weight: 500; color: #AB8A7A; letter-spacing: 3px; text-transform: uppercase; line-height: 1; }
+
+        /* PROGRESS BAR */
+        .progress-bar {
+            display: flex; align-items: center; justify-content: center;
+            gap: 0; padding: 2rem 2rem 0; max-width: 600px; margin: 0 auto;
+        }
+        .progress-step { display: flex; flex-direction: column; align-items: center; gap: 0.5rem; position: relative; z-index: 1; }
+        .progress-circle {
+            width: 36px; height: 36px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 14px; font-weight: 600;
+        }
+        .progress-circle.completed { background: #AB8A7A; color: #F5F1EB; }
+        .progress-circle.active { background: #39463A; color: #F5F1EB; }
+        .progress-label { font-size: 11px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; color: #73868A; }
+        .progress-label.active { color: #39463A; }
+        .progress-line { flex: 1; height: 2px; min-width: 80px; margin-top: -18px; background: #AB8A7A; }
+
+        /* CONFIRMATION */
+        .confirm-container { max-width: 620px; margin: 3rem auto; padding: 0 1.5rem; text-align: center; }
+        .confirm-card {
+            background: #FFFFFF; border-radius: 16px; padding: 3.5rem 3rem;
+            box-shadow: 0 4px 24px rgba(57,70,58,0.06); border: 1px solid #E0D7C7;
+        }
+        .confirm-icon {
+            width: 80px; height: 80px; border-radius: 50%;
+            background: linear-gradient(135deg, #39463A, #4A5A4B);
+            display: flex; align-items: center; justify-content: center;
+            margin: 0 auto 1.5rem;
+        }
+        .confirm-icon svg { width: 40px; height: 40px; }
+        .confirm-title { font-size: 28px; font-weight: 700; color: #39463A; margin-bottom: 0.8rem; letter-spacing: -0.02em; }
+        .confirm-subtitle { font-size: 15px; color: #73868A; line-height: 1.7; max-width: 440px; margin: 0 auto 2.5rem; }
+
+        .next-steps {
+            background: rgba(57,70,58,0.04); border-radius: 12px; padding: 2rem;
+            text-align: left; margin-bottom: 2rem;
+        }
+        .next-steps-title {
+            font-size: 12px; font-weight: 700; color: #AB8A7A;
+            letter-spacing: 2px; text-transform: uppercase; margin-bottom: 1.2rem;
+        }
+        .step-item {
+            display: flex; align-items: flex-start; gap: 1rem; margin-bottom: 1.2rem;
+        }
+        .step-item:last-child { margin-bottom: 0; }
+        .step-number {
+            width: 28px; height: 28px; min-width: 28px; border-radius: 50%;
+            background: #39463A; color: #F5F1EB; display: flex;
+            align-items: center; justify-content: center;
+            font-size: 12px; font-weight: 700; margin-top: 2px;
+        }
+        .step-content h4 { font-size: 14px; font-weight: 600; color: #39463A; margin-bottom: 0.2rem; }
+        .step-content p { font-size: 13px; color: #73868A; line-height: 1.6; }
+
+        .confirm-actions { display: flex; gap: 1rem; justify-content: center; margin-top: 2rem; }
+        .btn-primary {
+            padding: 0.9rem 2rem; background: linear-gradient(135deg, #39463A, #4A5A4B);
+            color: #F5F1EB; border: none; border-radius: 10px;
+            font-family: 'Inter', sans-serif; font-size: 14px; font-weight: 600;
+            cursor: pointer; transition: all 0.3s; text-decoration: none;
+            display: inline-flex; align-items: center;
+        }
+        .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(57,70,58,0.3); }
+        .btn-outline {
+            padding: 0.9rem 2rem; background: transparent;
+            border: 1.5px solid #AB8A7A; color: #927C67; border-radius: 10px;
+            font-family: 'Inter', sans-serif; font-size: 14px; font-weight: 600;
+            cursor: pointer; transition: all 0.3s; text-decoration: none;
+            display: inline-flex; align-items: center;
+        }
+        .btn-outline:hover { background: rgba(171,138,122,0.08); color: #39463A; }
+
+        .confirm-footer {
+            margin-top: 2rem; font-size: 13px; color: #73868A; line-height: 1.6;
+        }
+        .confirm-footer a { color: #AB8A7A; text-decoration: none; font-weight: 500; }
+        .confirm-footer a:hover { color: #39463A; }
+    </style>
+</head>
+<body>
+
+    <!-- NAV -->
+    <nav>
+        <a href="index.html" class="nav-left">
+            <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" width="40" height="40">
+                <circle cx="100" cy="100" r="96" fill="none" stroke="#73868A" stroke-width="1"/>
+                <circle cx="100" cy="100" r="82" fill="#39463A"/>
+                <circle cx="100" cy="100" r="70" fill="none" stroke="#E0D7C7" stroke-width="0.75" opacity="0.3"/>
+                <text x="100" y="124" font-family="Georgia,serif" font-size="92" fill="#E0D7C7" text-anchor="middle">V</text>
+            </svg>
+            <div class="logo-text-group">
+                <div class="logo-wordmark">Vanguard <span>RCM</span></div>
+                <div class="logo-tagline">Revenue Cycle Intelligence</div>
+            </div>
+        </a>
+    </nav>
+
+    <!-- PROGRESS BAR -->
+    <div class="progress-bar">
+        <div class="progress-step">
+            <div class="progress-circle completed">&#10003;</div>
+            <div class="progress-label">Account Setup</div>
+        </div>
+        <div class="progress-line"></div>
+        <div class="progress-step">
+            <div class="progress-circle completed">&#10003;</div>
+            <div class="progress-label">Payment Info</div>
+        </div>
+        <div class="progress-line"></div>
+        <div class="progress-step">
+            <div class="progress-circle active">&#10003;</div>
+            <div class="progress-label active">Confirmation</div>
+        </div>
+    </div>
+
+    <!-- CONFIRMATION CONTENT -->
+    <div class="confirm-container">
+        <div class="confirm-card">
+            <div class="confirm-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="#F5F1EB" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+            </div>
+            <h1 class="confirm-title">You're All Set!</h1>
+            <p class="confirm-subtitle">Your registration is complete and your payment information has been securely stored. A VanguardRCM onboarding specialist will be in touch shortly.</p>
+
+            <div class="next-steps">
+                <div class="next-steps-title">What Happens Next</div>
+                <div class="step-item">
+                    <div class="step-number">1</div>
+                    <div class="step-content">
+                        <h4>Onboarding Specialist Contact</h4>
+                        <p>A dedicated specialist will reach out within 1-2 business days to introduce themselves and schedule your kickoff call.</p>
+                    </div>
+                </div>
+                <div class="step-item">
+                    <div class="step-number">2</div>
+                    <div class="step-content">
+                        <h4>Contract Review &amp; Signing</h4>
+                        <p>Your specialist will walk you through the contractual terms, ensure you understand your selected tier and what's included, and send a contract for electronic signature.</p>
+                    </div>
+                </div>
+                <div class="step-item">
+                    <div class="step-number">3</div>
+                    <div class="step-content">
+                        <h4>Account Activation &amp; Training</h4>
+                        <p>Once the contract is signed, your account will be activated and your team will receive a personalized onboarding and training session.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="confirm-actions">
+                <a href="index.html" class="btn-primary">Return to Home</a>
+                <a href="demo-request.html" class="btn-outline">Contact Support</a>
+            </div>
+
+            <div class="confirm-footer">
+                <p>A confirmation email has been sent to your inbox. If you have any immediate questions, reach out at <a href="mailto:support@vanguardrcm.com">support@vanguardrcm.com</a></p>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>

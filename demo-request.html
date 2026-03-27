@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Request a Demo — VanguardRCM</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background: #F5F1EB; min-height: 100vh; display: flex; flex-direction: column; }
+
+        /* NAV */
+        nav {
+            position: sticky; top: 0; z-index: 100;
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 0.8rem 2.5rem; background: rgba(245,241,235,0.85);
+            backdrop-filter: blur(16px); border-bottom: 1px solid #E0D7C7;
+        }
+        .nav-left { display: flex; align-items: center; gap: 12px; text-decoration: none; }
+        .logo-text-group { display: flex; flex-direction: column; gap: 3px; }
+        .logo-wordmark { font-size: 20px; font-weight: 600; color: #39463A; letter-spacing: 0.5px; line-height: 1; }
+        .logo-wordmark span { font-weight: 300; color: #73868A; }
+        .logo-tagline { font-size: 8px; font-weight: 500; color: #AB8A7A; letter-spacing: 3px; text-transform: uppercase; line-height: 1; }
+        .nav-back { font-size: 14px; color: #73868A; text-decoration: none; transition: color 0.3s; }
+        .nav-back:hover { color: #39463A; }
+
+        /* LAYOUT */
+        .page-wrapper {
+            flex: 1; display: flex; align-items: center; justify-content: center;
+            padding: 3rem 1.5rem;
+        }
+        .demo-layout {
+            max-width: 1000px; width: 100%;
+            display: grid; grid-template-columns: 1fr 1.1fr; gap: 3rem;
+            align-items: start;
+        }
+
+        /* LEFT - INFO PANEL */
+        .info-panel { padding: 2rem 0; }
+        .info-eyebrow {
+            font-size: 11px; font-weight: 700; color: #AB8A7A;
+            letter-spacing: 2.5px; text-transform: uppercase; margin-bottom: 1rem;
+        }
+        .info-heading {
+            font-size: 34px; font-weight: 700; color: #39463A;
+            line-height: 1.2; letter-spacing: -0.02em; margin-bottom: 1rem;
+        }
+        .info-heading strong { color: #AB8A7A; }
+        .info-description {
+            font-size: 15px; color: #73868A; line-height: 1.7; margin-bottom: 2.5rem;
+            max-width: 400px;
+        }
+        .info-benefits { display: flex; flex-direction: column; gap: 1.2rem; }
+        .benefit-item { display: flex; align-items: flex-start; gap: 0.8rem; }
+        .benefit-icon {
+            width: 36px; height: 36px; min-width: 36px; border-radius: 10px;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .benefit-icon svg { width: 18px; height: 18px; }
+        .benefit-item:nth-child(1) .benefit-icon { background: rgba(57,70,58,0.08); }
+        .benefit-item:nth-child(2) .benefit-icon { background: rgba(171,138,122,0.1); }
+        .benefit-item:nth-child(3) .benefit-icon { background: rgba(115,134,138,0.1); }
+        .benefit-item:nth-child(4) .benefit-icon { background: rgba(146,124,103,0.08); }
+        .benefit-text h4 { font-size: 14px; font-weight: 600; color: #39463A; margin-bottom: 0.15rem; }
+        .benefit-text p { font-size: 13px; color: #73868A; line-height: 1.5; }
+
+        /* RIGHT - FORM CARD */
+        .form-card {
+            background: #FFFFFF; border-radius: 16px; padding: 2.5rem;
+            box-shadow: 0 4px 24px rgba(57,70,58,0.06); border: 1px solid #E0D7C7;
+        }
+        .form-title { font-size: 22px; font-weight: 700; color: #39463A; margin-bottom: 0.4rem; }
+        .form-subtitle { font-size: 13px; color: #73868A; margin-bottom: 2rem; line-height: 1.5; }
+        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem; }
+        .form-row.full { grid-template-columns: 1fr; }
+        .form-group { display: flex; flex-direction: column; gap: 0.35rem; }
+        .form-group label { font-size: 13px; font-weight: 500; color: #39463A; }
+        .form-group input, .form-group select, .form-group textarea {
+            padding: 0.7rem 0.9rem; border: 1.5px solid #E0D7C7; border-radius: 10px;
+            font-family: 'Inter', sans-serif; font-size: 14px; color: #39463A;
+            background: #FAFAF8; transition: all 0.3s; outline: none; resize: vertical;
+        }
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+            border-color: #AB8A7A; background: #FFFFFF;
+            box-shadow: 0 0 0 3px rgba(171,138,122,0.1);
+        }
+        .form-group input::placeholder, .form-group textarea::placeholder { color: #B8B4AE; }
+        .form-group select {
+            cursor: pointer; appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%2373868A' d='M1 1l5 5 5-5'/%3E%3C/svg%3E");
+            background-repeat: no-repeat; background-position: right 0.9rem center;
+        }
+
+        .btn-submit {
+            width: 100%; padding: 0.9rem; margin-top: 1.5rem;
+            background: linear-gradient(135deg, #39463A, #4A5A4B);
+            color: #F5F1EB; border: none; border-radius: 10px;
+            font-family: 'Inter', sans-serif; font-size: 15px; font-weight: 600;
+            cursor: pointer; transition: all 0.3s;
+        }
+        .btn-submit:hover { background: linear-gradient(135deg, #2A332B, #39463A); transform: translateY(-1px); box-shadow: 0 6px 20px rgba(57,70,58,0.3); }
+        .form-footer {
+            text-align: center; font-size: 12px; color: #73868A; margin-top: 1rem; line-height: 1.5;
+        }
+
+        /* SUCCESS STATE */
+        .success-state { display: none; text-align: center; padding: 2rem 0; }
+        .success-state.show { display: block; }
+        .success-icon {
+            width: 64px; height: 64px; border-radius: 50%;
+            background: linear-gradient(135deg, #39463A, #4A5A4B);
+            display: flex; align-items: center; justify-content: center;
+            margin: 0 auto 1.2rem;
+        }
+        .success-icon svg { width: 32px; height: 32px; }
+        .success-title { font-size: 22px; font-weight: 700; color: #39463A; margin-bottom: 0.5rem; }
+        .success-text { font-size: 14px; color: #73868A; line-height: 1.7; max-width: 380px; margin: 0 auto 1.5rem; }
+        .btn-home {
+            display: inline-flex; align-items: center; padding: 0.8rem 1.8rem;
+            background: transparent; border: 1.5px solid #AB8A7A; color: #927C67;
+            border-radius: 10px; font-family: 'Inter', sans-serif; font-size: 14px;
+            font-weight: 600; cursor: pointer; transition: all 0.3s; text-decoration: none;
+        }
+        .btn-home:hover { background: rgba(171,138,122,0.08); color: #39463A; }
+
+        @media (max-width: 768px) {
+            .demo-layout { grid-template-columns: 1fr; }
+            .info-panel { padding: 0; }
+            .form-row { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- NAV -->
+    <nav>
+        <a href="index.html" class="nav-left">
+            <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" width="40" height="40">
+                <circle cx="100" cy="100" r="96" fill="none" stroke="#73868A" stroke-width="1"/>
+                <circle cx="100" cy="100" r="82" fill="#39463A"/>
+                <circle cx="100" cy="100" r="70" fill="none" stroke="#E0D7C7" stroke-width="0.75" opacity="0.3"/>
+                <text x="100" y="124" font-family="Georgia,serif" font-size="92" fill="#E0D7C7" text-anchor="middle">V</text>
+            </svg>
+            <div class="logo-text-group">
+                <div class="logo-wordmark">Vanguard <span>RCM</span></div>
+                <div class="logo-tagline">Revenue Cycle Intelligence</div>
+            </div>
+        </a>
+        <a href="index.html" class="nav-back">&larr; Back to Home</a>
+    </nav>
+
+    <!-- MAIN -->
+    <div class="page-wrapper">
+        <div class="demo-layout">
+
+            <!-- LEFT INFO -->
+            <div class="info-panel">
+                <div class="info-eyebrow">Schedule a Demo</div>
+                <h1 class="info-heading">See VanguardRCM <strong>in Action</strong></h1>
+                <p class="info-description">Get a personalized walkthrough of our platform and discover how VanguardRCM can transform your revenue cycle operations.</p>
+
+                <div class="info-benefits">
+                    <div class="benefit-item">
+                        <div class="benefit-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="#39463A" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                        </div>
+                        <div class="benefit-text">
+                            <h4>30-Minute Walkthrough</h4>
+                            <p>Tailored to your specialty and practice size</p>
+                        </div>
+                    </div>
+                    <div class="benefit-item">
+                        <div class="benefit-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="#AB8A7A" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                        </div>
+                        <div class="benefit-text">
+                            <h4>HIPAA-Compliant Platform</h4>
+                            <p>Enterprise-grade security and compliance built in</p>
+                        </div>
+                    </div>
+                    <div class="benefit-item">
+                        <div class="benefit-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="#73868A" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+                        </div>
+                        <div class="benefit-text">
+                            <h4>ROI in Year One</h4>
+                            <p>See real revenue recovery results within months</p>
+                        </div>
+                    </div>
+                    <div class="benefit-item">
+                        <div class="benefit-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="#927C67" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                        </div>
+                        <div class="benefit-text">
+                            <h4>Dedicated Onboarding</h4>
+                            <p>White-glove setup with your own specialist</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- RIGHT FORM -->
+            <div class="form-card">
+                <div id="formContent">
+                    <h2 class="form-title">Request Your Demo</h2>
+                    <p class="form-subtitle">Fill out the form below and a member of our team will reach out within one business day.</p>
+
+                    <form id="demoForm">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>First Name</label>
+                                <input type="text" placeholder="Jane" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Last Name</label>
+                                <input type="text" placeholder="Smith" required>
+                            </div>
+                        </div>
+                        <div class="form-row full">
+                            <div class="form-group">
+                                <label>Work Email</label>
+                                <input type="email" placeholder="jane@yourpractice.com" required>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Phone Number</label>
+                                <input type="tel" placeholder="(555) 123-4567">
+                            </div>
+                            <div class="form-group">
+                                <label>Job Title</label>
+                                <input type="text" placeholder="Billing Manager">
+                            </div>
+                        </div>
+                        <div class="form-row full">
+                            <div class="form-group">
+                                <label>Organization Name</label>
+                                <input type="text" placeholder="Acme Health Partners" required>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Number of Providers</label>
+                                <select required>
+                                    <option value="" disabled selected>Select range</option>
+                                    <option>1 – 5</option>
+                                    <option>6 – 15</option>
+                                    <option>16 – 50</option>
+                                    <option>51 – 100</option>
+                                    <option>100+</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Current EHR/PM System</label>
+                                <select>
+                                    <option value="" disabled selected>Select system</option>
+                                    <option>eClinicalWorks</option>
+                                    <option>Athenahealth</option>
+                                    <option>Epic</option>
+                                    <option>Cerner</option>
+                                    <option>NextGen</option>
+                                    <option>AdvancedMD</option>
+                                    <option>Kareo / Tebra</option>
+                                    <option>DrChrono</option>
+                                    <option>Other</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-row full">
+                            <div class="form-group">
+                                <label>Anything specific you'd like to see? (optional)</label>
+                                <textarea rows="3" placeholder="E.g., denial management workflows, eligibility automation, analytics dashboards..."></textarea>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn-submit">Request My Demo</button>
+                        <p class="form-footer">No commitment required. We'll never share your information.</p>
+                    </form>
+                </div>
+
+                <!-- SUCCESS STATE -->
+                <div class="success-state" id="successState">
+                    <div class="success-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="#F5F1EB" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                    </div>
+                    <h2 class="success-title">Demo Requested!</h2>
+                    <p class="success-text">Thank you for your interest in VanguardRCM. A member of our team will reach out within one business day to schedule your personalized demo.</p>
+                    <a href="index.html" class="btn-home">Return to Home</a>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('demoForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            document.getElementById('formContent').style.display = 'none';
+            document.getElementById('successState').classList.add('show');
+        });
+    </script>
+
+</body>
+</html>

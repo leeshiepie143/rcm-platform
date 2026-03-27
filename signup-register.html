@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="en" style="scroll-behavior: smooth;">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up — VanguardRCM</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background: #F5F1EB; min-height: 100vh; }
+
+        /* NAV */
+        nav {
+            position: sticky; top: 0; z-index: 100;
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 0.8rem 2.5rem; background: rgba(245,241,235,0.85);
+            backdrop-filter: blur(16px); border-bottom: 1px solid #E0D7C7;
+        }
+        .nav-left { display: flex; align-items: center; gap: 12px; text-decoration: none; }
+        .logo-text-group { display: flex; flex-direction: column; gap: 3px; }
+        .logo-wordmark { font-size: 20px; font-weight: 600; color: #39463A; letter-spacing: 0.5px; line-height: 1; }
+        .logo-wordmark span { font-weight: 300; color: #73868A; }
+        .logo-tagline { font-size: 8px; font-weight: 500; color: #AB8A7A; letter-spacing: 3px; text-transform: uppercase; line-height: 1; }
+        .nav-back { font-size: 14px; color: #73868A; text-decoration: none; transition: color 0.3s; }
+        .nav-back:hover { color: #39463A; }
+
+        /* PROGRESS BAR */
+        .progress-bar {
+            display: flex; align-items: center; justify-content: center;
+            gap: 0; padding: 2rem 2rem 0; max-width: 600px; margin: 0 auto;
+        }
+        .progress-step {
+            display: flex; flex-direction: column; align-items: center; gap: 0.5rem;
+            position: relative; z-index: 1;
+        }
+        .progress-circle {
+            width: 36px; height: 36px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 14px; font-weight: 600; transition: all 0.3s;
+        }
+        .progress-circle.active { background: #39463A; color: #F5F1EB; }
+        .progress-circle.inactive { background: #E0D7C7; color: #927C67; }
+        .progress-circle.completed { background: #AB8A7A; color: #F5F1EB; }
+        .progress-label { font-size: 11px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; color: #73868A; }
+        .progress-label.active { color: #39463A; }
+        .progress-line { flex: 1; height: 2px; background: #E0D7C7; min-width: 80px; margin-top: -18px; }
+        .progress-line.completed { background: #AB8A7A; }
+
+        /* FORM CONTAINER */
+        .form-container {
+            max-width: 680px; margin: 2rem auto 3rem; padding: 0 1.5rem;
+        }
+        .form-card {
+            background: #FFFFFF; border-radius: 16px; padding: 3rem;
+            box-shadow: 0 4px 24px rgba(57,70,58,0.06);
+            border: 1px solid #E0D7C7;
+        }
+        .form-title {
+            font-size: 26px; font-weight: 700; color: #39463A;
+            margin-bottom: 0.5rem; letter-spacing: -0.02em;
+        }
+        .form-subtitle {
+            font-size: 14px; color: #73868A; line-height: 1.6; margin-bottom: 2.5rem;
+        }
+
+        /* FORM FIELDS */
+        .form-section-label {
+            font-size: 11px; font-weight: 700; color: #AB8A7A;
+            letter-spacing: 2px; text-transform: uppercase; margin-bottom: 1.2rem;
+            padding-bottom: 0.6rem; border-bottom: 1px solid #F5F1EB;
+        }
+        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem; }
+        .form-row.full { grid-template-columns: 1fr; }
+        .form-group { display: flex; flex-direction: column; gap: 0.4rem; margin-bottom: 0.5rem; }
+        .form-group label {
+            font-size: 13px; font-weight: 500; color: #39463A;
+        }
+        .form-group input, .form-group select, .form-group textarea {
+            padding: 0.75rem 1rem; border: 1.5px solid #E0D7C7; border-radius: 10px;
+            font-family: 'Inter', sans-serif; font-size: 14px; color: #39463A;
+            background: #FAFAF8; transition: all 0.3s; outline: none;
+        }
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+            border-color: #AB8A7A; background: #FFFFFF;
+            box-shadow: 0 0 0 3px rgba(171,138,122,0.1);
+        }
+        .form-group input::placeholder { color: #B8B4AE; }
+        .form-group select { cursor: pointer; appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%2373868A' d='M1 1l5 5 5-5'/%3E%3C/svg%3E");
+            background-repeat: no-repeat; background-position: right 1rem center;
+        }
+        .form-divider { height: 1px; background: #F5F1EB; margin: 1.5rem 0 2rem; }
+
+        /* PACKAGE SELECTION */
+        .package-options { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem; margin-bottom: 0.5rem; }
+        .package-option {
+            border: 2px solid #E0D7C7; border-radius: 12px; padding: 1.2rem;
+            cursor: pointer; transition: all 0.3s; text-align: center; position: relative;
+        }
+        .package-option:hover { border-color: #AB8A7A; background: rgba(171,138,122,0.03); }
+        .package-option.selected { border-color: #39463A; background: rgba(57,70,58,0.03); }
+        .package-option.selected::after {
+            content: '\2713'; position: absolute; top: 8px; right: 10px;
+            width: 20px; height: 20px; background: #39463A; color: #F5F1EB;
+            border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            font-size: 11px; font-weight: 700;
+        }
+        .package-option input[type="radio"] { display: none; }
+        .package-name { font-size: 14px; font-weight: 700; color: #39463A; margin-bottom: 0.3rem; }
+        .package-price { font-size: 13px; color: #927C67; font-weight: 600; }
+        .package-per-provider { font-size: 11px; color: #73868A; margin-top: 0.2rem; }
+        .package-badge {
+            display: inline-block; background: #AB8A7A; color: #F5F1EB;
+            font-size: 9px; font-weight: 700; letter-spacing: 1px;
+            padding: 2px 8px; border-radius: 20px; margin-bottom: 0.5rem;
+            text-transform: uppercase;
+        }
+
+        /* PROVIDER COUNT */
+        .provider-counter {
+            display: flex; align-items: center; gap: 1rem; margin-bottom: 0.5rem;
+        }
+        .counter-btn {
+            width: 40px; height: 40px; border-radius: 10px;
+            border: 1.5px solid #E0D7C7; background: #FAFAF8;
+            font-size: 20px; color: #39463A; cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            transition: all 0.3s;
+        }
+        .counter-btn:hover { border-color: #AB8A7A; background: rgba(171,138,122,0.05); }
+        .counter-value {
+            font-size: 24px; font-weight: 700; color: #39463A;
+            min-width: 50px; text-align: center;
+        }
+
+        /* COST SUMMARY */
+        .cost-summary {
+            background: rgba(57,70,58,0.04); border-radius: 12px; padding: 1.2rem 1.5rem;
+            margin-top: 1.5rem; margin-bottom: 0.5rem;
+        }
+        .cost-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem; }
+        .cost-row:last-child { margin-bottom: 0; padding-top: 0.8rem; border-top: 1px solid rgba(57,70,58,0.1); }
+        .cost-label { font-size: 13px; color: #73868A; }
+        .cost-value { font-size: 13px; color: #39463A; font-weight: 600; }
+        .cost-row:last-child .cost-label { font-size: 14px; font-weight: 700; color: #39463A; }
+        .cost-row:last-child .cost-value { font-size: 16px; font-weight: 700; color: #39463A; }
+
+        /* SUBMIT */
+        .btn-submit {
+            width: 100%; padding: 1rem; margin-top: 2rem;
+            background: linear-gradient(135deg, #39463A, #4A5A4B);
+            color: #F5F1EB; border: none; border-radius: 10px;
+            font-family: 'Inter', sans-serif; font-size: 15px; font-weight: 600;
+            cursor: pointer; transition: all 0.3s;
+        }
+        .btn-submit:hover { background: linear-gradient(135deg, #2A332B, #39463A); transform: translateY(-1px); box-shadow: 0 6px 20px rgba(57,70,58,0.3); }
+        .form-footer-note {
+            text-align: center; font-size: 12px; color: #73868A; margin-top: 1rem; line-height: 1.6;
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 640px) {
+            .form-row { grid-template-columns: 1fr; }
+            .package-options { grid-template-columns: 1fr; }
+            .form-card { padding: 2rem 1.5rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- NAV -->
+    <nav>
+        <a href="index.html" class="nav-left">
+            <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" width="40" height="40">
+                <circle cx="100" cy="100" r="96" fill="none" stroke="#73868A" stroke-width="1"/>
+                <circle cx="100" cy="100" r="82" fill="#39463A"/>
+                <circle cx="100" cy="100" r="70" fill="none" stroke="#E0D7C7" stroke-width="0.75" opacity="0.3"/>
+                <text x="100" y="124" font-family="Georgia,serif" font-size="92" fill="#E0D7C7" text-anchor="middle">V</text>
+            </svg>
+            <div class="logo-text-group">
+                <div class="logo-wordmark">Vanguard <span>RCM</span></div>
+                <div class="logo-tagline">Revenue Cycle Intelligence</div>
+            </div>
+        </a>
+        <a href="index.html" class="nav-back">&larr; Back to Home</a>
+    </nav>
+
+    <!-- PROGRESS BAR -->
+    <div class="progress-bar">
+        <div class="progress-step">
+            <div class="progress-circle active">1</div>
+            <div class="progress-label active">Account Setup</div>
+        </div>
+        <div class="progress-line"></div>
+        <div class="progress-step">
+            <div class="progress-circle inactive">2</div>
+            <div class="progress-label">Payment Info</div>
+        </div>
+        <div class="progress-line"></div>
+        <div class="progress-step">
+            <div class="progress-circle inactive">3</div>
+            <div class="progress-label">Confirmation</div>
+        </div>
+    </div>
+
+    <!-- FORM -->
+    <div class="form-container">
+        <div class="form-card">
+            <h1 class="form-title">Create Your Account</h1>
+            <p class="form-subtitle">Tell us about your organization so we can set up your VanguardRCM account. All fields are required unless marked optional.</p>
+
+            <form id="signupForm">
+                <!-- CONTACT INFO -->
+                <div class="form-section-label">Primary Contact</div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>First Name</label>
+                        <input type="text" placeholder="Jane" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Last Name</label>
+                        <input type="text" placeholder="Smith" required>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Email Address</label>
+                        <input type="email" placeholder="jane@yourpractice.com" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Phone Number</label>
+                        <input type="tel" placeholder="(555) 123-4567" required>
+                    </div>
+                </div>
+                <div class="form-row full">
+                    <div class="form-group">
+                        <label>Job Title</label>
+                        <input type="text" placeholder="Billing Manager, Practice Administrator, etc.">
+                    </div>
+                </div>
+
+                <div class="form-divider"></div>
+
+                <!-- COMPANY INFO -->
+                <div class="form-section-label">Organization Details</div>
+                <div class="form-row full">
+                    <div class="form-group">
+                        <label>Organization / Practice Name</label>
+                        <input type="text" placeholder="Acme Health Partners" required>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>NPI Number</label>
+                        <input type="text" placeholder="1234567890">
+                    </div>
+                    <div class="form-group">
+                        <label>Tax ID / EIN</label>
+                        <input type="text" placeholder="12-3456789">
+                    </div>
+                </div>
+                <div class="form-row full">
+                    <div class="form-group">
+                        <label>Street Address</label>
+                        <input type="text" placeholder="123 Main St, Suite 200" required>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>City</label>
+                        <input type="text" placeholder="Dallas" required>
+                    </div>
+                    <div class="form-group">
+                        <label>State</label>
+                        <select required>
+                            <option value="" disabled selected>Select state</option>
+                            <option>Alabama</option><option>Alaska</option><option>Arizona</option><option>Arkansas</option>
+                            <option>California</option><option>Colorado</option><option>Connecticut</option><option>Delaware</option>
+                            <option>Florida</option><option>Georgia</option><option>Hawaii</option><option>Idaho</option>
+                            <option>Illinois</option><option>Indiana</option><option>Iowa</option><option>Kansas</option>
+                            <option>Kentucky</option><option>Louisiana</option><option>Maine</option><option>Maryland</option>
+                            <option>Massachusetts</option><option>Michigan</option><option>Minnesota</option><option>Mississippi</option>
+                            <option>Missouri</option><option>Montana</option><option>Nebraska</option><option>Nevada</option>
+                            <option>New Hampshire</option><option>New Jersey</option><option>New Mexico</option><option>New York</option>
+                            <option>North Carolina</option><option>North Dakota</option><option>Ohio</option><option>Oklahoma</option>
+                            <option>Oregon</option><option>Pennsylvania</option><option>Rhode Island</option><option>South Carolina</option>
+                            <option>South Dakota</option><option>Tennessee</option><option>Texas</option><option>Utah</option>
+                            <option>Vermont</option><option>Virginia</option><option>Washington</option><option>West Virginia</option>
+                            <option>Wisconsin</option><option>Wyoming</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>ZIP Code</label>
+                        <input type="text" placeholder="75201" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Specialty (optional)</label>
+                        <select>
+                            <option value="" disabled selected>Select specialty</option>
+                            <option>Family Medicine</option><option>Internal Medicine</option><option>Cardiology</option>
+                            <option>Orthopedics</option><option>Dermatology</option><option>Pediatrics</option>
+                            <option>OB/GYN</option><option>Psychiatry</option><option>General Surgery</option>
+                            <option>Urgent Care</option><option>Multi-Specialty</option><option>Other</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-divider"></div>
+
+                <!-- PACKAGE SELECTION -->
+                <div class="form-section-label">Select Your Package</div>
+                <div class="package-options">
+                    <label class="package-option" id="pkg-starter" onclick="selectPackage('starter')">
+                        <input type="radio" name="package" value="starter">
+                        <div class="package-name">Starter</div>
+                        <div class="package-price">$2,500</div>
+                        <div class="package-per-provider">+ $149.99 / provider</div>
+                    </label>
+                    <label class="package-option" id="pkg-professional" onclick="selectPackage('professional')">
+                        <input type="radio" name="package" value="professional">
+                        <div class="package-badge">Most Popular</div>
+                        <div class="package-name">Professional</div>
+                        <div class="package-price">$5,000</div>
+                        <div class="package-per-provider">+ $199.99 / provider</div>
+                    </label>
+                    <label class="package-option" id="pkg-enterprise" onclick="selectPackage('enterprise')">
+                        <input type="radio" name="package" value="enterprise">
+                        <div class="package-name">Enterprise</div>
+                        <div class="package-price">Custom</div>
+                        <div class="package-per-provider">Contact for pricing</div>
+                    </label>
+                </div>
+
+                <div class="form-divider"></div>
+
+                <!-- BILLING PROVIDERS -->
+                <div class="form-section-label">Number of Billing Providers</div>
+                <p style="font-size: 13px; color: #73868A; margin-bottom: 1rem; line-height: 1.6;">How many providers (physicians, NPs, PAs) will be billing through VanguardRCM?</p>
+                <div class="provider-counter">
+                    <button type="button" class="counter-btn" onclick="adjustProviders(-1)">−</button>
+                    <div class="counter-value" id="providerCount">1</div>
+                    <button type="button" class="counter-btn" onclick="adjustProviders(1)">+</button>
+                    <span style="font-size: 13px; color: #73868A;">billing providers</span>
+                </div>
+
+                <!-- COST SUMMARY -->
+                <div class="cost-summary" id="costSummary">
+                    <div class="cost-row">
+                        <span class="cost-label">Base fee (<span id="summaryPlan">—</span>)</span>
+                        <span class="cost-value" id="summaryBase">$0.00</span>
+                    </div>
+                    <div class="cost-row">
+                        <span class="cost-label">Provider fee (<span id="summaryProviderCount">1</span> &times; <span id="summaryProviderRate">$0.00</span>)</span>
+                        <span class="cost-value" id="summaryProviderTotal">$0.00</span>
+                    </div>
+                    <div class="cost-row">
+                        <span class="cost-label">Estimated Monthly Total</span>
+                        <span class="cost-value" id="summaryTotal">$0.00</span>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn-submit">Continue to Payment &rarr;</button>
+                <p class="form-footer-note">Your payment information will be securely stored but you will <strong>not be charged</strong> until an onboarding specialist contacts you.</p>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Package data
+        const packages = {
+            starter: { name: 'Starter', base: 2500, perProvider: 149.99 },
+            professional: { name: 'Professional', base: 5000, perProvider: 199.99 },
+            enterprise: { name: 'Enterprise', base: 0, perProvider: 0 }
+        };
+
+        let selectedPackage = null;
+        let providerCount = 1;
+
+        // Check URL params for pre-selected plan
+        const urlParams = new URLSearchParams(window.location.search);
+        const preselectedPlan = urlParams.get('plan');
+        if (preselectedPlan && packages[preselectedPlan]) {
+            window.addEventListener('DOMContentLoaded', () => selectPackage(preselectedPlan));
+        }
+
+        function selectPackage(pkg) {
+            selectedPackage = pkg;
+            document.querySelectorAll('.package-option').forEach(el => el.classList.remove('selected'));
+            document.getElementById('pkg-' + pkg).classList.add('selected');
+            document.querySelector('#pkg-' + pkg + ' input[type="radio"]').checked = true;
+            updateCostSummary();
+        }
+
+        function adjustProviders(delta) {
+            providerCount = Math.max(1, providerCount + delta);
+            document.getElementById('providerCount').textContent = providerCount;
+            updateCostSummary();
+        }
+
+        function updateCostSummary() {
+            if (!selectedPackage) return;
+            const pkg = packages[selectedPackage];
+            const base = pkg.base;
+            const providerTotal = pkg.perProvider * providerCount;
+            const total = base + providerTotal;
+
+            document.getElementById('summaryPlan').textContent = pkg.name;
+            document.getElementById('summaryBase').textContent = '$' + base.toLocaleString('en-US', { minimumFractionDigits: 2 });
+            document.getElementById('summaryProviderCount').textContent = providerCount;
+            document.getElementById('summaryProviderRate').textContent = '$' + pkg.perProvider.toFixed(2);
+            document.getElementById('summaryProviderTotal').textContent = '$' + providerTotal.toLocaleString('en-US', { minimumFractionDigits: 2 });
+            document.getElementById('summaryTotal').textContent = '$' + total.toLocaleString('en-US', { minimumFractionDigits: 2 });
+
+            if (selectedPackage === 'enterprise') {
+                document.getElementById('summaryBase').textContent = 'Custom';
+                document.getElementById('summaryProviderTotal').textContent = 'Custom';
+                document.getElementById('summaryTotal').textContent = 'Contact Sales';
+            }
+        }
+
+        // Form submit
+        document.getElementById('signupForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            if (!selectedPackage) {
+                alert('Please select a package to continue.');
+                return;
+            }
+            // Store data and go to payment page
+            const formData = {
+                package: selectedPackage,
+                providers: providerCount,
+                packageName: packages[selectedPackage].name,
+                base: packages[selectedPackage].base,
+                perProvider: packages[selectedPackage].perProvider
+            };
+            sessionStorage.setItem('signupData', JSON.stringify(formData));
+            window.location.href = 'signup-payment.html';
+        });
+    </script>
+
+</body>
+</html>
