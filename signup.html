@@ -400,6 +400,89 @@
             display: none;
         }
 
+        /* Success Modal */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background-color: rgba(45, 53, 54, 0.4);
+            backdrop-filter: blur(4px);
+            z-index: 9999;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal {
+            background-color: #FFFFFF;
+            border-radius: 20px;
+            padding: 3rem;
+            max-width: 460px;
+            width: 90%;
+            text-align: center;
+            box-shadow: 0 20px 40px rgba(45, 53, 54, 0.12);
+            animation: modalSlideUp 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        @keyframes modalSlideUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .modal-icon {
+            width: 64px;
+            height: 64px;
+            background-color: #E4E9E6;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+        }
+
+        .modal-icon svg {
+            width: 32px;
+            height: 32px;
+            stroke: #697C70;
+            fill: none;
+            stroke-width: 2.5;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        .modal h3 {
+            font-size: 22px;
+            font-weight: 600;
+            color: #2D3536;
+            margin-bottom: 0.75rem;
+        }
+
+        .modal p {
+            font-size: 15px;
+            color: #5A6365;
+            line-height: 1.6;
+            margin-bottom: 2rem;
+        }
+
+        .modal-btn {
+            padding: 0.85rem 2.5rem;
+            background-color: #697C70;
+            color: #FFFFFF;
+            border: none;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .modal-btn:hover {
+            background-color: #586B60;
+        }
+
         @media (max-width: 768px) {
             .signup-container {
                 padding: 2rem 1.5rem;
@@ -544,6 +627,18 @@
         </section>
     </div>
 
+    <!-- Success Modal -->
+    <div class="modal-overlay" id="signupModal">
+        <div class="modal">
+            <div class="modal-icon">
+                <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg>
+            </div>
+            <h3>Account Created!</h3>
+            <p>Thank you for signing up. Your account is currently <strong>pending activation</strong>. Our team is putting the finishing touches on the platform and will notify you by email once your account is ready to access.</p>
+            <button class="modal-btn" onclick="closeSignupModal()">Back to Home</button>
+        </div>
+    </div>
+
     <script>
         let selectedPlan = 'pro';
         let isAnnual = false;
@@ -593,9 +688,17 @@
                 return;
             }
 
-            alert(`Account created!\nPlan: ${selectedPlan.toUpperCase()}\nOrganization: ${orgName}\nWelcome, ${fullName}!`);
-            window.location.href = 'app.html';
+            document.getElementById('signupModal').classList.add('active');
         }
+
+        function closeSignupModal() {
+            document.getElementById('signupModal').classList.remove('active');
+            window.location.href = 'index.html';
+        }
+
+        document.getElementById('signupModal').addEventListener('click', function(e) {
+            if (e.target === this) closeSignupModal();
+        });
 
         document.querySelectorAll('.pricing-card')[1].classList.add('selected');
     </script>
