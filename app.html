@@ -14,6 +14,8 @@
     <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
     <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="https://unpkg.com/prop-types@15.8.1/prop-types.min.js"></script>
+    <script src="https://unpkg.com/recharts@2.12.7/umd/Recharts.js"></script>
     <script src="rcm_config.js"></script>
     <script src="payer_knowledge_base.js"></script>
     <script src="mpfs-data.js"></script>
@@ -2487,6 +2489,8 @@
       green:'#4CAF50',red:'#E53935',amber:'#FF9800',blue:'#2196F3',
       chartColors:['#39463A','#AB8A7A','#73868A','#927C67','#E0D7C7','#8FBC8F','#B0C4DE','#D2B48C','#A0522D','#708090']
     };
+
+    const {LineChart,Line,BarChart,Bar,PieChart,Pie,Cell,AreaChart,Area,XAxis,YAxis,CartesianGrid,Tooltip,ResponsiveContainer,RadialBarChart,RadialBar,Legend}=Recharts;
 
     const DashKPI=({label,value,sub,trend})=>(
       <div className="kpi-card">
@@ -8680,756 +8684,324 @@
      */
     
     const PracticeProfilePage = () => {
-      // Demo practices data
-      const demoPractices = [
+      const [practices, setPractices] = React.useState([
         {
           id: 1,
-          name: 'Desert Valley Medical Group',
-          npi: '1234567890',
-          taxId: '82-1234567',
-          address: '2847 North Rampart Boulevard, Las Vegas, NV 89128',
-          phone: '(702) 555-0147',
-          fax: '(702) 555-0148',
-          email: 'info@desertvalleymedical.com',
-          specialty: 'Internal Medicine, Family Medicine',
-          taxonomyCode: '207Q00000X',
-          billingNpi: '1234567890',
-          payToAddress: '2847 North Rampart Boulevard, Las Vegas, NV 89128',
-          eftEnrolled: true,
-          eraEnrolled: true,
-          locations: [
-            { name: 'Main Campus', address: '2847 North Rampart Boulevard, Las Vegas, NV 89128', phone: '(702) 555-0147', hours: 'M-F 8AM-6PM' },
-            { name: 'West Side Clinic', address: '4521 West Charleston Boulevard, Las Vegas, NV 89102', phone: '(702) 555-0149', hours: 'M-F 9AM-5PM' }
+          organizationName: 'Primary Care Network',
+          groupNPI: '1234567890',
+          practiceName: 'Downtown Medical Center',
+          address: '123 Main Street',
+          city: 'Springfield',
+          state: 'IL',
+          zip: '62701',
+          taxID: '45-1234567',
+          phone: '(217) 555-0100',
+          fax: '(217) 555-0101',
+          facilities: [
+            { id: 1, name: 'Downtown Clinic', address: '123 Main St', city: 'Springfield', state: 'IL', zip: '62701', npi: '1111111111', phone: '(217) 555-0100' }
+          ],
+          providers: [
+            { id: 1, name: 'Dr. John Smith', npi: '2222222222', specialty: 'Internal Medicine', credentials: 'MD', status: 'Active' }
           ]
         },
         {
           id: 2,
-          name: 'Sunrise Family Medicine',
-          npi: '0987654321',
-          taxId: '82-7654321',
-          address: '1425 East Flamingo Road, Las Vegas, NV 89119',
-          phone: '(702) 555-0201',
-          fax: '(702) 555-0202',
-          email: 'contact@sunrisefamily.com',
-          specialty: 'Family Medicine, Pediatrics',
-          taxonomyCode: '207R00000X',
-          billingNpi: '0987654321',
-          payToAddress: '1425 East Flamingo Road, Las Vegas, NV 89119',
-          eftEnrolled: true,
-          eraEnrolled: false,
-          locations: [
-            { name: 'Main Office', address: '1425 East Flamingo Road, Las Vegas, NV 89119', phone: '(702) 555-0201', hours: 'M-F 8AM-7PM, Sat 9AM-3PM' }
-          ]
-        },
-        {
-          id: 3,
-          name: 'Silver State Cardiology',
-          npi: '1122334455',
-          taxId: '82-1122334',
-          address: '7842 South Eastern Avenue, Las Vegas, NV 89123',
-          phone: '(702) 555-0301',
-          fax: '(702) 555-0302',
-          email: 'cardio@silverstatehealth.com',
-          specialty: 'Cardiology, Internal Medicine',
-          taxonomyCode: '207RC0000X',
-          billingNpi: '1122334456',
-          payToAddress: '7842 South Eastern Avenue, Suite 200, Las Vegas, NV 89123',
-          eftEnrolled: true,
-          eraEnrolled: true,
-          locations: [
-            { name: 'Main Clinic', address: '7842 South Eastern Avenue, Las Vegas, NV 89123', phone: '(702) 555-0301', hours: 'M-F 8AM-5PM' },
-            { name: 'Summerlin Office', address: '2951 West Horizon Ridge Parkway, Henderson, NV 89052', phone: '(702) 555-0303', hours: 'M-Th 9AM-6PM, F 9AM-2PM' }
-          ]
-        },
-        {
-          id: 4,
-          name: 'Nevada Orthopedic Associates',
-          npi: '5566778899',
-          taxId: '82-5566778',
-          address: '4120 South Rainbow Boulevard, Las Vegas, NV 89103',
-          phone: '(702) 555-0401',
-          fax: '(702) 555-0402',
-          email: 'admin@nevadaortho.com',
-          specialty: 'Orthopedic Surgery, Sports Medicine',
-          taxonomyCode: '207X00000X',
-          billingNpi: '5566778900',
-          payToAddress: '4120 South Rainbow Boulevard, Suite 100, Las Vegas, NV 89103',
-          eftEnrolled: false,
-          eraEnrolled: true,
-          locations: [
-            { name: 'Main Campus', address: '4120 South Rainbow Boulevard, Las Vegas, NV 89103', phone: '(702) 555-0401', hours: 'M-F 7AM-6PM' },
-            { name: 'Henderson Clinic', address: '900 South Pavilion Center Drive, Las Vegas, NV 89144', phone: '(702) 555-0405', hours: 'M-F 8AM-5PM' },
-            { name: 'North Las Vegas', address: '5400 East Lake Mead Boulevard, North Las Vegas, NV 89030', phone: '(702) 555-0407', hours: 'Tu-Th 10AM-6PM' }
-          ]
+          organizationName: 'Suburban Health Systems',
+          groupNPI: '0987654321',
+          practiceName: 'Westside Family Practice',
+          address: '456 Oak Avenue',
+          city: 'Springfield',
+          state: 'IL',
+          zip: '62702',
+          taxID: '45-9876543',
+          phone: '(217) 555-0200',
+          fax: '(217) 555-0201',
+          facilities: [],
+          providers: []
         }
-      ];
-    
-      // Demo providers data
-      const getDemoProviders = (practiceId) => {
-        const providersByPractice = {
-          1: [
-            { id: 101, name: 'Dr. Michael J. Patterson', npi: '1234567891', specialty: 'Internal Medicine', status: 'Active', caqhId: 'CAQH001', deaNumber: 'MP1234567' },
-            { id: 102, name: 'Dr. Sarah Chen', npi: '1234567892', specialty: 'Family Medicine', status: 'Active', caqhId: 'CAQH002', deaNumber: 'SC1234567' },
-            { id: 103, name: 'Dr. James Whitmore', npi: '1234567893', specialty: 'Internal Medicine', status: 'Active', caqhId: 'CAQH003', deaNumber: 'JW1234567' },
-            { id: 104, name: 'Nurse Practitioner Lisa Rodriguez', npi: '1234567894', specialty: 'Family Medicine', status: 'Active', caqhId: 'CAQH004', deaNumber: 'LR1234567' },
-            { id: 105, name: 'Dr. Robert Patel', npi: '1234567895', specialty: 'Preventive Medicine', status: 'Credentialing', caqhId: 'CAQH005', deaNumber: 'RP1234567' }
-          ],
-          2: [
-            { id: 201, name: 'Dr. Jennifer Martinez', npi: '0987654322', specialty: 'Family Medicine', status: 'Active', caqhId: 'CAQH006', deaNumber: 'JM0987654' },
-            { id: 202, name: 'Dr. David Thompson', npi: '0987654323', specialty: 'Pediatrics', status: 'Active', caqhId: 'CAQH007', deaNumber: 'DT0987654' },
-            { id: 203, name: 'Physician Assistant Karen Smith', npi: '0987654324', specialty: 'Family Medicine', status: 'Active', caqhId: 'CAQH008', deaNumber: 'KS0987654' },
-            { id: 204, name: 'Dr. Christopher Lee', npi: '0987654325', specialty: 'Family Medicine', status: 'Active', caqhId: 'CAQH009', deaNumber: 'CL0987654' },
-            { id: 205, name: 'Dr. Michelle Brown', npi: '0987654326', specialty: 'Pediatrics', status: 'Inactive', caqhId: 'CAQH010', deaNumber: 'MB0987654' },
-            { id: 206, name: 'Nurse Practitioner Amanda Foster', npi: '0987654327', specialty: 'Family Medicine', status: 'Active', caqhId: 'CAQH011', deaNumber: 'AF0987654' }
-          ],
-          3: [
-            { id: 301, name: 'Dr. Howard Weinstein', npi: '1122334456', specialty: 'Cardiology', status: 'Active', caqhId: 'CAQH012', deaNumber: 'HW1122334' },
-            { id: 302, name: 'Dr. Amanda Martinez', npi: '1122334457', specialty: 'Cardiology', status: 'Active', caqhId: 'CAQH013', deaNumber: 'AM1122334' },
-            { id: 303, name: 'Dr. Kenneth Davis', npi: '1122334458', specialty: 'Internal Medicine', status: 'Active', caqhId: 'CAQH014', deaNumber: 'KD1122334' },
-            { id: 304, name: 'Physician Assistant Thomas Wilson', npi: '1122334459', specialty: 'Cardiology', status: 'Active', caqhId: 'CAQH015', deaNumber: 'TW1122334' },
-            { id: 305, name: 'Dr. Rebecca Stone', npi: '1122334460', specialty: 'Cardiology', status: 'Credentialing', caqhId: 'CAQH016', deaNumber: 'RS1122334' },
-            { id: 306, name: 'Nurse Practitioner Diana Jackson', npi: '1122334461', specialty: 'Cardiology', status: 'Active', caqhId: 'CAQH017', deaNumber: 'DJ1122334' },
-            { id: 307, name: 'Dr. George Elliott', npi: '1122334462', specialty: 'Internal Medicine', status: 'Active', caqhId: 'CAQH018', deaNumber: 'GE1122334' }
-          ],
-          4: [
-            { id: 401, name: 'Dr. Marcus Johnson', npi: '5566778901', specialty: 'Orthopedic Surgery', status: 'Active', caqhId: 'CAQH019', deaNumber: 'MJ5566778' },
-            { id: 402, name: 'Dr. Susan Garcia', npi: '5566778902', specialty: 'Orthopedic Surgery', status: 'Active', caqhId: 'CAQH020', deaNumber: 'SG5566778' },
-            { id: 403, name: 'Dr. Brandon Foster', npi: '5566778903', specialty: 'Sports Medicine', status: 'Active', caqhId: 'CAQH021', deaNumber: 'BF5566778' },
-            { id: 404, name: 'Physician Assistant Lisa Anderson', npi: '5566778904', specialty: 'Orthopedic Surgery', status: 'Active', caqhId: 'CAQH022', deaNumber: 'LA5566778' },
-            { id: 405, name: 'Dr. Walter Hayes', npi: '5566778905', specialty: 'Orthopedic Surgery', status: 'Credentialing', caqhId: 'CAQH023', deaNumber: 'WH5566778' },
-            { id: 406, name: 'Dr. Victoria Nelson', npi: '5566778906', specialty: 'Sports Medicine', status: 'Active', caqhId: 'CAQH024', deaNumber: 'VN5566778' },
-            { id: 407, name: 'Nurse Practitioner Edward Moore', npi: '5566778907', specialty: 'Orthopedic Surgery', status: 'Active', caqhId: 'CAQH025', deaNumber: 'EM5566778' },
-            { id: 408, name: 'Dr. Patricia Turner', npi: '5566778908', specialty: 'Orthopedic Surgery', status: 'Active', caqhId: 'CAQH026', deaNumber: 'PT5566778' }
-          ]
-        };
-        return providersByPractice[practiceId] || [];
+      ]);
+
+      const [formData, setFormData] = React.useState({
+        organizationName: '', groupNPI: '', practiceName: '', address: '', city: '', state: '', zip: '', taxID: '', phone: '', fax: '', facilities: [], providers: []
+      });
+
+      const [activeTab, setActiveTab] = React.useState('new');
+      const [selectedPractice, setSelectedPractice] = React.useState(null);
+      const [newFacility, setNewFacility] = React.useState({ name: '', address: '', city: '', state: '', zip: '', npi: '', phone: '' });
+      const [newProvider, setNewProvider] = React.useState({ name: '', npi: '', specialty: '', credentials: '', status: 'Active' });
+      const [expandedSections, setExpandedSections] = React.useState({ newForm: true, facilities: true, providers: true });
+
+      const colors = { deepForest: '#39463A', warmClay: '#AB8A7A', cream: '#F5F3F0', slateBlue: '#73868A', charcoal: '#2D2D2D', lightGray: '#EFEFEF', white: '#FFFFFF', border: '#D5D0CC' };
+
+      const handleInputChange = (e) => {
+        const { name, value } = e.target;
+        setFormData(prev => ({ ...prev, [name]: value }));
       };
-    
-      // Demo insurance enrollments
-      const getInsuranceEnrollments = (practiceId) => {
-        const enrollments = {
-          1: [
-            { id: 'E001', payerName: 'Blue Cross Blue Shield Nevada', payerId: 'BCBS001', effectiveDate: '2024-01-15', status: 'Active', era: 'Yes', eft: 'Yes' },
-            { id: 'E002', payerName: 'UnitedHealthcare Nevada', payerId: 'UHC001', effectiveDate: '2023-11-01', status: 'Active', era: 'Yes', eft: 'Yes' },
-            { id: 'E003', payerName: 'Aetna Nevada', payerId: 'AETNA001', effectiveDate: '2024-03-01', status: 'Pending', era: 'No', eft: 'No' },
-            { id: 'E004', payerName: 'Cigna Nevada', payerId: 'CIGNA001', effectiveDate: '2024-02-15', status: 'Active', era: 'Yes', eft: 'Yes' }
-          ],
-          2: [
-            { id: 'E101', payerName: 'Blue Cross Blue Shield Nevada', payerId: 'BCBS001', effectiveDate: '2024-01-01', status: 'Active', era: 'Yes', eft: 'No' },
-            { id: 'E102', payerName: 'UnitedHealthcare Nevada', payerId: 'UHC001', effectiveDate: '2024-02-01', status: 'Active', era: 'No', eft: 'Yes' },
-            { id: 'E103', payerName: 'Aetna Nevada', payerId: 'AETNA001', effectiveDate: '2023-12-01', status: 'Active', era: 'Yes', eft: 'Yes' }
-          ],
-          3: [
-            { id: 'E201', payerName: 'Blue Cross Blue Shield Nevada', payerId: 'BCBS001', effectiveDate: '2024-01-15', status: 'Active', era: 'Yes', eft: 'Yes' },
-            { id: 'E202', payerName: 'UnitedHealthcare Nevada', payerId: 'UHC001', effectiveDate: '2023-10-01', status: 'Active', era: 'Yes', eft: 'Yes' },
-            { id: 'E203', payerName: 'Cigna Nevada', payerId: 'CIGNA001', effectiveDate: '2024-01-01', status: 'Active', era: 'Yes', eft: 'Yes' },
-            { id: 'E204', payerName: 'Aetna Nevada', payerId: 'AETNA001', effectiveDate: '2024-03-15', status: 'Credentialing', era: 'No', eft: 'No' }
-          ],
-          4: [
-            { id: 'E301', payerName: 'Blue Cross Blue Shield Nevada', payerId: 'BCBS001', effectiveDate: '2023-06-01', status: 'Active', era: 'Yes', eft: 'Yes' },
-            { id: 'E302', payerName: 'UnitedHealthcare Nevada', payerId: 'UHC001', effectiveDate: '2024-02-01', status: 'Active', era: 'Yes', eft: 'No' },
-            { id: 'E303', payerName: 'Cigna Nevada', payerId: 'CIGNA001', effectiveDate: '2024-01-15', status: 'Active', era: 'No', eft: 'Yes' }
-          ]
-        };
-        return enrollments[practiceId] || [];
-      };
-    
-      // State management
-      const [selectedPractice, setSelectedPractice] = React.useState(demoPractices[0]);
-      const [editMode, setEditMode] = React.useState(false);
-      const [searchTerm, setSearchTerm] = React.useState('');
-      const [expandedSection, setExpandedSection] = React.useState('info');
-      const [filteredProviders, setFilteredProviders] = React.useState([]);
-    
-      // Fetch and filter providers
-      React.useEffect(() => {
-        const providers = getDemoProviders(selectedPractice.id);
-        if (searchTerm.trim() === '') {
-          setFilteredProviders(providers);
-        } else {
-          const filtered = providers.filter(p =>
-            p.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            p.npi.includes(searchTerm) ||
-            p.specialty.toLowerCase().includes(searchTerm.toLowerCase())
-          );
-          setFilteredProviders(filtered);
-        }
-      }, [selectedPractice, searchTerm]);
-    
-      const providers = getDemoProviders(selectedPractice.id);
-      const insuranceEnrollments = getInsuranceEnrollments(selectedPractice.id);
-    
-      // Styles
-      const styles = {
-        container: {
-          display: 'flex',
-          height: '100vh',
-          backgroundColor: '#f5f3f0',
-          fontFamily: 'Arial, sans-serif'
-        },
-        sidebar: {
-          width: '300px',
-          backgroundColor: '#39463A',
-          color: 'white',
-          overflowY: 'auto',
-          padding: '20px',
-          boxShadow: '2px 0 5px rgba(0,0,0,0.1)'
-        },
-        sidebarHeader: {
-          fontSize: '18px',
-          fontWeight: 'bold',
-          marginBottom: '15px',
-          color: '#AB8A7A',
-          borderBottom: '2px solid #AB8A7A',
-          paddingBottom: '10px'
-        },
-        practiceListItem: {
-          padding: '12px',
-          marginBottom: '8px',
-          backgroundColor: 'rgba(255,255,255,0.1)',
-          border: '2px solid transparent',
-          borderRadius: '4px',
-          cursor: 'pointer',
-          transition: 'all 0.3s ease',
-          fontSize: '14px'
-        },
-        practiceListItemActive: {
-          backgroundColor: '#AB8A7A',
-          borderColor: '#AB8A7A',
-          fontWeight: 'bold'
-        },
-        mainContent: {
-          flex: 1,
-          overflowY: 'auto',
-          padding: '30px'
-        },
-        header: {
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          marginBottom: '30px',
-          borderBottom: '3px solid #39463A',
-          paddingBottom: '15px'
-        },
-        title: {
-          fontSize: '28px',
-          fontWeight: 'bold',
-          color: '#39463A'
-        },
-        buttonGroup: {
-          display: 'flex',
-          gap: '10px'
-        },
-        button: {
-          padding: '10px 16px',
-          backgroundColor: '#39463A',
-          color: 'white',
-          border: 'none',
-          borderRadius: '4px',
-          cursor: 'pointer',
-          fontSize: '14px',
-          transition: 'background-color 0.3s ease',
-          fontWeight: 'bold'
-        },
-        buttonSecondary: {
-          backgroundColor: '#AB8A7A'
-        },
-        buttonDanger: {
-          backgroundColor: '#C73E3E'
-        },
-        section: {
-          backgroundColor: 'white',
-          borderRadius: '8px',
-          padding: '20px',
-          marginBottom: '20px',
-          boxShadow: '0 2px 8px rgba(0,0,0,0.08)',
-          border: '1px solid #e0dbd5'
-        },
-        sectionTitle: {
-          fontSize: '16px',
-          fontWeight: 'bold',
-          color: '#39463A',
-          marginBottom: '15px',
-          cursor: 'pointer',
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          padding: '10px',
-          backgroundColor: '#f9f7f4',
-          borderRadius: '4px'
-        },
-        sectionContent: {
-          marginTop: '15px'
-        },
-        grid: {
-          display: 'grid',
-          gridTemplateColumns: 'repeat(2, 1fr)',
-          gap: '15px',
-          marginBottom: '15px'
-        },
-        gridItem: {
-          display: 'flex',
-          flexDirection: 'column'
-        },
-        label: {
-          fontSize: '12px',
-          fontWeight: 'bold',
-          color: '#39463A',
-          textTransform: 'uppercase',
-          letterSpacing: '0.5px',
-          marginBottom: '5px'
-        },
-        value: {
-          fontSize: '14px',
-          color: '#333'
-        },
-        input: {
-          padding: '8px 12px',
-          border: '1px solid #d0c8c0',
-          borderRadius: '4px',
-          fontSize: '14px',
-          fontFamily: 'Arial, sans-serif'
-        },
-        table: {
-          width: '100%',
-          borderCollapse: 'collapse',
-          marginTop: '10px'
-        },
-        tableHeader: {
-          backgroundColor: '#f0ebe5',
-          borderBottom: '2px solid #39463A'
-        },
-        tableHeaderCell: {
-          padding: '12px',
-          textAlign: 'left',
-          fontSize: '12px',
-          fontWeight: 'bold',
-          color: '#39463A',
-          textTransform: 'uppercase',
-          letterSpacing: '0.5px'
-        },
-        tableRow: {
-          borderBottom: '1px solid #e0dbd5'
-        },
-        tableCell: {
-          padding: '12px',
-          fontSize: '13px',
-          color: '#333'
-        },
-        badge: {
-          display: 'inline-block',
-          padding: '4px 8px',
-          borderRadius: '3px',
-          fontSize: '11px',
-          fontWeight: 'bold',
-          textTransform: 'uppercase'
-        },
-        badgeActive: {
-          backgroundColor: '#d4f0d4',
-          color: '#1d5e1d'
-        },
-        badgePending: {
-          backgroundColor: '#fff3cd',
-          color: '#856404'
-        },
-        badgeCredentialing: {
-          backgroundColor: '#cfe2ff',
-          color: '#084298'
-        },
-        badgeInactive: {
-          backgroundColor: '#f8d7da',
-          color: '#842029'
-        },
-        billingBox: {
-          display: 'flex',
-          gap: '20px',
-          padding: '15px',
-          backgroundColor: '#f9f7f4',
-          borderRadius: '4px',
-          marginTop: '10px'
-        },
-        billingItem: {
-          flex: 1
-        },
-        searchBox: {
-          padding: '10px 15px',
-          border: '2px solid #39463A',
-          borderRadius: '4px',
-          fontSize: '14px',
-          marginBottom: '15px',
-          fontFamily: 'Arial, sans-serif',
-          width: '100%'
-        },
-        locationsGrid: {
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(400px, 1fr))',
-          gap: '15px',
-          marginTop: '10px'
-        },
-        locationCard: {
-          backgroundColor: '#f9f7f4',
-          borderLeft: '4px solid #AB8A7A',
-          padding: '15px',
-          borderRadius: '4px'
+
+      const handleAddFacility = () => {
+        if (newFacility.name && newFacility.npi) {
+          setFormData(prev => ({ ...prev, facilities: [...prev.facilities, { ...newFacility, id: Date.now() }] }));
+          setNewFacility({ name: '', address: '', city: '', state: '', zip: '', npi: '', phone: '' });
         }
       };
-    
-      const handleHoverPractice = (e) => {
-        e.target.style.transform = 'translateX(5px)';
+
+      const handleAddProvider = () => {
+        if (newProvider.name && newProvider.npi) {
+          setFormData(prev => ({ ...prev, providers: [...prev.providers, { ...newProvider, id: Date.now() }] }));
+          setNewProvider({ name: '', npi: '', specialty: '', credentials: '', status: 'Active' });
+        }
       };
-    
-      const handleHoverOutPractice = (e) => {
-        e.target.style.transform = 'translateX(0)';
+
+      const handleSavePractice = () => {
+        if (formData.organizationName && formData.practiceName) {
+          setPractices(prev => [...prev, { ...formData, id: Date.now() }]);
+          setFormData({ organizationName: '', groupNPI: '', practiceName: '', address: '', city: '', state: '', zip: '', taxID: '', phone: '', fax: '', facilities: [], providers: [] });
+          alert('Practice profile saved successfully!');
+        }
       };
-    
-      const handleButtonHover = (e) => {
-        e.target.style.opacity = '0.85';
+
+      const toggleSection = (section) => {
+        setExpandedSections(prev => ({ ...prev, [section]: !prev[section] }));
       };
-    
-      const handleButtonHoverOut = (e) => {
-        e.target.style.opacity = '1';
+
+      const removeFacility = (id) => {
+        setFormData(prev => ({ ...prev, facilities: prev.facilities.filter(f => f.id !== id) }));
       };
-    
-      const getStatusBadge = (status) => {
-        let badgeStyle = { ...styles.badge };
-        if (status === 'Active') badgeStyle = { ...badgeStyle, ...styles.badgeActive };
-        else if (status === 'Pending') badgeStyle = { ...badgeStyle, ...styles.badgePending };
-        else if (status === 'Credentialing') badgeStyle = { ...badgeStyle, ...styles.badgeCredentialing };
-        else if (status === 'Inactive') badgeStyle = { ...badgeStyle, ...styles.badgeInactive };
-        return badgeStyle;
+
+      const removeProvider = (id) => {
+        setFormData(prev => ({ ...prev, providers: prev.providers.filter(p => p.id !== id) }));
       };
-    
+
+      const inputStyle = { width: '100%', padding: '10px 12px', border: '1px solid ' + colors.border, borderRadius: '4px', fontSize: '13px', boxSizing: 'border-box' };
+      const labelStyle = { display: 'block', color: colors.charcoal, fontSize: '13px', fontWeight: '600', marginBottom: '8px' };
+
       return (
-        <div style={styles.container}>
-          {/* Sidebar - Practice List */}
-          <div style={styles.sidebar}>
-            <div style={styles.sidebarHeader}>Practices</div>
-            {demoPractices.map(practice => (
-              <div
-                key={practice.id}
-                style={{
-                  ...styles.practiceListItem,
-                  ...(selectedPractice.id === practice.id ? styles.practiceListItemActive : {}),
-                  transform: 'translateX(0)',
-                  transition: 'all 0.3s ease'
-                }}
-                onClick={() => setSelectedPractice(practice)}
-                onMouseEnter={handleHoverPractice}
-                onMouseLeave={handleHoverOutPractice}
-              >
-                <div style={{ fontWeight: 'bold' }}>{practice.name}</div>
-                <div style={{ fontSize: '12px', opacity: 0.8, marginTop: '4px' }}>NPI: {practice.npi}</div>
+        <div style={{ backgroundColor: colors.cream, minHeight: '100vh', padding: '30px' }}>
+          <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
+            <div style={{ marginBottom: '40px' }}>
+              <h1 style={{ color: colors.deepForest, fontSize: '32px', fontWeight: '700', margin: '0 0 10px 0' }}>Practice Profiles</h1>
+              <p style={{ color: colors.slateBlue, fontSize: '14px', margin: '0' }}>Manage your practice profiles, facility locations, and billing providers</p>
+            </div>
+
+            <div style={{ display: 'flex', borderBottom: '2px solid ' + colors.border, marginBottom: '30px', gap: '20px' }}>
+              <button onClick={() => setActiveTab('new')} style={{ padding: '12px 20px', background: activeTab === 'new' ? colors.warmClay : 'transparent', color: activeTab === 'new' ? colors.white : colors.slateBlue, border: 'none', cursor: 'pointer', fontSize: '14px', fontWeight: '600', borderBottom: activeTab === 'new' ? '3px solid ' + colors.deepForest : 'none' }}>New Practice Profile</button>
+              <button onClick={() => setActiveTab('existing')} style={{ padding: '12px 20px', background: activeTab === 'existing' ? colors.warmClay : 'transparent', color: activeTab === 'existing' ? colors.white : colors.slateBlue, border: 'none', cursor: 'pointer', fontSize: '14px', fontWeight: '600', borderBottom: activeTab === 'existing' ? '3px solid ' + colors.deepForest : 'none' }}>Existing Practices ({practices.length})</button>
+            </div>
+
+            {activeTab === 'new' && (
+              <div style={{ backgroundColor: colors.white, borderRadius: '8px', padding: '30px', boxShadow: '0 2px 4px rgba(0,0,0,0.1)' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px', paddingBottom: '15px', borderBottom: '1px solid ' + colors.border }}>
+                  <h2 style={{ color: colors.deepForest, fontSize: '20px', fontWeight: '700', margin: '0' }}>New Practice Profile</h2>
+                  <button onClick={() => toggleSection('newForm')} style={{ background: 'none', border: 'none', fontSize: '18px', cursor: 'pointer', color: colors.slateBlue }}>{expandedSections.newForm ? '▼' : '▶'}</button>
+                </div>
+
+                {expandedSections.newForm && (
+                  <>
+                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px', marginBottom: '20px' }}>
+                      <div>
+                        <label style={labelStyle}>Organization</label>
+                        <input type="text" name="organizationName" value={formData.organizationName} onChange={handleInputChange} style={inputStyle} placeholder="Organization Name" />
+                      </div>
+                      <div>
+                        <label style={labelStyle}>Group NPI or Legal</label>
+                        <input type="text" name="groupNPI" value={formData.groupNPI} onChange={handleInputChange} style={inputStyle} placeholder="NPI or Legal Name" />
+                      </div>
+                    </div>
+
+                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px', marginBottom: '20px' }}>
+                      <div>
+                        <label style={labelStyle}>Practice Name</label>
+                        <input type="text" name="practiceName" value={formData.practiceName} onChange={handleInputChange} style={inputStyle} placeholder="Practice Name" />
+                      </div>
+                      <div></div>
+                    </div>
+
+                    <div style={{ marginBottom: '20px', paddingBottom: '20px', borderBottom: '1px solid ' + colors.border }}>
+                      <h3 style={{ color: colors.charcoal, fontSize: '13px', fontWeight: '700', marginBottom: '15px', marginTop: '0' }}>Practice Address</h3>
+                      <div style={{ marginBottom: '15px' }}>
+                        <label style={labelStyle}>Address Line</label>
+                        <input type="text" name="address" value={formData.address} onChange={handleInputChange} style={inputStyle} placeholder="Street Address" />
+                      </div>
+                      <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr 1fr', gap: '15px' }}>
+                        <div>
+                          <label style={labelStyle}>City</label>
+                          <input type="text" name="city" value={formData.city} onChange={handleInputChange} style={inputStyle} placeholder="City" />
+                        </div>
+                        <div>
+                          <label style={labelStyle}>State</label>
+                          <input type="text" name="state" value={formData.state} onChange={handleInputChange} style={inputStyle} placeholder="State" />
+                        </div>
+                        <div>
+                          <label style={labelStyle}>Zip</label>
+                          <input type="text" name="zip" value={formData.zip} onChange={handleInputChange} style={inputStyle} placeholder="Zip" />
+                        </div>
+                      </div>
+                    </div>
+
+                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px', marginBottom: '20px' }}>
+                      <div>
+                        <label style={labelStyle}>Tax ID</label>
+                        <input type="text" name="taxID" value={formData.taxID} onChange={handleInputChange} style={inputStyle} placeholder="Tax ID" />
+                      </div>
+                      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px' }}>
+                        <div>
+                          <label style={labelStyle}>Phone</label>
+                          <input type="text" name="phone" value={formData.phone} onChange={handleInputChange} style={inputStyle} placeholder="Phone" />
+                        </div>
+                        <div>
+                          <label style={labelStyle}>Fax</label>
+                          <input type="text" name="fax" value={formData.fax} onChange={handleInputChange} style={inputStyle} placeholder="Fax" />
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Facility Locations Section */}
+                    <div style={{ marginBottom: '20px', paddingBottom: '20px', borderBottom: '1px solid ' + colors.border }}>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '15px' }}>
+                        <h3 style={{ color: colors.deepForest, fontSize: '14px', fontWeight: '700', margin: '0' }}>Facility Locations (CMS)</h3>
+                        <button onClick={() => toggleSection('facilities')} style={{ background: 'none', border: 'none', fontSize: '16px', cursor: 'pointer', color: colors.slateBlue }}>{expandedSections.facilities ? '▼' : '▶'}</button>
+                      </div>
+
+                      {expandedSections.facilities && (
+                        <>
+                          {formData.facilities.length > 0 && (
+                            <div style={{ marginBottom: '20px', overflowX: 'auto' }}>
+                              <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '12px' }}>
+                                <thead>
+                                  <tr style={{ backgroundColor: colors.lightGray }}>
+                                    {['Facility Name', 'Address', 'City', 'State', 'Zip', 'NPI', 'Phone', 'Action'].map(h => (
+                                      <th key={h} style={{ padding: '10px', textAlign: h === 'Action' ? 'center' : 'left', color: colors.charcoal, fontWeight: '600', borderBottom: '1px solid ' + colors.border }}>{h}</th>
+                                    ))}
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                  {formData.facilities.map(facility => (
+                                    <tr key={facility.id} style={{ borderBottom: '1px solid ' + colors.border }}>
+                                      <td style={{ padding: '10px', color: colors.charcoal }}>{facility.name}</td>
+                                      <td style={{ padding: '10px', color: colors.charcoal }}>{facility.address}</td>
+                                      <td style={{ padding: '10px', color: colors.charcoal }}>{facility.city}</td>
+                                      <td style={{ padding: '10px', color: colors.charcoal }}>{facility.state}</td>
+                                      <td style={{ padding: '10px', color: colors.charcoal }}>{facility.zip}</td>
+                                      <td style={{ padding: '10px', color: colors.charcoal }}>{facility.npi}</td>
+                                      <td style={{ padding: '10px', color: colors.charcoal }}>{facility.phone}</td>
+                                      <td style={{ padding: '10px', textAlign: 'center' }}>
+                                        <button onClick={() => removeFacility(facility.id)} style={{ background: 'none', border: 'none', color: '#DC3545', cursor: 'pointer', fontSize: '12px', fontWeight: '600' }}>Remove</button>
+                                      </td>
+                                    </tr>
+                                  ))}
+                                </tbody>
+                              </table>
+                            </div>
+                          )}
+                          <div style={{ backgroundColor: colors.lightGray, padding: '15px', borderRadius: '4px', marginTop: '15px' }}>
+                            <h4 style={{ color: colors.charcoal, fontSize: '12px', fontWeight: '700', marginTop: '0', marginBottom: '15px' }}>Add New Facility</h4>
+                            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr 1fr 1fr 1fr 1fr', gap: '10px', marginBottom: '15px' }}>
+                              <input type="text" value={newFacility.name} onChange={(e) => setNewFacility({...newFacility, name: e.target.value})} placeholder="Facility Name" style={{ padding: '8px', border: '1px solid ' + colors.border, borderRadius: '4px', fontSize: '12px', boxSizing: 'border-box' }} />
+                              <input type="text" value={newFacility.address} onChange={(e) => setNewFacility({...newFacility, address: e.target.value})} placeholder="Address" style={{ padding: '8px', border: '1px solid ' + colors.border, borderRadius: '4px', fontSize: '12px', boxSizing: 'border-box' }} />
+                              <input type="text" value={newFacility.city} onChange={(e) => setNewFacility({...newFacility, city: e.target.value})} placeholder="City" style={{ padding: '8px', border: '1px solid ' + colors.border, borderRadius: '4px', fontSize: '12px', boxSizing: 'border-box' }} />
+                              <input type="text" value={newFacility.state} onChange={(e) => setNewFacility({...newFacility, state: e.target.value})} placeholder="State" style={{ padding: '8px', border: '1px solid ' + colors.border, borderRadius: '4px', fontSize: '12px', boxSizing: 'border-box' }} />
+                              <input type="text" value={newFacility.zip} onChange={(e) => setNewFacility({...newFacility, zip: e.target.value})} placeholder="Zip" style={{ padding: '8px', border: '1px solid ' + colors.border, borderRadius: '4px', fontSize: '12px', boxSizing: 'border-box' }} />
+                              <input type="text" value={newFacility.npi} onChange={(e) => setNewFacility({...newFacility, npi: e.target.value})} placeholder="NPI" style={{ padding: '8px', border: '1px solid ' + colors.border, borderRadius: '4px', fontSize: '12px', boxSizing: 'border-box' }} />
+                              <input type="text" value={newFacility.phone} onChange={(e) => setNewFacility({...newFacility, phone: e.target.value})} placeholder="Phone" style={{ padding: '8px', border: '1px solid ' + colors.border, borderRadius: '4px', fontSize: '12px', boxSizing: 'border-box' }} />
+                            </div>
+                            <button onClick={handleAddFacility} style={{ padding: '8px 16px', backgroundColor: colors.warmClay, color: colors.white, border: 'none', borderRadius: '4px', cursor: 'pointer', fontSize: '12px', fontWeight: '600' }}>+ Add Facility</button>
+                          </div>
+                        </>
+                      )}
+                    </div>
+
+                    {/* Billing Providers Section */}
+                    <div style={{ marginBottom: '30px' }}>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '15px' }}>
+                        <h3 style={{ color: colors.deepForest, fontSize: '14px', fontWeight: '700', margin: '0' }}>Billing Providers</h3>
+                        <button onClick={() => toggleSection('providers')} style={{ background: 'none', border: 'none', fontSize: '16px', cursor: 'pointer', color: colors.slateBlue }}>{expandedSections.providers ? '▼' : '▶'}</button>
+                      </div>
+
+                      {expandedSections.providers && (
+                        <>
+                          {formData.providers.length > 0 && (
+                            <div style={{ marginBottom: '20px', overflowX: 'auto' }}>
+                              <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '12px' }}>
+                                <thead>
+                                  <tr style={{ backgroundColor: colors.lightGray }}>
+                                    {['Provider Name', 'NPI', 'Specialty', 'Credentials', 'Status', 'Action'].map(h => (
+                                      <th key={h} style={{ padding: '10px', textAlign: h === 'Action' ? 'center' : 'left', color: colors.charcoal, fontWeight: '600', borderBottom: '1px solid ' + colors.border }}>{h}</th>
+                                    ))}
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                  {formData.providers.map(provider => (
+                                    <tr key={provider.id} style={{ borderBottom: '1px solid ' + colors.border }}>
+                                      <td style={{ padding: '10px', color: colors.charcoal }}>{provider.name}</td>
+                                      <td style={{ padding: '10px', color: colors.charcoal }}>{provider.npi}</td>
+                                      <td style={{ padding: '10px', color: colors.charcoal }}>{provider.specialty}</td>
+                                      <td style={{ padding: '10px', color: colors.charcoal }}>{provider.credentials}</td>
+                                      <td style={{ padding: '10px' }}>
+                                        <span style={{ padding: '4px 12px', borderRadius: '20px', backgroundColor: provider.status === 'Active' ? '#D4EDDA' : '#F8D7DA', color: provider.status === 'Active' ? '#155724' : '#721C24', fontSize: '11px', fontWeight: '600' }}>{provider.status}</span>
+                                      </td>
+                                      <td style={{ padding: '10px', textAlign: 'center' }}>
+                                        <button onClick={() => removeProvider(provider.id)} style={{ background: 'none', border: 'none', color: '#DC3545', cursor: 'pointer', fontSize: '12px', fontWeight: '600' }}>Remove</button>
+                                      </td>
+                                    </tr>
+                                  ))}
+                                </tbody>
+                              </table>
+                            </div>
+                          )}
+                          <div style={{ backgroundColor: colors.lightGray, padding: '15px', borderRadius: '4px', marginTop: '15px' }}>
+                            <h4 style={{ color: colors.charcoal, fontSize: '12px', fontWeight: '700', marginTop: '0', marginBottom: '15px' }}>Add New Provider</h4>
+                            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr 1fr 1fr', gap: '10px', marginBottom: '15px' }}>
+                              <input type="text" value={newProvider.name} onChange={(e) => setNewProvider({...newProvider, name: e.target.value})} placeholder="Provider Name" style={{ padding: '8px', border: '1px solid ' + colors.border, borderRadius: '4px', fontSize: '12px', boxSizing: 'border-box' }} />
+                              <input type="text" value={newProvider.npi} onChange={(e) => setNewProvider({...newProvider, npi: e.target.value})} placeholder="NPI" style={{ padding: '8px', border: '1px solid ' + colors.border, borderRadius: '4px', fontSize: '12px', boxSizing: 'border-box' }} />
+                              <input type="text" value={newProvider.specialty} onChange={(e) => setNewProvider({...newProvider, specialty: e.target.value})} placeholder="Specialty" style={{ padding: '8px', border: '1px solid ' + colors.border, borderRadius: '4px', fontSize: '12px', boxSizing: 'border-box' }} />
+                              <input type="text" value={newProvider.credentials} onChange={(e) => setNewProvider({...newProvider, credentials: e.target.value})} placeholder="Credentials" style={{ padding: '8px', border: '1px solid ' + colors.border, borderRadius: '4px', fontSize: '12px', boxSizing: 'border-box' }} />
+                              <select value={newProvider.status} onChange={(e) => setNewProvider({...newProvider, status: e.target.value})} style={{ padding: '8px', border: '1px solid ' + colors.border, borderRadius: '4px', fontSize: '12px', boxSizing: 'border-box' }}>
+                                <option value="Active">Active</option>
+                                <option value="Inactive">Inactive</option>
+                              </select>
+                            </div>
+                            <button onClick={handleAddProvider} style={{ padding: '8px 16px', backgroundColor: colors.warmClay, color: colors.white, border: 'none', borderRadius: '4px', cursor: 'pointer', fontSize: '12px', fontWeight: '600' }}>+ Add Provider</button>
+                          </div>
+                        </>
+                      )}
+                    </div>
+
+                    <div style={{ display: 'flex', gap: '10px', justifyContent: 'flex-end' }}>
+                      <button onClick={() => setFormData({ organizationName: '', groupNPI: '', practiceName: '', address: '', city: '', state: '', zip: '', taxID: '', phone: '', fax: '', facilities: [], providers: [] })} style={{ padding: '12px 24px', backgroundColor: colors.lightGray, color: colors.charcoal, border: '1px solid ' + colors.border, borderRadius: '4px', cursor: 'pointer', fontSize: '13px', fontWeight: '600' }}>Clear</button>
+                      <button onClick={handleSavePractice} style={{ padding: '12px 24px', backgroundColor: colors.warmClay, color: colors.white, border: 'none', borderRadius: '4px', cursor: 'pointer', fontSize: '13px', fontWeight: '600' }}>Save Practice Profile</button>
+                    </div>
+                  </>
+                )}
               </div>
-            ))}
-            <button
-              style={{
-                ...styles.button,
-                ...styles.buttonSecondary,
-                width: '100%',
-                marginTop: '20px'
-              }}
-              onMouseEnter={handleButtonHover}
-              onMouseLeave={handleButtonHoverOut}
-            >
-              + Add Practice
-            </button>
-          </div>
-    
-          {/* Main Content */}
-          <div style={styles.mainContent}>
-            {/* Header */}
-            <div style={styles.header}>
+            )}
+
+            {activeTab === 'existing' && (
               <div>
-                <div style={styles.title}>{selectedPractice.name}</div>
-                <div style={{ color: '#39463A', fontSize: '13px', marginTop: '5px' }}>
-                  Tax ID: {selectedPractice.taxId} | NPI: {selectedPractice.npi}
-                </div>
-              </div>
-              <div style={styles.buttonGroup}>
-                <button
-                  style={{
-                    ...styles.button,
-                    ...(editMode ? styles.buttonDanger : styles.buttonSecondary)
-                  }}
-                  onClick={() => setEditMode(!editMode)}
-                  onMouseEnter={handleButtonHover}
-                  onMouseLeave={handleButtonHoverOut}
-                >
-                  {editMode ? 'Cancel' : 'Edit'}
-                </button>
-                <button
-                  style={styles.button}
-                  onMouseEnter={handleButtonHover}
-                  onMouseLeave={handleButtonHoverOut}
-                >
-                  Save
-                </button>
-              </div>
-            </div>
-    
-            {/* Practice Information Section */}
-            <div style={styles.section}>
-              <div
-                style={styles.sectionTitle}
-                onClick={() => setExpandedSection(expandedSection === 'info' ? '' : 'info')}
-              >
-                <span>Practice Information</span>
-                <span style={{ fontSize: '16px' }}>{expandedSection === 'info' ? '▼' : '▶'}</span>
-              </div>
-              {(expandedSection === 'info' || expandedSection === '') && (
-                <div style={styles.sectionContent}>
-                  <div style={styles.grid}>
-                    <div style={styles.gridItem}>
-                      <div style={styles.label}>Practice Name</div>
-                      <div style={styles.value}>{selectedPractice.name}</div>
-                    </div>
-                    <div style={styles.gridItem}>
-                      <div style={styles.label}>NPI</div>
-                      <div style={styles.value}>{selectedPractice.npi}</div>
-                    </div>
-                    <div style={styles.gridItem}>
-                      <div style={styles.label}>Tax ID</div>
-                      <div style={styles.value}>{selectedPractice.taxId}</div>
-                    </div>
-                    <div style={styles.gridItem}>
-                      <div style={styles.label}>Specialty</div>
-                      <div style={styles.value}>{selectedPractice.specialty}</div>
-                    </div>
-                    <div style={styles.gridItem}>
-                      <div style={styles.label}>Taxonomy Code</div>
-                      <div style={styles.value}>{selectedPractice.taxonomyCode}</div>
-                    </div>
-                    <div style={styles.gridItem}>
-                      <div style={styles.label}>Phone</div>
-                      <div style={styles.value}>{selectedPractice.phone}</div>
-                    </div>
-                    <div style={styles.gridItem}>
-                      <div style={styles.label}>Fax</div>
-                      <div style={styles.value}>{selectedPractice.fax}</div>
-                    </div>
-                    <div style={styles.gridItem}>
-                      <div style={styles.label}>Email</div>
-                      <div style={styles.value}>{selectedPractice.email}</div>
-                    </div>
-                  </div>
-                  <div style={{ marginTop: '20px' }}>
-                    <div style={styles.label}>Street Address</div>
-                    <div style={styles.value}>{selectedPractice.address}</div>
-                  </div>
-                </div>
-              )}
-            </div>
-    
-            {/* Billing Information Section */}
-            <div style={styles.section}>
-              <div
-                style={styles.sectionTitle}
-                onClick={() => setExpandedSection(expandedSection === 'billing' ? '' : 'billing')}
-              >
-                <span>Billing Information</span>
-                <span style={{ fontSize: '16px' }}>{expandedSection === 'billing' ? '▼' : '▶'}</span>
-              </div>
-              {(expandedSection === 'billing' || expandedSection === '') && (
-                <div style={styles.sectionContent}>
-                  <div style={styles.grid}>
-                    <div style={styles.gridItem}>
-                      <div style={styles.label}>Billing NPI</div>
-                      <div style={styles.value}>{selectedPractice.billingNpi}</div>
-                    </div>
-                    <div style={styles.gridItem}>
-                      <div style={styles.label}>Pay-to Address</div>
-                      <div style={styles.value}>{selectedPractice.payToAddress}</div>
-                    </div>
-                  </div>
-                  <div style={styles.billingBox}>
-                    <div style={styles.billingItem}>
-                      <div style={styles.label}>EFT Enrolled</div>
-                      <div style={styles.value}>
-                        <span style={getStatusBadge(selectedPractice.eftEnrolled ? 'Active' : 'Inactive')}>
-                          {selectedPractice.eftEnrolled ? 'Yes' : 'No'}
-                        </span>
+                {practices.map(practice => (
+                  <div key={practice.id} style={{ backgroundColor: colors.white, borderRadius: '8px', padding: '20px', marginBottom: '15px', boxShadow: '0 2px 4px rgba(0,0,0,0.1)', cursor: 'pointer', border: selectedPractice && selectedPractice.id === practice.id ? '2px solid ' + colors.warmClay : '1px solid ' + colors.border }} onClick={() => setSelectedPractice(selectedPractice && selectedPractice.id === practice.id ? null : practice)}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                      <div>
+                        <h3 style={{ color: colors.deepForest, fontSize: '16px', fontWeight: '700', margin: '0 0 5px 0' }}>{practice.practiceName}</h3>
+                        <p style={{ color: colors.slateBlue, fontSize: '13px', margin: '0' }}>{practice.organizationName} | {practice.city}, {practice.state}</p>
                       </div>
+                      <span style={{ color: colors.slateBlue, fontSize: '18px' }}>{selectedPractice && selectedPractice.id === practice.id ? '▼' : '▶'}</span>
                     </div>
-                    <div style={styles.billingItem}>
-                      <div style={styles.label}>ERA Enrolled</div>
-                      <div style={styles.value}>
-                        <span style={getStatusBadge(selectedPractice.eraEnrolled ? 'Active' : 'Inactive')}>
-                          {selectedPractice.eraEnrolled ? 'Yes' : 'No'}
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              )}
-            </div>
-    
-            {/* Office Locations Section */}
-            <div style={styles.section}>
-              <div
-                style={styles.sectionTitle}
-                onClick={() => setExpandedSection(expandedSection === 'locations' ? '' : 'locations')}
-              >
-                <span>Office Locations</span>
-                <span style={{ fontSize: '16px' }}>{expandedSection === 'locations' ? '▼' : '▶'}</span>
-              </div>
-              {(expandedSection === 'locations' || expandedSection === '') && (
-                <div style={styles.sectionContent}>
-                  <div style={styles.locationsGrid}>
-                    {selectedPractice.locations.map((location, idx) => (
-                      <div key={idx} style={styles.locationCard}>
-                        <div style={{ fontSize: '14px', fontWeight: 'bold', color: '#39463A', marginBottom: '10px' }}>
-                          {location.name}
+                    {selectedPractice && selectedPractice.id === practice.id && (
+                      <div style={{ marginTop: '20px', paddingTop: '20px', borderTop: '1px solid ' + colors.border }}>
+                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px', marginBottom: '20px' }}>
+                          <div><p style={{ color: colors.slateBlue, fontSize: '12px', fontWeight: '600', margin: '0 0 5px 0' }}>Group NPI</p><p style={{ color: colors.charcoal, fontSize: '13px', margin: '0' }}>{practice.groupNPI}</p></div>
+                          <div><p style={{ color: colors.slateBlue, fontSize: '12px', fontWeight: '600', margin: '0 0 5px 0' }}>Tax ID</p><p style={{ color: colors.charcoal, fontSize: '13px', margin: '0' }}>{practice.taxID}</p></div>
+                          <div><p style={{ color: colors.slateBlue, fontSize: '12px', fontWeight: '600', margin: '0 0 5px 0' }}>Phone</p><p style={{ color: colors.charcoal, fontSize: '13px', margin: '0' }}>{practice.phone}</p></div>
+                          <div><p style={{ color: colors.slateBlue, fontSize: '12px', fontWeight: '600', margin: '0 0 5px 0' }}>Fax</p><p style={{ color: colors.charcoal, fontSize: '13px', margin: '0' }}>{practice.fax}</p></div>
                         </div>
-                        <div style={{ fontSize: '13px', color: '#555', marginBottom: '8px' }}>
-                          <div>{location.address}</div>
-                          <div style={{ marginTop: '5px' }}>Phone: {location.phone}</div>
-                          <div>Hours: {location.hours}</div>
-                        </div>
+                        <p style={{ color: colors.slateBlue, fontSize: '12px', fontWeight: '600', margin: '15px 0 10px 0' }}>Address</p>
+                        <p style={{ color: colors.charcoal, fontSize: '13px', margin: '0' }}>{practice.address}, {practice.city}, {practice.state} {practice.zip}</p>
                       </div>
-                    ))}
+                    )}
                   </div>
-                </div>
-              )}
-            </div>
-    
-            {/* Provider Roster Section */}
-            <div style={styles.section}>
-              <div
-                style={styles.sectionTitle}
-                onClick={() => setExpandedSection(expandedSection === 'providers' ? '' : 'providers')}
-              >
-                <span>Provider Roster ({providers.length})</span>
-                <span style={{ fontSize: '16px' }}>{expandedSection === 'providers' ? '▼' : '▶'}</span>
+                ))}
               </div>
-              {(expandedSection === 'providers' || expandedSection === '') && (
-                <div style={styles.sectionContent}>
-                  <input
-                    type="text"
-                    placeholder="Search providers by name, NPI, or specialty..."
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                    style={styles.searchBox}
-                  />
-                  <button
-                    style={{
-                      ...styles.button,
-                      ...styles.buttonSecondary,
-                      marginBottom: '15px'
-                    }}
-                    onMouseEnter={handleButtonHover}
-                    onMouseLeave={handleButtonHoverOut}
-                  >
-                    + Add Provider
-                  </button>
-                  <table style={styles.table}>
-                    <thead style={styles.tableHeader}>
-                      <tr>
-                        <th style={styles.tableHeaderCell}>Provider Name</th>
-                        <th style={styles.tableHeaderCell}>NPI</th>
-                        <th style={styles.tableHeaderCell}>Specialty</th>
-                        <th style={styles.tableHeaderCell}>Status</th>
-                        <th style={styles.tableHeaderCell}>CAQH ID</th>
-                        <th style={styles.tableHeaderCell}>DEA Number</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {filteredProviders.map(provider => (
-                        <tr key={provider.id} style={styles.tableRow}>
-                          <td style={styles.tableCell}>{provider.name}</td>
-                          <td style={styles.tableCell}>{provider.npi}</td>
-                          <td style={styles.tableCell}>{provider.specialty}</td>
-                          <td style={styles.tableCell}>
-                            <span style={getStatusBadge(provider.status)}>{provider.status}</span>
-                          </td>
-                          <td style={styles.tableCell}>{provider.caqhId}</td>
-                          <td style={styles.tableCell}>{provider.deaNumber}</td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-              )}
-            </div>
-    
-            {/* Insurance Enrollments Section */}
-            <div style={styles.section}>
-              <div
-                style={styles.sectionTitle}
-                onClick={() => setExpandedSection(expandedSection === 'insurance' ? '' : 'insurance')}
-              >
-                <span>Insurance Enrollments ({insuranceEnrollments.length})</span>
-                <span style={{ fontSize: '16px' }}>{expandedSection === 'insurance' ? '▼' : '▶'}</span>
-              </div>
-              {(expandedSection === 'insurance' || expandedSection === '') && (
-                <div style={styles.sectionContent}>
-                  <table style={styles.table}>
-                    <thead style={styles.tableHeader}>
-                      <tr>
-                        <th style={styles.tableHeaderCell}>Payer Name</th>
-                        <th style={styles.tableHeaderCell}>Payer ID</th>
-                        <th style={styles.tableHeaderCell}>Effective Date</th>
-                        <th style={styles.tableHeaderCell}>Status</th>
-                        <th style={styles.tableHeaderCell}>ERA</th>
-                        <th style={styles.tableHeaderCell}>EFT</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {insuranceEnrollments.map(enrollment => (
-                        <tr key={enrollment.id} style={styles.tableRow}>
-                          <td style={styles.tableCell}>{enrollment.payerName}</td>
-                          <td style={styles.tableCell}>{enrollment.payerId}</td>
-                          <td style={styles.tableCell}>{enrollment.effectiveDate}</td>
-                          <td style={styles.tableCell}>
-                            <span style={getStatusBadge(enrollment.status)}>{enrollment.status}</span>
-                          </td>
-                          <td style={styles.tableCell}>{enrollment.era}</td>
-                          <td style={styles.tableCell}>{enrollment.eft}</td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-              )}
-            </div>
-    
-            {/* Credentialing Status Section */}
-            <div style={styles.section}>
-              <div
-                style={styles.sectionTitle}
-                onClick={() => setExpandedSection(expandedSection === 'credentialing' ? '' : 'credentialing')}
-              >
-                <span>Credentialing Status</span>
-                <span style={{ fontSize: '16px' }}>{expandedSection === 'credentialing' ? '▼' : '▶'}</span>
-              </div>
-              {(expandedSection === 'credentialing' || expandedSection === '') && (
-                <div style={styles.sectionContent}>
-                  <div style={styles.grid}>
-                    <div style={styles.gridItem}>
-                      <div style={styles.label}>Total Providers</div>
-                      <div style={styles.value}>{providers.length}</div>
-                    </div>
-                    <div style={styles.gridItem}>
-                      <div style={styles.label}>Active Providers</div>
-                      <div style={styles.value}>{providers.filter(p => p.status === 'Active').length}</div>
-                    </div>
-                    <div style={styles.gridItem}>
-                      <div style={styles.label}>In Credentialing</div>
-                      <div style={styles.value}>{providers.filter(p => p.status === 'Credentialing').length}</div>
-                    </div>
-                    <div style={styles.gridItem}>
-                      <div style={styles.label}>Inactive Providers</div>
-                      <div style={styles.value}>{providers.filter(p => p.status === 'Inactive').length}</div>
-                    </div>
-                  </div>
-                  <div style={{ marginTop: '20px', padding: '15px', backgroundColor: '#f0f5f0', borderRadius: '4px', borderLeft: '4px solid #39463A' }}>
-                    <div style={{ fontSize: '13px', color: '#333', lineHeight: '1.6' }}>
-                      <strong>Credentialing Summary:</strong> This practice has {providers.filter(p => p.status === 'Active').length} fully credentialed providers across {insuranceEnrollments.length} insurance payers.
-                      {providers.filter(p => p.status === 'Credentialing').length > 0 && ` ${providers.filter(p => p.status === 'Credentialing').length} provider(s) currently in credentialing process.`}
-                    </div>
-                  </div>
-                </div>
-              )}
-            </div>
+            )}
           </div>
         </div>
       );
@@ -9957,970 +9529,723 @@
     
     
     const MedicalCodingPage = ({ apiKey, practices }) => {
-      const [selectedEncounter, setSelectedEncounter] = React.useState(null);
-      const [encounters, setEncounters] = React.useState([
-        {
-          id: 'ENC001',
-          patient: 'James Mitchell',
-          dos: '2026-03-28',
-          provider: 'Dr. Sarah Chen',
-          procedure: 'Office visit - Established patient, moderate complexity',
-          status: 'Pending Review',
-          clinicalNotes: 'Patient presents with complaint of lower back pain x 2 weeks. Pain is worse with bending and lifting. Patient reports morning stiffness. Denies radiation to legs. On examination, mild tenderness over lumbar spine, normal neurological exam. No evidence of acute distress. Assessment: Acute lower back strain. Plan: Rest, NSAIDs, physical therapy referral.',
-          cptCodes: [],
-          icd10Codes: [],
-          modifiers: []
-        },
-        {
-          id: 'ENC002',
-          patient: 'Maria Rodriguez',
-          dos: '2026-03-28',
-          provider: 'Dr. Michael Park',
-          procedure: 'Knee arthroscopy with meniscectomy',
-          status: 'AI Suggested',
-          clinicalNotes: 'Patient with meniscal tear confirmed on MRI. Underwent arthroscopic evaluation. Medial meniscus tear identified and debrided. Lateral meniscus intact. No chondral lesions noted. Procedure completed without complication. Patient tolerated well.',
-          cptCodes: [],
-          icd10Codes: [],
-          modifiers: []
-        },
-        {
-          id: 'ENC003',
-          patient: 'Robert Johnson',
-          dos: '2026-03-27',
-          provider: 'Dr. Lisa Wong',
-          procedure: 'Comprehensive metabolic panel review',
-          status: 'Approved',
-          clinicalNotes: 'Patient with Type 2 diabetes presenting for annual physical. Labs reviewed: glucose 156, BUN 18, creatinine 0.9, sodium 138, potassium 4.2. All electrolytes normal. Glucose slightly elevated, currently on metformin.',
-          cptCodes: [{ code: '99215', desc: 'Office visit - Established patient, high complexity', confidence: 98 }],
-          icd10Codes: [{ code: 'E11.9', desc: 'Type 2 diabetes without complications', confidence: 96 }],
-          modifiers: []
-        },
-        {
-          id: 'ENC004',
-          patient: 'Patricia Williams',
-          dos: '2026-03-27',
-          provider: 'Dr. James Anderson',
-          procedure: 'Shoulder injection - Rotator cuff',
-          status: 'Needs Clarification',
-          clinicalNotes: 'Patient with chronic rotator cuff tendinitis. Underwent subacromial injection of corticosteroid and local anesthetic. Ultrasound guidance used. Patient tolerated procedure well. Will follow up in 6 weeks.',
-          cptCodes: [],
-          icd10Codes: [],
-          modifiers: []
-        },
-        {
-          id: 'ENC005',
-          patient: 'David Brown',
-          dos: '2026-03-26',
-          provider: 'Dr. Rachel Green',
-          procedure: 'Venipuncture and blood cultures',
-          status: 'Pending Review',
-          clinicalNotes: 'Patient presenting with fever and chills. Suspect sepsis. Blood cultures obtained x 2 sets. CBC and CMP ordered. Patient started on empiric antibiotics pending culture results.',
-          cptCodes: [],
-          icd10Codes: [],
-          modifiers: []
-        },
-        {
-          id: 'ENC006',
-          patient: 'Susan Taylor',
-          dos: '2026-03-26',
-          provider: 'Dr. Kevin Martinez',
-          procedure: 'Pap smear with HPV testing',
-          status: 'AI Suggested',
-          clinicalNotes: 'Patient presents for routine gynecological exam and screening. Pap smear collected. HPV testing ordered. Routine preventive care. Patient counseled on results timeline.',
-          cptCodes: [],
-          icd10Codes: [],
-          modifiers: []
-        },
-        {
-          id: 'ENC007',
-          patient: 'Thomas Harris',
-          dos: '2026-03-25',
-          provider: 'Dr. Amanda Scott',
-          procedure: 'Echocardiogram - Transthoracic',
-          status: 'Pending Review',
-          clinicalNotes: 'Patient with history of hypertension. Transthoracic echocardiogram performed. Left ventricular function normal. No significant valvular disease. EF approximately 55%. No pericardial effusion.',
-          cptCodes: [],
-          icd10Codes: [],
-          modifiers: []
-        },
-        {
-          id: 'ENC008',
-          patient: 'Jennifer White',
-          dos: '2026-03-25',
-          provider: 'Dr. Christopher Davis',
-          procedure: 'Trigger point injection - Multiple sites',
-          status: 'AI Suggested',
-          clinicalNotes: 'Patient with myofascial pain syndrome. Trigger point injections administered to bilateral trapezius and rhomboid muscles. Lidocaine and triamcinolone used. Patient tolerating well.',
-          cptCodes: [],
-          icd10Codes: [],
-          modifiers: []
-        },
-        {
-          id: 'ENC009',
-          patient: 'Charles Lee',
-          dos: '2026-03-24',
-          provider: 'Dr. Elizabeth Thompson',
-          procedure: 'Diabetes management consultation',
-          status: 'Approved',
-          clinicalNotes: 'Patient with Type 2 diabetes returning for medication management. Current medications reviewed. A1C 7.2%. Patient compliant with regimen. Adjustment made to Lisinopril dosage.',
-          cptCodes: [{ code: '99213', desc: 'Office visit - Established patient, low complexity', confidence: 94 }],
-          icd10Codes: [{ code: 'E11.65', desc: 'Type 2 diabetes with hypoglycemia with coma', confidence: 85 }],
-          modifiers: []
-        },
-        {
-          id: 'ENC010',
-          patient: 'Nicole Allen',
-          dos: '2026-03-24',
-          provider: 'Dr. Daniel Jackson',
-          procedure: 'X-ray - Chest, 2 views',
-          status: 'Pending Review',
-          clinicalNotes: 'Patient with persistent cough and shortness of breath. Chest X-ray obtained. No acute infiltrates. Mild hyperinflation suggestive of COPD. Heart size normal.',
-          cptCodes: [],
-          icd10Codes: [],
-          modifiers: []
-        }
+      const [activeMainTab, setActiveMainTab] = React.useState('single');
+      const [formData, setFormData] = React.useState({
+        providerName: '', renderingProvider: '', facilityLocation: '', placeOfService: '', posCode: '',
+        specialty: '', insuranceCompany: '', planType: '', dateOfBirth: '', chartDate: '',
+        race: '', renderingProviderNpi: '', state: '', dateOfService: '', dxAge: '', payToAddress: '',
+        icd10cm: '', mrn: '', clinicalNotes: ''
+      });
+      const [expandedSections, setExpandedSections] = React.useState({ demographics: false, guarantor: false, insurance: false });
+      const [uploadedFile, setUploadedFile] = React.useState(null);
+      const [batchFile, setBatchFile] = React.useState(null);
+      const [batchProcessing, setBatchProcessing] = React.useState(false);
+      const [batchProgress, setBatchProgress] = React.useState(0);
+      const [batchResults, setBatchResults] = React.useState([]);
+      const [batchCompleted, setBatchCompleted] = React.useState(false);
+      const [flaggedItems, setFlaggedItems] = React.useState([
+        { id: 'FLAG001', patient: 'James Mitchell', dos: '2026-03-28', provider: 'Dr. Sarah Chen', originalDx: 'M54.5', recommendedDx: 'M54.51', originalCpt: '99214', recommendedCpt: '99214', reason: 'DX code M54.5 is non-specific. Recommend M54.51 (Vertebrogenic low back pain) for higher specificity.', status: 'pending', source: 'single' },
+        { id: 'FLAG002', patient: 'Maria Rodriguez', dos: '2026-03-28', provider: 'Dr. Michael Park', originalDx: 'M23.20', recommendedDx: 'M23.21', originalCpt: '29881', recommendedCpt: '29881', reason: 'Laterality not specified. Recommend M23.21 (Derangement of meniscus, right knee).', status: 'pending', source: 'single' }
       ]);
-    
-      const [searchQuery, setSearchQuery] = React.useState('');
-      const [searchResults, setSearchResults] = React.useState([]);
-      const [showSearch, setShowSearch] = React.useState(false);
-      const [chatMessages, setChatMessages] = React.useState([
-        { sender: 'ai', text: 'Hello! I\'m CodingPro, your AI coding assistant. How can I help with your medical coding questions today?' }
-      ]);
-      const [chatInput, setChatInput] = React.useState('');
-      const [auditTrail, setAuditTrail] = React.useState([]);
-    
-      const demoCodeDatabase = {
+      const [codedClaims, setCodedClaims] = React.useState([]);
+      const [batchReport, setBatchReport] = React.useState(null);
+      const [codingResult, setCodingResult] = React.useState(null);
+      const [isProcessing, setIsProcessing] = React.useState(false);
+      const [codingReports, setCodingReports] = React.useState([]);
+      const [showReport, setShowReport] = React.useState(null);
+
+      const colors = { deepForest: '#39463A', warmClay: '#AB8A7A', cream: '#F5F3F0', slateBlue: '#73868A', charcoal: '#2D2D2D', lightGray: '#E8E6E3', white: '#FFFFFF', border: '#D5D0CC' };
+
+      // ========== AI CODING ENGINE ==========
+      const codeDatabase = {
         cpt: [
-          { code: '99213', desc: 'Office visit - Est. patient, low complexity', category: 'E/M' },
-          { code: '99214', desc: 'Office visit - Est. patient, moderate complexity', category: 'E/M' },
-          { code: '99215', desc: 'Office visit - Est. patient, high complexity', category: 'E/M' },
-          { code: '29881', desc: 'Knee arthroscopy with meniscectomy', category: 'Surgery' },
-          { code: '80053', desc: 'Comprehensive metabolic panel', category: 'Lab' },
-          { code: '20610', desc: 'Shoulder injection - Single tendon', category: 'Procedure' },
-          { code: '36415', desc: 'Venipuncture', category: 'Procedure' },
-          { code: '88175', desc: 'Pap smear with HPV', category: 'Pathology' },
-          { code: '93000', desc: 'Electrocardiogram', category: 'Diagnostic' },
-          { code: '93306', desc: 'Echocardiogram - Transthoracic', category: 'Diagnostic' },
-          { code: '20553', desc: 'Trigger point injection - Single or multiple', category: 'Procedure' },
-          { code: '99285', desc: 'ED visit - High severity', category: 'E/M' }
+          { code: '99213', desc: 'Office visit - Est. patient, low complexity', category: 'E/M', rvu: 1.3 },
+          { code: '99214', desc: 'Office visit - Est. patient, moderate complexity', category: 'E/M', rvu: 1.92 },
+          { code: '99215', desc: 'Office visit - Est. patient, high complexity', category: 'E/M', rvu: 2.8 },
+          { code: '99203', desc: 'Office visit - New patient, low complexity', category: 'E/M', rvu: 1.6 },
+          { code: '99204', desc: 'Office visit - New patient, moderate complexity', category: 'E/M', rvu: 2.6 },
+          { code: '99205', desc: 'Office visit - New patient, high complexity', category: 'E/M', rvu: 3.5 },
+          { code: '29881', desc: 'Knee arthroscopy with meniscectomy', category: 'Surgery', rvu: 7.41 },
+          { code: '80053', desc: 'Comprehensive metabolic panel', category: 'Lab', rvu: 0.0 },
+          { code: '20610', desc: 'Arthrocentesis, major joint - injection', category: 'Procedure', rvu: 1.52 },
+          { code: '36415', desc: 'Venipuncture', category: 'Procedure', rvu: 0.17 },
+          { code: '88175', desc: 'Cervical/vaginal cytopathology - ThinPrep', category: 'Pathology', rvu: 0.0 },
+          { code: '93000', desc: 'Electrocardiogram, complete', category: 'Diagnostic', rvu: 0.7 },
+          { code: '93306', desc: 'Echocardiogram - Transthoracic, complete', category: 'Diagnostic', rvu: 3.07 },
+          { code: '20553', desc: 'Trigger point injection - 3 or more muscles', category: 'Procedure', rvu: 1.13 },
+          { code: '71046', desc: 'Chest X-ray, 2 views', category: 'Radiology', rvu: 0.7 },
+          { code: '99285', desc: 'ED visit - High severity', category: 'E/M', rvu: 4.63 },
+          { code: '97110', desc: 'Therapeutic exercises', category: 'Rehab', rvu: 0.72 },
+          { code: '90837', desc: 'Psychotherapy, 60 minutes', category: 'Psychiatry', rvu: 2.14 }
         ],
         icd10: [
           { code: 'M54.5', desc: 'Low back pain', category: 'Musculoskeletal' },
-          { code: 'M83.3', desc: 'Meniscus derangement', category: 'Musculoskeletal' },
+          { code: 'M54.51', desc: 'Vertebrogenic low back pain', category: 'Musculoskeletal' },
+          { code: 'M23.21', desc: 'Derangement of meniscus, right knee', category: 'Musculoskeletal' },
           { code: 'E11.9', desc: 'Type 2 diabetes without complications', category: 'Endocrine' },
+          { code: 'E11.65', desc: 'Type 2 diabetes with hyperglycemia', category: 'Endocrine' },
           { code: 'M75.4', desc: 'Impingement syndrome of shoulder', category: 'Musculoskeletal' },
           { code: 'R50.9', desc: 'Fever, unspecified', category: 'Symptoms' },
           { code: 'Z12.4', desc: 'Encounter for screening for cervical cancer', category: 'Screening' },
           { code: 'I10', desc: 'Essential hypertension', category: 'Circulatory' },
           { code: 'M79.1', desc: 'Myofascial pain syndrome', category: 'Musculoskeletal' },
-          { code: 'J44.9', desc: 'Chronic obstructive pulmonary disease', category: 'Respiratory' },
-          { code: 'R05.9', desc: 'Fever, unspecified', category: 'Symptoms' }
+          { code: 'J44.9', desc: 'Chronic obstructive pulmonary disease, unspecified', category: 'Respiratory' },
+          { code: 'R05.9', desc: 'Cough, unspecified', category: 'Symptoms' },
+          { code: 'I25.10', desc: 'Atherosclerotic heart disease of native coronary artery', category: 'Circulatory' },
+          { code: 'N18.3', desc: 'Chronic kidney disease, stage 3', category: 'Genitourinary' },
+          { code: 'F41.1', desc: 'Generalized anxiety disorder', category: 'Mental' },
+          { code: 'G47.33', desc: 'Obstructive sleep apnea', category: 'Nervous System' },
+          { code: 'K21.0', desc: 'GERD with esophagitis', category: 'Digestive' },
+          { code: 'Z79.82', desc: 'Long term use of aspirin', category: 'Factors' }
         ],
         modifiers: [
           { code: '25', desc: 'Significant, separately identifiable E/M service' },
           { code: '59', desc: 'Distinct procedural service' },
           { code: '76', desc: 'Repeat procedure same physician' },
           { code: '77', desc: 'Repeat procedure different physician' },
-          { code: '-LT', desc: 'Left side' },
-          { code: '-RT', desc: 'Right side' },
-          { code: '-50', desc: 'Bilateral procedure' }
+          { code: 'LT', desc: 'Left side' },
+          { code: 'RT', desc: 'Right side' },
+          { code: '50', desc: 'Bilateral procedure' },
+          { code: '26', desc: 'Professional component' },
+          { code: 'TC', desc: 'Technical component' }
         ]
       };
-    
-      const getAISuggestions = (encounter) => {
-        const suggestions = {
-          cpt: [],
-          icd10: [],
-          modifiers: []
-        };
-    
-        if (encounter.procedure.toLowerCase().includes('office visit')) {
-          suggestions.cpt = [
-            { code: '99214', desc: 'Office visit - Established patient, moderate complexity', confidence: 94 },
-            { code: '99215', desc: 'Office visit - Established patient, high complexity', confidence: 78 }
-          ];
-        } else if (encounter.procedure.toLowerCase().includes('arthroscopy')) {
-          suggestions.cpt = [
-            { code: '29881', desc: 'Knee arthroscopy with meniscectomy', confidence: 96 },
-            { code: '29882', desc: 'Knee arthroscopy with meniscus repair', confidence: 72 }
-          ];
-        } else if (encounter.procedure.toLowerCase().includes('injection')) {
-          suggestions.cpt = [
-            { code: '20610', desc: 'Shoulder injection - Single tendon', confidence: 92 },
-            { code: '20550', desc: 'Injection - Single or multiple trigger points', confidence: 85 }
-          ];
-        } else if (encounter.procedure.toLowerCase().includes('metabolic')) {
-          suggestions.cpt = [
-            { code: '80053', desc: 'Comprehensive metabolic panel', confidence: 98 }
-          ];
-        } else if (encounter.procedure.toLowerCase().includes('pap')) {
-          suggestions.cpt = [
-            { code: '88175', desc: 'Pap smear with HPV testing', confidence: 97 }
-          ];
-        } else if (encounter.procedure.toLowerCase().includes('echo')) {
-          suggestions.cpt = [
-            { code: '93306', desc: 'Echocardiogram - Transthoracic', confidence: 95 }
-          ];
+
+      // AI Coding Engine - analyzes clinical notes and returns suggestions
+      const runAICoding = (notes, specialty) => {
+        const notesLower = (notes || '').toLowerCase();
+        const suggestions = { cptCodes: [], icd10Codes: [], modifiers: [], flags: [], confidence: 0 };
+
+        // CPT suggestion logic based on clinical content
+        if (notesLower.includes('office visit') || notesLower.includes('presents with') || notesLower.includes('follow up') || notesLower.includes('follow-up')) {
+          if (notesLower.includes('high complexity') || notesLower.includes('multiple') || notesLower.includes('extensive')) {
+            suggestions.cptCodes.push({ code: '99215', desc: 'Office visit - Est. patient, high complexity', confidence: 92, rvu: 2.8 });
+            suggestions.cptCodes.push({ code: '99214', desc: 'Office visit - Est. patient, moderate complexity', confidence: 78, rvu: 1.92 });
+          } else if (notesLower.includes('moderate') || notesLower.includes('detailed')) {
+            suggestions.cptCodes.push({ code: '99214', desc: 'Office visit - Est. patient, moderate complexity', confidence: 94, rvu: 1.92 });
+            suggestions.cptCodes.push({ code: '99215', desc: 'Office visit - Est. patient, high complexity', confidence: 65, rvu: 2.8 });
+          } else {
+            suggestions.cptCodes.push({ code: '99213', desc: 'Office visit - Est. patient, low complexity', confidence: 88, rvu: 1.3 });
+            suggestions.cptCodes.push({ code: '99214', desc: 'Office visit - Est. patient, moderate complexity', confidence: 72, rvu: 1.92 });
+          }
         }
-    
-        if (encounter.procedure.toLowerCase().includes('back') || encounter.procedure.toLowerCase().includes('strain')) {
-          suggestions.icd10 = [
-            { code: 'M54.5', desc: 'Low back pain', confidence: 92 },
-            { code: 'M54.6', desc: 'Pain in thoracic spine', confidence: 45 }
-          ];
-        } else if (encounter.procedure.toLowerCase().includes('meniscus') || encounter.procedure.toLowerCase().includes('knee')) {
-          suggestions.icd10 = [
-            { code: 'M83.3', desc: 'Meniscus derangement', confidence: 94 }
-          ];
-        } else if (encounter.procedure.toLowerCase().includes('diabetes')) {
-          suggestions.icd10 = [
-            { code: 'E11.9', desc: 'Type 2 diabetes without complications', confidence: 96 }
-          ];
-        } else if (encounter.procedure.toLowerCase().includes('shoulder')) {
-          suggestions.icd10 = [
-            { code: 'M75.4', desc: 'Impingement syndrome of shoulder', confidence: 89 }
-          ];
-        } else if (encounter.procedure.toLowerCase().includes('fever')) {
-          suggestions.icd10 = [
-            { code: 'R50.9', desc: 'Fever, unspecified', confidence: 91 }
-          ];
-        } else if (encounter.procedure.toLowerCase().includes('pap')) {
-          suggestions.icd10 = [
-            { code: 'Z12.4', desc: 'Encounter for screening for cervical cancer', confidence: 98 }
-          ];
-        } else if (encounter.procedure.toLowerCase().includes('echo') || encounter.procedure.toLowerCase().includes('hypertension')) {
-          suggestions.icd10 = [
-            { code: 'I10', desc: 'Essential hypertension', confidence: 88 }
-          ];
-        } else if (encounter.procedure.toLowerCase().includes('myofascial')) {
-          suggestions.icd10 = [
-            { code: 'M79.1', desc: 'Myofascial pain syndrome', confidence: 93 }
-          ];
-        } else if (encounter.procedure.toLowerCase().includes('chest') || encounter.procedure.toLowerCase().includes('cough')) {
-          suggestions.icd10 = [
-            { code: 'J44.9', desc: 'Chronic obstructive pulmonary disease', confidence: 82 }
-          ];
+        if (notesLower.includes('arthroscop')) {
+          suggestions.cptCodes.push({ code: '29881', desc: 'Knee arthroscopy with meniscectomy', confidence: 96, rvu: 7.41 });
         }
-    
-        if (encounter.procedure.toLowerCase().includes('office visit') && encounter.procedure.toLowerCase().includes('established')) {
-          suggestions.modifiers = [
-            { code: '25', desc: 'Significant, separately identifiable E/M service', confidence: 65 }
-          ];
+        if (notesLower.includes('injection') && (notesLower.includes('shoulder') || notesLower.includes('joint'))) {
+          suggestions.cptCodes.push({ code: '20610', desc: 'Arthrocentesis, major joint - injection', confidence: 91, rvu: 1.52 });
         }
-    
+        if (notesLower.includes('trigger point')) {
+          suggestions.cptCodes.push({ code: '20553', desc: 'Trigger point injection - 3 or more muscles', confidence: 93, rvu: 1.13 });
+        }
+        if (notesLower.includes('echocardiogram') || notesLower.includes('echo')) {
+          suggestions.cptCodes.push({ code: '93306', desc: 'Echocardiogram - Transthoracic, complete', confidence: 95, rvu: 3.07 });
+        }
+        if (notesLower.includes('chest x-ray') || notesLower.includes('chest xray') || notesLower.includes('cxr')) {
+          suggestions.cptCodes.push({ code: '71046', desc: 'Chest X-ray, 2 views', confidence: 94, rvu: 0.7 });
+        }
+        if (notesLower.includes('venipuncture') || notesLower.includes('blood draw') || notesLower.includes('blood cultures')) {
+          suggestions.cptCodes.push({ code: '36415', desc: 'Venipuncture', confidence: 97, rvu: 0.17 });
+        }
+        if (notesLower.includes('pap') || notesLower.includes('cervical')) {
+          suggestions.cptCodes.push({ code: '88175', desc: 'Cervical/vaginal cytopathology - ThinPrep', confidence: 90, rvu: 0.0 });
+        }
+        if (notesLower.includes('metabolic panel') || notesLower.includes('cmp') || notesLower.includes('bmp')) {
+          suggestions.cptCodes.push({ code: '80053', desc: 'Comprehensive metabolic panel', confidence: 95, rvu: 0.0 });
+        }
+
+        // ICD-10 suggestion logic
+        if (notesLower.includes('back pain') || notesLower.includes('lumbar')) {
+          suggestions.icd10Codes.push({ code: 'M54.51', desc: 'Vertebrogenic low back pain', confidence: 90 });
+          suggestions.flags.push('Consider specificity: M54.51 preferred over M54.5 for vertebrogenic back pain');
+        }
+        if (notesLower.includes('diabetes') || notesLower.includes('a1c') || notesLower.includes('glucose')) {
+          suggestions.icd10Codes.push({ code: 'E11.9', desc: 'Type 2 diabetes without complications', confidence: 88 });
+          if (notesLower.includes('elevated') || notesLower.includes('uncontrolled')) {
+            suggestions.icd10Codes.push({ code: 'E11.65', desc: 'Type 2 diabetes with hyperglycemia', confidence: 85 });
+            suggestions.flags.push('A1C or glucose elevated - consider E11.65 instead of E11.9');
+          }
+        }
+        if (notesLower.includes('hypertension') || notesLower.includes('high blood pressure') || notesLower.includes('htn')) {
+          suggestions.icd10Codes.push({ code: 'I10', desc: 'Essential hypertension', confidence: 96 });
+        }
+        if (notesLower.includes('meniscus') || notesLower.includes('meniscal')) {
+          suggestions.icd10Codes.push({ code: 'M23.21', desc: 'Derangement of meniscus, right knee', confidence: 82 });
+          suggestions.flags.push('Verify laterality - defaulted to right knee (M23.21)');
+        }
+        if (notesLower.includes('shoulder') && notesLower.includes('impingement')) {
+          suggestions.icd10Codes.push({ code: 'M75.4', desc: 'Impingement syndrome of shoulder', confidence: 91 });
+        }
+        if (notesLower.includes('rotator cuff') && notesLower.includes('tendin')) {
+          suggestions.icd10Codes.push({ code: 'M75.4', desc: 'Impingement syndrome of shoulder', confidence: 87 });
+        }
+        if (notesLower.includes('fever') || notesLower.includes('febrile')) {
+          suggestions.icd10Codes.push({ code: 'R50.9', desc: 'Fever, unspecified', confidence: 92 });
+        }
+        if (notesLower.includes('copd') || notesLower.includes('chronic obstructive')) {
+          suggestions.icd10Codes.push({ code: 'J44.9', desc: 'COPD, unspecified', confidence: 93 });
+        }
+        if (notesLower.includes('cough')) {
+          suggestions.icd10Codes.push({ code: 'R05.9', desc: 'Cough, unspecified', confidence: 89 });
+        }
+        if (notesLower.includes('myofascial') || notesLower.includes('trigger point')) {
+          suggestions.icd10Codes.push({ code: 'M79.1', desc: 'Myofascial pain syndrome', confidence: 94 });
+        }
+        if (notesLower.includes('anxiety')) {
+          suggestions.icd10Codes.push({ code: 'F41.1', desc: 'Generalized anxiety disorder', confidence: 86 });
+        }
+        if (notesLower.includes('sleep apnea')) {
+          suggestions.icd10Codes.push({ code: 'G47.33', desc: 'Obstructive sleep apnea', confidence: 91 });
+        }
+        if (notesLower.includes('screening') && notesLower.includes('cervical')) {
+          suggestions.icd10Codes.push({ code: 'Z12.4', desc: 'Encounter for screening for cervical cancer', confidence: 93 });
+        }
+
+        // Modifier suggestions
+        if (suggestions.cptCodes.length > 1 && suggestions.cptCodes.some(c => c.code.startsWith('99'))) {
+          suggestions.modifiers.push({ code: '25', desc: 'Significant, separately identifiable E/M service', confidence: 80 });
+        }
+        if (notesLower.includes('bilateral')) {
+          suggestions.modifiers.push({ code: '50', desc: 'Bilateral procedure', confidence: 88 });
+        }
+        if (notesLower.includes('left')) {
+          suggestions.modifiers.push({ code: 'LT', desc: 'Left side', confidence: 90 });
+        }
+        if (notesLower.includes('right') && !notesLower.includes('right away')) {
+          suggestions.modifiers.push({ code: 'RT', desc: 'Right side', confidence: 90 });
+        }
+
+        // Default if nothing matched
+        if (suggestions.cptCodes.length === 0) {
+          suggestions.cptCodes.push({ code: '99213', desc: 'Office visit - Est. patient, low complexity', confidence: 60, rvu: 1.3 });
+          suggestions.flags.push('No specific procedure keywords found - defaulted to 99213. Review clinical documentation.');
+        }
+        if (suggestions.icd10Codes.length === 0) {
+          suggestions.flags.push('No diagnosis codes could be determined from clinical notes. Please add ICD-10 codes manually.');
+        }
+
+        // Calculate overall confidence
+        const allConfidences = [...suggestions.cptCodes.map(c => c.confidence), ...suggestions.icd10Codes.map(c => c.confidence)];
+        suggestions.confidence = allConfidences.length > 0 ? Math.round(allConfidences.reduce((a, b) => a + b, 0) / allConfidences.length) : 0;
+
         return suggestions;
       };
-    
-      const handleEncounterSelect = (encounter) => {
-        setSelectedEncounter(encounter);
-        setShowSearch(false);
-        setAuditTrail([
-          { action: 'Encounter opened', timestamp: new Date().toLocaleTimeString(), user: 'Current User' }
-        ]);
-      };
-    
-      const handleCodeSearch = (query) => {
-        setSearchQuery(query);
-        if (query.trim().length === 0) {
-          setSearchResults([]);
-          return;
-        }
-    
-        const results = [];
-        demoCodeDatabase.cpt.forEach(code => {
-          if (code.code.includes(query) || code.desc.toLowerCase().includes(query.toLowerCase())) {
-            results.push({ type: 'CPT', ...code });
-          }
-        });
-        demoCodeDatabase.icd10.forEach(code => {
-          if (code.code.includes(query) || code.desc.toLowerCase().includes(query.toLowerCase())) {
-            results.push({ type: 'ICD-10', ...code });
-          }
-        });
-        demoCodeDatabase.modifiers.forEach(code => {
-          if (code.code.includes(query) || code.desc.toLowerCase().includes(query.toLowerCase())) {
-            results.push({ type: 'Modifier', ...code });
-          }
-        });
-    
-        setSearchResults(results.slice(0, 10));
-      };
-    
-      const handleAddCode = (codeObj) => {
-        if (!selectedEncounter) return;
-    
-        const updatedEncounters = encounters.map(enc => {
-          if (enc.id === selectedEncounter.id) {
-            const updatedEnc = { ...enc };
-            if (codeObj.type === 'CPT') {
-              updatedEnc.cptCodes = [...updatedEnc.cptCodes, { code: codeObj.code, desc: codeObj.desc, confidence: 0 }];
-            } else if (codeObj.type === 'ICD-10') {
-              updatedEnc.icd10Codes = [...updatedEnc.icd10Codes, { code: codeObj.code, desc: codeObj.desc, confidence: 0 }];
-            } else if (codeObj.type === 'Modifier') {
-              updatedEnc.modifiers = [...updatedEnc.modifiers, codeObj.code];
-            }
-            return updatedEnc;
-          }
-          return enc;
-        });
-    
-        setEncounters(updatedEncounters);
-        setSelectedEncounter(updatedEncounters.find(enc => enc.id === selectedEncounter.id));
-        setAuditTrail([...auditTrail, { action: `Added ${codeObj.type} code: ${codeObj.code}`, timestamp: new Date().toLocaleTimeString(), user: 'Current User' }]);
-        setSearchResults([]);
-        setSearchQuery('');
-      };
-    
-      const handleAddAISuggestion = (suggestion, type) => {
-        if (!selectedEncounter) return;
-    
-        const updatedEncounters = encounters.map(enc => {
-          if (enc.id === selectedEncounter.id) {
-            const updatedEnc = { ...enc };
-            if (type === 'cpt') {
-              updatedEnc.cptCodes = [...updatedEnc.cptCodes, suggestion];
-            } else if (type === 'icd10') {
-              updatedEnc.icd10Codes = [...updatedEnc.icd10Codes, suggestion];
-            }
-            return updatedEnc;
-          }
-          return enc;
-        });
-    
-        setEncounters(updatedEncounters);
-        setSelectedEncounter(updatedEncounters.find(enc => enc.id === selectedEncounter.id));
-        setAuditTrail([...auditTrail, { action: `Accepted AI suggestion: ${type.toUpperCase()} ${suggestion.code}`, timestamp: new Date().toLocaleTimeString(), user: 'Current User' }]);
-      };
-    
-      const handleRemoveCode = (type, codeToRemove) => {
-        if (!selectedEncounter) return;
-    
-        const updatedEncounters = encounters.map(enc => {
-          if (enc.id === selectedEncounter.id) {
-            const updatedEnc = { ...enc };
-            if (type === 'cpt') {
-              updatedEnc.cptCodes = updatedEnc.cptCodes.filter(c => c.code !== codeToRemove);
-            } else if (type === 'icd10') {
-              updatedEnc.icd10Codes = updatedEnc.icd10Codes.filter(c => c.code !== codeToRemove);
-            } else if (type === 'modifier') {
-              updatedEnc.modifiers = updatedEnc.modifiers.filter(m => m !== codeToRemove);
-            }
-            return updatedEnc;
-          }
-          return enc;
-        });
-    
-        setEncounters(updatedEncounters);
-        setSelectedEncounter(updatedEncounters.find(enc => enc.id === selectedEncounter.id));
-        setAuditTrail([...auditTrail, { action: `Removed ${type} code: ${codeToRemove}`, timestamp: new Date().toLocaleTimeString(), user: 'Current User' }]);
-      };
-    
-      const handleSendMessage = () => {
-        if (chatInput.trim().length === 0) return;
-    
-        setChatMessages([...chatMessages, { sender: 'user', text: chatInput }]);
-    
-        const aiResponses = [
-          'The 25 modifier should be used when a distinct E/M service is provided on the same day as a procedure. This is commonly used in office visits with surgical procedures.',
-          'For bundling edits, CPT code 29881 includes the diagnostic arthroscopy, so you cannot bill both the diagnostic and therapeutic codes separately.',
-          'LCD requirements vary by region and payer. For your location, the LCD indicates that this code requires modifier 59 when billed with certain other codes.',
-          'The confidence level is based on AI analysis of the clinical documentation. Higher confidence suggests the coding recommendation is well-supported by the notes.',
-          'For proper coding, ensure you have distinct identifiable services. The 25 modifier helps clarify that the E/M service was separate from the procedure performed.',
-          'This code selection looks accurate based on the clinical presentation. The confidence levels indicate strong alignment with the documentation provided.'
-        ];
-    
-        const randomResponse = aiResponses[Math.floor(Math.random() * aiResponses.length)];
+
+      const handleFormChange = (field, value) => { setFormData(prev => ({ ...prev, [field]: value })); };
+      const toggleSection = (section) => { setExpandedSections(prev => ({ ...prev, [section]: !prev[section] })); };
+      const handleFileUpload = (e) => { const file = e.target.files[0]; if (file) setUploadedFile(file); };
+      const handleBatchFileUpload = (e) => { const file = e.target.files[0]; if (file) setBatchFile(file); };
+
+      // Code the encounter using AI engine
+      const handleCodeEncounter = () => {
+        if (!formData.clinicalNotes && !formData.icd10cm) { alert('Please enter clinical documentation or ICD-10 codes'); return; }
+        setIsProcessing(true);
+        // Simulate processing delay
         setTimeout(() => {
-          setChatMessages(prev => [...prev, { sender: 'ai', text: randomResponse }]);
-        }, 800);
-    
-        setChatInput('');
+          const aiResult = runAICoding(formData.clinicalNotes, formData.specialty);
+          setCodingResult(aiResult);
+          setIsProcessing(false);
+
+          // Auto-generate report
+          const report = {
+            id: 'RPT-' + Date.now(),
+            timestamp: new Date().toLocaleString(),
+            provider: formData.providerName || 'Unassigned',
+            patient: formData.mrn || 'N/A',
+            dos: formData.dateOfService || new Date().toISOString().split('T')[0],
+            facility: formData.facilityLocation || 'N/A',
+            insurance: formData.insuranceCompany || 'N/A',
+            cptCodes: aiResult.cptCodes,
+            icd10Codes: aiResult.icd10Codes,
+            modifiers: aiResult.modifiers,
+            flags: aiResult.flags,
+            confidence: aiResult.confidence,
+            manualIcd: formData.icd10cm ? formData.icd10cm.split(',').map(c => c.trim()) : [],
+            status: aiResult.flags.length > 0 ? 'Flagged' : 'Clean'
+          };
+          setCodingReports(prev => [report, ...prev]);
+
+          // Add to claims queue
+          const claim = {
+            id: 'CLM-' + Date.now(),
+            timestamp: new Date().toLocaleString(),
+            provider: formData.providerName || 'Unassigned',
+            facility: formData.facilityLocation || 'N/A',
+            cptCodes: aiResult.cptCodes.map(c => c.code),
+            icd10Codes: aiResult.icd10Codes.length > 0 ? aiResult.icd10Codes.map(c => c.code) : (formData.icd10cm ? formData.icd10cm.split(',').map(c => c.trim()) : []),
+            mrn: formData.mrn || 'N/A',
+            dateOfService: formData.dateOfService || 'N/A',
+            insurance: formData.insuranceCompany || 'N/A',
+            confidence: aiResult.confidence,
+            status: aiResult.flags.length > 0 ? 'Flagged - Review Required' : 'Queued for Submission'
+          };
+          setCodedClaims(prev => [claim, ...prev]);
+
+          // Add flagged items if any
+          if (aiResult.flags.length > 0) {
+            const newFlagged = {
+              id: 'FLAG-' + Date.now(),
+              patient: formData.mrn || 'Patient',
+              dos: formData.dateOfService || new Date().toISOString().split('T')[0],
+              provider: formData.providerName || 'Unassigned',
+              originalDx: formData.icd10cm || aiResult.icd10Codes[0]?.code || '',
+              recommendedDx: aiResult.icd10Codes[0]?.code || '',
+              originalCpt: aiResult.cptCodes[0]?.code || '',
+              recommendedCpt: aiResult.cptCodes[0]?.code || '',
+              reason: aiResult.flags.join('; '),
+              status: 'pending',
+              source: 'single'
+            };
+            setFlaggedItems(prev => [...prev, newFlagged]);
+          }
+        }, 1500);
       };
-    
-      const getStatusColor = (status) => {
-        switch (status) {
-          case 'Pending Review': return '#AB8A7A';
-          case 'AI Suggested': return '#D4A574';
-          case 'Approved': return '#39463A';
-          case 'Needs Clarification': return '#E8B4A8';
-          default: return '#AB8A7A';
-        }
+
+      // Batch processing
+      const processBatch = () => {
+        if (!batchFile) { alert('Please upload a batch file first'); return; }
+        setBatchProcessing(true); setBatchProgress(0); setBatchCompleted(false); setBatchResults([]);
+        let progress = 0;
+        const mockEncounters = [
+          { recordId: 'REC001', patient: 'John Adams', notes: 'Office visit established patient with hypertension follow up moderate complexity', specialty: 'Internal Medicine' },
+          { recordId: 'REC002', patient: 'Beth Clark', notes: 'Patient with type 2 diabetes elevated glucose A1C review', specialty: 'Internal Medicine' },
+          { recordId: 'REC003', patient: 'Carlos Diaz', notes: 'Trigger point injection bilateral trapezius myofascial pain', specialty: 'Pain Management' },
+          { recordId: 'REC004', patient: 'Diana Evans', notes: 'COPD exacerbation cough shortness of breath chest x-ray', specialty: 'Pulmonology' },
+          { recordId: 'REC005', patient: 'Eric Foster', notes: '', specialty: 'Family Medicine' },
+          { recordId: 'REC006', patient: 'Fiona Grant', notes: 'Office visit low complexity follow up anxiety generalized', specialty: 'Psychiatry' },
+          { recordId: 'REC007', patient: 'George Hill', notes: 'Echocardiogram transthoracic hypertension eval', specialty: 'Cardiology' },
+          { recordId: 'REC008', patient: 'Hannah Ives', notes: 'Knee arthroscopy meniscectomy meniscal tear right knee', specialty: 'Orthopedics' }
+        ];
+        const interval = setInterval(() => {
+          progress += Math.random() * 15 + 8;
+          if (progress >= 100) {
+            progress = 100; clearInterval(interval);
+            const results = mockEncounters.map(enc => {
+              const aiResult = runAICoding(enc.notes, enc.specialty);
+              return {
+                recordId: enc.recordId,
+                patient: enc.patient,
+                cpt: aiResult.cptCodes[0]?.code || 'N/A',
+                cptDesc: aiResult.cptCodes[0]?.desc || '',
+                icd10: aiResult.icd10Codes[0]?.code || 'N/A',
+                icd10Desc: aiResult.icd10Codes[0]?.desc || '',
+                confidence: aiResult.confidence,
+                status: enc.notes ? 'Coded' : 'Failed',
+                flags: aiResult.flags
+              };
+            });
+            setBatchResults(results); setBatchCompleted(true);
+
+            // Add flagged items from batch
+            const newFlagged = results.filter(r => r.flags.length > 0 && r.status !== 'Failed').map(r => ({
+              id: 'BFLAG-' + r.recordId, patient: r.patient, dos: '2026-03-28', provider: 'Batch Import',
+              originalDx: r.icd10, recommendedDx: r.icd10, originalCpt: r.cpt, recommendedCpt: r.cpt,
+              reason: r.flags[0], status: 'pending', source: 'batch'
+            }));
+            setFlaggedItems(prev => [...prev, ...newFlagged]);
+
+            // Add all coded claims to queue
+            results.filter(r => r.status === 'Coded').forEach(r => {
+              setCodedClaims(prev => [...prev, {
+                id: 'CLM-B-' + r.recordId, timestamp: new Date().toLocaleString(),
+                provider: 'Batch Import', facility: 'N/A',
+                cptCodes: [r.cpt], icd10Codes: [r.icd10],
+                mrn: r.patient, dateOfService: '2026-03-28',
+                insurance: 'N/A', confidence: r.confidence,
+                status: r.flags.length > 0 ? 'Flagged' : 'Queued'
+              }]);
+            });
+
+            // Generate batch report
+            const coded = results.filter(r => r.status === 'Coded').length;
+            const failed = results.filter(r => r.status === 'Failed').length;
+            const flagged = results.filter(r => r.flags.length > 0).length;
+            const batchRpt = { id: 'BRPT-' + Date.now(), total: results.length, coded, failed, flagged, timestamp: new Date().toLocaleString(), results };
+            setBatchReport(batchRpt);
+            setCodingReports(prev => [{ id: batchRpt.id, timestamp: batchRpt.timestamp, provider: 'Batch Import', patient: batchRpt.total + ' records', dos: '2026-03-28', facility: 'Batch', insurance: 'Various', cptCodes: [], icd10Codes: [], modifiers: [], flags: [], confidence: 0, manualIcd: [], status: 'Batch - ' + coded + ' coded, ' + failed + ' failed, ' + flagged + ' flagged', isBatch: true, batchData: batchRpt }, ...prev]);
+
+            setBatchProcessing(false);
+          }
+          setBatchProgress(Math.min(progress, 100));
+        }, 400);
       };
-    
-      const containerStyle = {
-        padding: '24px',
-        backgroundColor: '#f5f2f0',
-        minHeight: '100vh',
-        fontFamily: 'system-ui, -apple-system, sans-serif'
+
+      // Handle flagged item actions
+      const handleFlaggedAction = (itemId, action) => {
+        const item = flaggedItems.find(f => f.id === itemId);
+        if (!item) return;
+        const claim = {
+          id: 'CLM-' + itemId, timestamp: new Date().toLocaleString(),
+          provider: item.provider, facility: 'N/A',
+          cptCodes: [action === 'accept' ? item.recommendedCpt : item.originalCpt],
+          icd10Codes: [action === 'accept' ? item.recommendedDx : item.originalDx],
+          mrn: item.patient, dateOfService: item.dos,
+          insurance: 'N/A', confidence: 0,
+          status: action === 'accept' ? 'Queued - Updated per recommendation' : 'Queued - Original codes kept'
+        };
+        setCodedClaims(prev => {
+          const existing = prev.findIndex(c => c.mrn === item.patient && c.status.includes('Flagged'));
+          if (existing >= 0) {
+            const updated = [...prev];
+            updated[existing] = { ...updated[existing], ...claim };
+            return updated;
+          }
+          return [claim, ...prev];
+        });
+        setFlaggedItems(prev => prev.filter(f => f.id !== itemId));
       };
-    
-      const headerStyle = {
-        marginBottom: '24px',
-        borderBottom: `3px solid #39463A`,
-        paddingBottom: '16px'
-      };
-    
-      const titleStyle = {
-        fontSize: '32px',
-        fontWeight: 'bold',
-        color: '#39463A',
-        margin: '0 0 8px 0'
-      };
-    
-      const subtitleStyle = {
-        fontSize: '14px',
-        color: '#666',
-        margin: '0'
-      };
-    
-      const mainGridStyle = {
-        display: 'grid',
-        gridTemplateColumns: '1fr 2fr 1fr',
-        gap: '24px',
-        marginBottom: '24px'
-      };
-    
-      const cardStyle = {
-        backgroundColor: 'white',
-        borderRadius: '8px',
-        padding: '20px',
-        boxShadow: '0 2px 8px rgba(57, 70, 58, 0.1)',
-        border: `1px solid #e0d5d0`
-      };
-    
-      const sectionTitleStyle = {
-        fontSize: '16px',
-        fontWeight: 'bold',
-        color: '#39463A',
-        marginBottom: '16px',
-        borderBottom: `2px solid #AB8A7A`,
-        paddingBottom: '8px'
-      };
-    
-      const encounterItemStyle = (isSelected) => ({
-        padding: '12px',
-        marginBottom: '8px',
-        borderRadius: '6px',
-        cursor: 'pointer',
-        backgroundColor: isSelected ? '#39463A' : '#f9f7f5',
-        color: isSelected ? 'white' : '#333',
-        border: `1px solid ${isSelected ? '#39463A' : '#e0d5d0'}`,
-        transition: 'all 0.2s'
-      });
-    
-      const statusBadgeStyle = (status) => ({
-        display: 'inline-block',
-        padding: '4px 8px',
-        borderRadius: '4px',
-        fontSize: '11px',
-        fontWeight: 'bold',
-        backgroundColor: getStatusColor(status),
-        color: 'white',
-        marginTop: '4px'
-      });
-    
-      const codeInputStyle = {
-        width: '100%',
-        padding: '10px',
-        borderRadius: '6px',
-        border: `1px solid #AB8A7A`,
-        fontSize: '14px',
-        marginBottom: '12px',
-        boxSizing: 'border-box'
-      };
-    
-      const codeListStyle = {
-        display: 'flex',
-        flexDirection: 'column',
-        gap: '8px',
-        marginBottom: '16px'
-      };
-    
-      const codeTagStyle = {
-        display: 'flex',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        padding: '8px 12px',
-        backgroundColor: '#f0e8e4',
-        borderRadius: '6px',
-        fontSize: '13px',
-        borderLeft: `3px solid #AB8A7A`
-      };
-    
-      const removeButtonStyle = {
-        background: 'none',
-        border: 'none',
-        color: '#666',
-        cursor: 'pointer',
-        fontSize: '14px',
-        padding: '0 4px'
-      };
-    
-      const suggestionBoxStyle = {
-        backgroundColor: '#fffbf7',
-        padding: '12px',
-        borderRadius: '6px',
-        marginBottom: '12px',
-        borderLeft: `3px solid #D4A574`,
-        fontSize: '13px'
-      };
-    
-      const addButtonStyle = {
-        backgroundColor: '#39463A',
-        color: 'white',
-        border: 'none',
-        padding: '6px 12px',
-        borderRadius: '4px',
-        cursor: 'pointer',
-        fontSize: '12px',
-        fontWeight: 'bold',
-        marginLeft: '8px'
-      };
-    
-      const searchResultStyle = {
-        padding: '8px',
-        borderBottom: `1px solid #e0d5d0`,
-        cursor: 'pointer',
-        fontSize: '13px',
-        display: 'flex',
-        justifyContent: 'space-between',
-        alignItems: 'center'
-      };
-    
-      const statsGridStyle = {
-        display: 'grid',
-        gridTemplateColumns: '1fr 1fr',
-        gap: '12px'
-      };
-    
-      const statBoxStyle = {
-        backgroundColor: '#fffbf7',
-        padding: '12px',
-        borderRadius: '6px',
-        borderLeft: `3px solid #AB8A7A`
-      };
-    
-      const statNumberStyle = {
-        fontSize: '18px',
-        fontWeight: 'bold',
-        color: '#39463A'
-      };
-    
-      const statLabelStyle = {
-        fontSize: '11px',
-        color: '#666',
-        marginTop: '4px'
-      };
-    
-      const chatContainerStyle = {
-        display: 'flex',
-        flexDirection: 'column',
-        height: '400px',
-        border: `1px solid #e0d5d0`,
-        borderRadius: '6px',
-        backgroundColor: '#fffbf7'
-      };
-    
-      const messagesStyle = {
-        flex: 1,
-        overflowY: 'auto',
-        padding: '12px',
-        display: 'flex',
-        flexDirection: 'column',
-        gap: '8px'
-      };
-    
-      const messageStyle = (isUser) => ({
-        padding: '10px 12px',
-        borderRadius: '6px',
-        maxWidth: '90%',
-        wordWrap: 'break-word',
-        fontSize: '13px',
-        backgroundColor: isUser ? '#39463A' : '#e8dfd8',
-        color: isUser ? 'white' : '#333',
-        alignSelf: isUser ? 'flex-end' : 'flex-start'
-      });
-    
-      const chatInputAreaStyle = {
-        padding: '12px',
-        borderTop: `1px solid #e0d5d0`,
-        display: 'flex',
-        gap: '8px'
-      };
-    
-      const chatInputStyle = {
-        flex: 1,
-        padding: '8px 12px',
-        borderRadius: '4px',
-        border: `1px solid #AB8A7A`,
-        fontSize: '13px',
-        boxSizing: 'border-box'
-      };
-    
-      const sendButtonStyle = {
-        backgroundColor: '#39463A',
-        color: 'white',
-        border: 'none',
-        padding: '8px 16px',
-        borderRadius: '4px',
-        cursor: 'pointer',
-        fontWeight: 'bold',
-        fontSize: '13px'
-      };
-    
-      const auditItemStyle = {
-        padding: '8px',
-        fontSize: '12px',
-        borderBottom: `1px solid #e0d5d0`,
-        color: '#555'
-      };
-    
-      const warningBoxStyle = {
-        backgroundColor: '#fff3e6',
-        border: `1px solid #ffb380`,
-        borderRadius: '6px',
-        padding: '12px',
-        marginBottom: '12px',
-        fontSize: '12px',
-        color: '#d97706'
-      };
-    
-      const aiSuggestionContainer = {
-        backgroundColor: '#f0e8e4',
-        padding: '12px',
-        borderRadius: '6px',
-        marginBottom: '16px',
-        borderLeft: `3px solid #D4A574`
-      };
-    
+
+      const inputStyle = { width: '100%', padding: '10px 12px', border: '1px solid ' + colors.border, borderRadius: '4px', fontSize: '13px', boxSizing: 'border-box', fontFamily: 'inherit' };
+      const selectStyle = { ...inputStyle, cursor: 'pointer' };
+      const labelStyle = { display: 'block', fontSize: '12px', fontWeight: '600', color: colors.deepForest, marginBottom: '8px', textTransform: 'uppercase', letterSpacing: '0.5px' };
+      const btnStyle = { padding: '12px 24px', fontSize: '14px', fontWeight: '600', backgroundColor: colors.warmClay, color: colors.white, border: 'none', borderRadius: '4px', cursor: 'pointer' };
+
       return (
-        <div style={containerStyle}>
-          <div style={headerStyle}>
-            <h1 style={titleStyle}>CodingPro - AI-Assisted Medical Coding</h1>
-            <p style={subtitleStyle}>VanguardRCM intelligent coding platform | Select an encounter to begin coding</p>
-          </div>
-    
-          <div style={statsGridStyle}>
-            <div style={cardStyle}>
-              <div style={statBoxStyle}>
-                <div style={statNumberStyle}>24</div>
-                <div style={statLabelStyle}>Encounters Coded Today</div>
-              </div>
+        <div style={{ backgroundColor: colors.cream, minHeight: '100vh', padding: '24px', fontFamily: '"Segoe UI", Tahoma, Geneva, Verdana, sans-serif' }}>
+          <div style={{ maxWidth: '1400px', margin: '0 auto' }}>
+            <div style={{ marginBottom: '24px' }}>
+              <h1 style={{ fontSize: '32px', fontWeight: 'bold', color: colors.deepForest, margin: '0 0 8px 0' }}>AI-Powered Medical Coding Engine</h1>
+              <p style={{ fontSize: '14px', color: colors.slateBlue, margin: 0 }}>Automate ICD-10 and CPT coding with advanced AI analysis</p>
             </div>
-            <div style={cardStyle}>
-              <div style={statBoxStyle}>
-                <div style={statNumberStyle}>97.3%</div>
-                <div style={statLabelStyle}>AI Accuracy Rate</div>
-              </div>
+
+            {/* Main Tabs */}
+            <div style={{ display: 'flex', gap: '8px', marginBottom: '24px', borderBottom: '2px solid ' + colors.lightGray }}>
+              {[{id:'single', label:'Single Encounter'}, {id:'batch', label:'Batch Processing'}, {id:'flagged', label:'Flagged (' + flaggedItems.length + ')'}, {id:'reports', label:'Coding Reports (' + codingReports.length + ')'}, {id:'queue', label:'Claims Queue (' + codedClaims.length + ')'}].map(tab => (
+                <button key={tab.id} onClick={() => setActiveMainTab(tab.id)} style={{ padding: '12px 24px', fontSize: '13px', fontWeight: '600', border: 'none', backgroundColor: activeMainTab === tab.id ? colors.warmClay : 'transparent', color: activeMainTab === tab.id ? colors.white : colors.charcoal, cursor: 'pointer', borderBottom: activeMainTab === tab.id ? '3px solid ' + colors.warmClay : 'none' }}>{tab.label}</button>
+              ))}
             </div>
-            <div style={cardStyle}>
-              <div style={statBoxStyle}>
-                <div style={statNumberStyle}>2.4 min</div>
-                <div style={statLabelStyle}>Avg Coding Time</div>
-              </div>
-            </div>
-            <div style={cardStyle}>
-              <div style={statBoxStyle}>
-                <div style={statNumberStyle}>8</div>
-                <div style={statLabelStyle}>Queries Pending</div>
-              </div>
-            </div>
-          </div>
-    
-          <div style={mainGridStyle}>
-            <div style={cardStyle}>
-              <div style={sectionTitleStyle}>Encounter Queue ({encounters.length})</div>
-              <div style={{ maxHeight: '600px', overflowY: 'auto' }}>
-                {encounters.map(enc => (
-                  <div
-                    key={enc.id}
-                    style={encounterItemStyle(selectedEncounter?.id === enc.id)}
-                    onClick={() => handleEncounterSelect(enc)}
-                  >
-                    <div style={{ fontWeight: 'bold', fontSize: '13px' }}>{enc.patient}</div>
-                    <div style={{ fontSize: '12px', opacity: selectedEncounter?.id === enc.id ? 0.9 : 0.7, marginTop: '4px' }}>
-                      {enc.provider}
+
+            {/* ===== SINGLE ENCOUNTER TAB ===== */}
+            {activeMainTab === 'single' && (
+              <div>
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px', marginBottom: '24px', backgroundColor: colors.white, padding: '24px', borderRadius: '8px', boxShadow: '0 2px 4px rgba(0,0,0,0.1)' }}>
+                  <div><label style={labelStyle}>Provider Name</label>
+                    <select style={selectStyle} value={formData.providerName} onChange={(e) => handleFormChange('providerName', e.target.value)}>
+                      <option value="">Select Provider</option><option value="Dr. Sarah Chen">Dr. Sarah Chen</option><option value="Dr. Michael Park">Dr. Michael Park</option><option value="Dr. Lisa Wong">Dr. Lisa Wong</option><option value="Dr. James Anderson">Dr. James Anderson</option>
+                    </select></div>
+                  <div><label style={labelStyle}>Rendering Provider</label>
+                    <select style={selectStyle} value={formData.renderingProvider} onChange={(e) => handleFormChange('renderingProvider', e.target.value)}>
+                      <option value="">Select Rendering Provider</option><option value="Dr. Sarah Chen">Dr. Sarah Chen</option><option value="Dr. Michael Park">Dr. Michael Park</option><option value="Dr. Lisa Wong">Dr. Lisa Wong</option>
+                    </select></div>
+                  <div><label style={labelStyle}>Facility/Location</label>
+                    <select style={selectStyle} value={formData.facilityLocation} onChange={(e) => handleFormChange('facilityLocation', e.target.value)}>
+                      <option value="">Select Facility</option><option value="Desert Valley Medical Group">Desert Valley Medical Group</option><option value="Sunrise Family Medicine">Sunrise Family Medicine</option><option value="Silver State Cardiology">Silver State Cardiology</option>
+                    </select></div>
+                  <div><label style={labelStyle}>Place of Service (POS) coded facility code</label>
+                    <select style={selectStyle} value={formData.placeOfService} onChange={(e) => handleFormChange('placeOfService', e.target.value)}>
+                      <option value="">Select Place of Service</option><option value="11">11 - Office</option><option value="21">21 - Inpatient Hospital</option><option value="22">22 - Outpatient Hospital</option><option value="23">23 - Emergency Room</option><option value="24">24 - Ambulatory Surgical Center</option>
+                    </select></div>
+                  <div><label style={labelStyle}>Specialty</label>
+                    <select style={selectStyle} value={formData.specialty} onChange={(e) => handleFormChange('specialty', e.target.value)}>
+                      <option value="">Select Specialty</option><option value="Cardiology">Cardiology</option><option value="Orthopedics">Orthopedics</option><option value="Family Medicine">Family Medicine</option><option value="Internal Medicine">Internal Medicine</option><option value="Pain Management">Pain Management</option><option value="Pulmonology">Pulmonology</option>
+                    </select></div>
+                  <div><label style={labelStyle}>Insurance Company</label>
+                    <select style={selectStyle} value={formData.insuranceCompany} onChange={(e) => handleFormChange('insuranceCompany', e.target.value)}>
+                      <option value="">Select Insurance</option><option value="Blue Cross Blue Shield">Blue Cross Blue Shield</option><option value="UnitedHealthcare">UnitedHealthcare</option><option value="Aetna">Aetna</option><option value="Cigna">Cigna</option><option value="Humana">Humana</option>
+                    </select></div>
+                  <div><label style={labelStyle}>Plan Type</label>
+                    <select style={selectStyle} value={formData.planType} onChange={(e) => handleFormChange('planType', e.target.value)}>
+                      <option value="">Traditional / Medicare</option><option value="PPO">PPO</option><option value="HMO">HMO</option><option value="POS">POS</option><option value="Medicare">Medicare</option><option value="Medicaid">Medicaid</option>
+                    </select></div>
+                  <div></div>
+                  <div><label style={labelStyle}>Date of Birth</label><input type="date" style={inputStyle} value={formData.dateOfBirth} onChange={(e) => handleFormChange('dateOfBirth', e.target.value)} /></div>
+                  <div><label style={labelStyle}>Chart Date</label><input type="date" style={inputStyle} value={formData.chartDate} onChange={(e) => handleFormChange('chartDate', e.target.value)} /></div>
+                  <div><label style={labelStyle}>Race (BMI, Unweighted)</label>
+                    <select style={selectStyle} value={formData.race} onChange={(e) => handleFormChange('race', e.target.value)}>
+                      <option value="">Select</option><option value="White">White</option><option value="Black">Black</option><option value="Hispanic">Hispanic</option><option value="Asian">Asian</option><option value="Other">Other</option>
+                    </select></div>
+                  <div><label style={labelStyle}>Rendering Provider NPI</label><input type="text" style={inputStyle} placeholder="Enter NPI" value={formData.renderingProviderNpi} onChange={(e) => handleFormChange('renderingProviderNpi', e.target.value)} /></div>
+                  <div><label style={labelStyle}>Select State</label>
+                    <select style={selectStyle} value={formData.state} onChange={(e) => handleFormChange('state', e.target.value)}>
+                      <option value="">Select State</option><option value="NV">Nevada</option><option value="CA">California</option><option value="AZ">Arizona</option><option value="UT">Utah</option>
+                    </select></div>
+                  <div><label style={labelStyle}>Date of Service</label><input type="date" style={inputStyle} value={formData.dateOfService} onChange={(e) => handleFormChange('dateOfService', e.target.value)} /></div>
+                  <div><label style={labelStyle}>DX (Age) Left</label><input type="text" style={inputStyle} placeholder="Age or DX code" value={formData.dxAge} onChange={(e) => handleFormChange('dxAge', e.target.value)} /></div>
+                  <div><label style={labelStyle}>Pay to Address</label><input type="text" style={inputStyle} placeholder="Enter address" value={formData.payToAddress} onChange={(e) => handleFormChange('payToAddress', e.target.value)} /></div>
+                  <div><label style={labelStyle}>ICD-10 CM</label><input type="text" style={inputStyle} placeholder="Enter ICD-10 codes (comma-separated)" value={formData.icd10cm} onChange={(e) => handleFormChange('icd10cm', e.target.value)} /></div>
+                  <div><label style={labelStyle}>MRN (ID, Optional)</label><input type="text" style={inputStyle} placeholder="Optional" value={formData.mrn} onChange={(e) => handleFormChange('mrn', e.target.value)} /></div>
+                </div>
+
+                {/* Expandable Sections */}
+                {[{key:'demographics', label:'Patient Demographics (for Claims Queue export)'}, {key:'guarantor', label:'Guarantor Information'}, {key:'insurance', label:'Insurance Policy Details'}].map(sec => (
+                  <div key={sec.key} style={{ marginBottom: '12px', backgroundColor: colors.white, borderRadius: '4px', boxShadow: '0 2px 4px rgba(0,0,0,0.1)' }}>
+                    <div onClick={() => toggleSection(sec.key)} style={{ padding: '16px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', cursor: 'pointer', backgroundColor: colors.cream, borderBottom: '1px solid ' + colors.lightGray }}>
+                      <span style={{ fontWeight: '600', color: colors.deepForest }}>{sec.label}</span>
+                      <span style={{ fontSize: '18px' }}>{expandedSections[sec.key] ? '▼' : '▶'}</span>
                     </div>
-                    <div style={{ fontSize: '11px', opacity: selectedEncounter?.id === enc.id ? 0.8 : 0.6, marginTop: '2px' }}>
-                      DOS: {enc.dos}
-                    </div>
-                    <div style={statusBadgeStyle(enc.status)}>{enc.status}</div>
+                    {expandedSections[sec.key] && <div style={{ padding: '16px' }}><p style={{ margin: '0', fontSize: '13px', color: colors.slateBlue }}>{sec.key === 'demographics' ? 'Patient demographic fields will be exported with the claim to the Claims Queue.' : sec.key === 'guarantor' ? 'Enter guarantor information if different from patient.' : 'Primary and secondary insurance policy details.'}</p></div>}
                   </div>
                 ))}
-              </div>
-            </div>
-    
-            <div style={cardStyle}>
-              {selectedEncounter ? (
-                <>
-                  <div style={sectionTitleStyle}>Coding Workspace - {selectedEncounter.patient}</div>
-    
-                  <div style={{ marginBottom: '16px' }}>
-                    <div style={{ fontSize: '12px', fontWeight: 'bold', color: '#39463A', marginBottom: '8px' }}>Clinical Notes</div>
-                    <textarea
-                      value={selectedEncounter.clinicalNotes}
-                      readOnly
-                      style={{
-                        width: '100%',
-                        height: '100px',
-                        padding: '10px',
-                        borderRadius: '6px',
-                        border: `1px solid #AB8A7A`,
-                        fontSize: '12px',
-                        backgroundColor: '#fffbf7',
-                        boxSizing: 'border-box',
-                        fontFamily: 'monospace'
-                      }}
-                    />
+
+                {/* File Upload */}
+                <div style={{ marginTop: '20px' }}>
+                  <input type="file" id="codingFileUpload" style={{ display: 'none' }} onChange={handleFileUpload} accept=".pdf,.doc,.docx,.txt" />
+                  <div onClick={() => document.getElementById('codingFileUpload').click()} style={{ border: '2px dashed ' + colors.warmClay, borderRadius: '8px', padding: '40px', textAlign: 'center', backgroundColor: '#fafaf8', cursor: 'pointer', marginBottom: '20px' }}>
+                    <div style={{ fontSize: '24px' }}>📄</div>
+                    {uploadedFile ? <p style={{ fontSize: '14px', color: '#388E3C', margin: '12px 0 0 0' }}>Selected: {uploadedFile.name}</p> : <p style={{ fontSize: '14px', color: colors.slateBlue, margin: '12px 0 0 0' }}>Drag & drop a medical record here, or click to browse</p>}
                   </div>
-    
-                  <div style={{ marginBottom: '16px' }}>
-                    <div style={sectionTitleStyle}>AI Code Suggestions</div>
-    
-                    {(() => {
-                      const suggestions = getAISuggestions(selectedEncounter);
-                      return (
-                        <>
-                          {suggestions.cpt.length > 0 && (
-                            <div style={aiSuggestionContainer}>
-                              <div style={{ fontWeight: 'bold', color: '#39463A', marginBottom: '8px', fontSize: '13px' }}>
-                                Suggested CPT Codes
-                              </div>
-                              {suggestions.cpt.map(code => (
-                                <div key={code.code} style={suggestionBoxStyle}>
-                                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                                    <div>
-                                      <div style={{ fontWeight: 'bold', color: '#39463A' }}>{code.code}</div>
-                                      <div style={{ fontSize: '12px', color: '#666', marginTop: '2px' }}>{code.desc}</div>
-                                      <div style={{ fontSize: '11px', color: '#AB8A7A', marginTop: '4px' }}>
-                                        Confidence: {code.confidence}%
-                                      </div>
-                                    </div>
-                                    <button
-                                      onClick={() => handleAddAISuggestion(code, 'cpt')}
-                                      style={addButtonStyle}
-                                    >
-                                      Add
-                                    </button>
-                                  </div>
-                                </div>
-                              ))}
-                            </div>
-                          )}
-    
-                          {suggestions.icd10.length > 0 && (
-                            <div style={aiSuggestionContainer}>
-                              <div style={{ fontWeight: 'bold', color: '#39463A', marginBottom: '8px', fontSize: '13px' }}>
-                                Suggested ICD-10 Codes
-                              </div>
-                              {suggestions.icd10.map(code => (
-                                <div key={code.code} style={suggestionBoxStyle}>
-                                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                                    <div>
-                                      <div style={{ fontWeight: 'bold', color: '#39463A' }}>{code.code}</div>
-                                      <div style={{ fontSize: '12px', color: '#666', marginTop: '2px' }}>{code.desc}</div>
-                                      <div style={{ fontSize: '11px', color: '#AB8A7A', marginTop: '4px' }}>
-                                        Confidence: {code.confidence}%
-                                      </div>
-                                    </div>
-                                    <button
-                                      onClick={() => handleAddAISuggestion(code, 'icd10')}
-                                      style={addButtonStyle}
-                                    >
-                                      Add
-                                    </button>
-                                  </div>
-                                </div>
-                              ))}
-                            </div>
-                          )}
-    
-                          {suggestions.modifiers.length > 0 && (
-                            <div style={aiSuggestionContainer}>
-                              <div style={{ fontWeight: 'bold', color: '#39463A', marginBottom: '8px', fontSize: '13px' }}>
-                                Modifier Suggestions
-                              </div>
-                              {suggestions.modifiers.map(mod => (
-                                <div key={mod.code} style={suggestionBoxStyle}>
-                                  <div>
-                                    <div style={{ fontWeight: 'bold', color: '#39463A' }}>{mod.code}</div>
-                                    <div style={{ fontSize: '12px', color: '#666', marginTop: '2px' }}>{mod.desc}</div>
-                                    <div style={{ fontSize: '11px', color: '#AB8A7A', marginTop: '4px' }}>
-                                      Confidence: {mod.confidence}%
-                                    </div>
-                                  </div>
-                                </div>
-                              ))}
-                            </div>
-                          )}
-                        </>
-                      );
-                    })()}
-                  </div>
-    
-                  <div style={{ marginBottom: '16px' }}>
-                    <div style={sectionTitleStyle}>Manual Code Entry & Search</div>
-                    <input
-                      type="text"
-                      placeholder="Search CPT/ICD-10 (e.g., 99214, E11.9)"
-                      value={searchQuery}
-                      onChange={(e) => handleCodeSearch(e.target.value)}
-                      onFocus={() => setShowSearch(true)}
-                      style={codeInputStyle}
-                    />
-    
-                    {showSearch && searchResults.length > 0 && (
-                      <div style={{ border: `1px solid #AB8A7A`, borderRadius: '6px', maxHeight: '200px', overflowY: 'auto' }}>
-                        {searchResults.map(result => (
-                          <div
-                            key={result.code + result.type}
-                            style={searchResultStyle}
-                            onClick={() => handleAddCode(result)}
-                          >
-                            <div>
-                              <div style={{ fontWeight: 'bold', fontSize: '12px' }}>
-                                [{result.type}] {result.code}
-                              </div>
-                              <div style={{ fontSize: '11px', color: '#666' }}>{result.desc}</div>
-                            </div>
-                            <span style={{ color: '#39463A', fontWeight: 'bold' }}>+</span>
+                </div>
+
+                {/* Clinical Documentation */}
+                <div><label style={{ ...labelStyle, marginBottom: '12px' }}>Clinical Documentation</label>
+                  <textarea style={{ ...inputStyle, minHeight: '150px', resize: 'vertical' }} placeholder="Paste or type clinical notes here... The AI coding engine will analyze these notes and suggest CPT/ICD-10 codes with confidence scores." value={formData.clinicalNotes} onChange={(e) => handleFormChange('clinicalNotes', e.target.value)} />
+                </div>
+
+                {/* Submit */}
+                <div style={{ marginTop: '24px', display: 'flex', gap: '12px' }}>
+                  <button onClick={handleCodeEncounter} disabled={isProcessing} style={{ ...btnStyle, backgroundColor: isProcessing ? colors.slateBlue : colors.warmClay, cursor: isProcessing ? 'not-allowed' : 'pointer' }}>{isProcessing ? '⏳ AI Coding in Progress...' : '🔬 Code Encounter'}</button>
+                  <button onClick={() => { setFormData({ providerName: '', renderingProvider: '', facilityLocation: '', placeOfService: '', posCode: '', specialty: '', insuranceCompany: '', planType: '', dateOfBirth: '', chartDate: '', race: '', renderingProviderNpi: '', state: '', dateOfService: '', dxAge: '', payToAddress: '', icd10cm: '', mrn: '', clinicalNotes: '' }); setCodingResult(null); setUploadedFile(null); }} style={{ ...btnStyle, backgroundColor: colors.slateBlue }}>Reset Form</button>
+                </div>
+
+                {/* AI Coding Results */}
+                {codingResult && (
+                  <div style={{ marginTop: '24px', backgroundColor: colors.white, borderRadius: '8px', padding: '24px', boxShadow: '0 2px 4px rgba(0,0,0,0.1)' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
+                      <h3 style={{ margin: '0', color: colors.deepForest, fontSize: '18px' }}>AI Coding Results</h3>
+                      <span style={{ padding: '6px 16px', borderRadius: '20px', fontSize: '13px', fontWeight: '600', backgroundColor: codingResult.confidence >= 85 ? '#D4EDDA' : codingResult.confidence >= 70 ? '#FFF3E0' : '#FFEBEE', color: codingResult.confidence >= 85 ? '#155724' : codingResult.confidence >= 70 ? '#E65100' : '#721C24' }}>Confidence: {codingResult.confidence}%</span>
+                    </div>
+
+                    {/* CPT Codes */}
+                    <div style={{ marginBottom: '16px' }}>
+                      <h4 style={{ color: colors.deepForest, fontSize: '14px', margin: '0 0 10px 0' }}>Suggested CPT Codes</h4>
+                      {codingResult.cptCodes.map((c, i) => (
+                        <div key={i} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px 12px', backgroundColor: i === 0 ? '#E8F5E9' : colors.cream, borderRadius: '4px', marginBottom: '6px', border: '1px solid ' + colors.lightGray }}>
+                          <div><strong style={{ color: colors.deepForest }}>{c.code}</strong> <span style={{ color: colors.charcoal, fontSize: '13px' }}>— {c.desc}</span></div>
+                          <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
+                            <span style={{ fontSize: '12px', color: colors.slateBlue }}>RVU: {c.rvu}</span>
+                            <span style={{ padding: '3px 10px', borderRadius: '12px', fontSize: '11px', fontWeight: '600', backgroundColor: c.confidence >= 85 ? '#C8E6C9' : '#FFF9C4', color: c.confidence >= 85 ? '#2E7D32' : '#F57F17' }}>{c.confidence}%</span>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+
+                    {/* ICD-10 Codes */}
+                    <div style={{ marginBottom: '16px' }}>
+                      <h4 style={{ color: colors.deepForest, fontSize: '14px', margin: '0 0 10px 0' }}>Suggested ICD-10 Codes</h4>
+                      {codingResult.icd10Codes.map((c, i) => (
+                        <div key={i} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px 12px', backgroundColor: i === 0 ? '#E8F5E9' : colors.cream, borderRadius: '4px', marginBottom: '6px', border: '1px solid ' + colors.lightGray }}>
+                          <div><strong style={{ color: colors.deepForest }}>{c.code}</strong> <span style={{ color: colors.charcoal, fontSize: '13px' }}>— {c.desc}</span></div>
+                          <span style={{ padding: '3px 10px', borderRadius: '12px', fontSize: '11px', fontWeight: '600', backgroundColor: c.confidence >= 85 ? '#C8E6C9' : '#FFF9C4', color: c.confidence >= 85 ? '#2E7D32' : '#F57F17' }}>{c.confidence}%</span>
+                        </div>
+                      ))}
+                    </div>
+
+                    {/* Modifiers */}
+                    {codingResult.modifiers.length > 0 && (
+                      <div style={{ marginBottom: '16px' }}>
+                        <h4 style={{ color: colors.deepForest, fontSize: '14px', margin: '0 0 10px 0' }}>Suggested Modifiers</h4>
+                        {codingResult.modifiers.map((m, i) => (
+                          <div key={i} style={{ padding: '8px 12px', backgroundColor: colors.cream, borderRadius: '4px', marginBottom: '4px', fontSize: '13px' }}>
+                            <strong>{m.code}</strong> — {m.desc} <span style={{ color: colors.slateBlue }}>({m.confidence}%)</span>
                           </div>
                         ))}
                       </div>
                     )}
+
+                    {/* Flags */}
+                    {codingResult.flags.length > 0 && (
+                      <div style={{ backgroundColor: '#FFF8E1', border: '1px solid #FFE082', borderRadius: '4px', padding: '12px', marginTop: '12px' }}>
+                        <h4 style={{ margin: '0 0 8px 0', fontSize: '13px', color: '#E65100' }}>⚠ Flags for Review</h4>
+                        {codingResult.flags.map((f, i) => <p key={i} style={{ margin: '4px 0', fontSize: '13px', color: colors.charcoal }}>• {f}</p>)}
+                      </div>
+                    )}
+
+                    <p style={{ margin: '16px 0 0 0', fontSize: '12px', color: colors.slateBlue }}>✅ Claim added to Claims Queue | 📄 Report generated in Coding Reports tab</p>
                   </div>
-    
-                  <div style={{ marginBottom: '16px' }}>
-                    <div style={sectionTitleStyle}>Code Validation Warnings</div>
-                    <div style={warningBoxStyle}>
-                      <strong>LCD/NCD Alert:</strong> Verify regional coverage determination for selected procedure code.
-                    </div>
-                    <div style={warningBoxStyle}>
-                      <strong>Bundling Note:</strong> Diagnostic service may be included in the primary procedure. Review for edit compliance.
+                )}
+              </div>
+            )}
+
+            {/* ===== BATCH PROCESSING TAB ===== */}
+            {activeMainTab === 'batch' && (
+              <div>
+                <div style={{ backgroundColor: colors.white, padding: '24px', borderRadius: '8px', marginBottom: '24px', boxShadow: '0 2px 4px rgba(0,0,0,0.1)' }}>
+                  <h3 style={{ fontSize: '16px', fontWeight: '600', color: colors.deepForest, marginBottom: '16px', marginTop: '0' }}>Upload Batch Records</h3>
+                  <input type="file" id="batchFileUpload" style={{ display: 'none' }} onChange={handleBatchFileUpload} accept=".csv,.xlsx,.xls" />
+                  <div onClick={() => document.getElementById('batchFileUpload').click()} style={{ border: '2px dashed ' + colors.warmClay, borderRadius: '8px', padding: '40px', textAlign: 'center', backgroundColor: '#fafaf8', cursor: 'pointer', marginBottom: '16px' }}>
+                    <div style={{ fontSize: '24px' }}>📊</div>
+                    {batchFile ? <p style={{ fontSize: '14px', color: '#388E3C', margin: '12px 0 0 0' }}>Selected: {batchFile.name}</p> : <p style={{ fontSize: '14px', color: colors.slateBlue, margin: '12px 0 0 0' }}>Upload CSV or Excel file with medical records for batch coding</p>}
+                  </div>
+                  <button onClick={processBatch} disabled={batchProcessing} style={{ ...btnStyle, backgroundColor: batchProcessing ? colors.slateBlue : colors.warmClay, cursor: batchProcessing ? 'not-allowed' : 'pointer' }}>{batchProcessing ? 'Processing... ' + Math.round(batchProgress) + '%' : '🔬 Process Batch'}</button>
+                </div>
+
+                {batchProcessing && (
+                  <div style={{ backgroundColor: colors.white, padding: '24px', borderRadius: '8px', marginBottom: '24px' }}>
+                    <p style={{ fontSize: '13px', color: colors.slateBlue, marginBottom: '12px' }}>AI coding {Math.round(batchProgress)}% complete...</p>
+                    <div style={{ height: '8px', backgroundColor: colors.lightGray, borderRadius: '4px', overflow: 'hidden' }}>
+                      <div style={{ height: '100%', backgroundColor: colors.warmClay, width: batchProgress + '%', transition: 'width 0.3s ease' }}></div>
                     </div>
                   </div>
-    
-                  <div style={{ marginBottom: '16px' }}>
-                    <div style={sectionTitleStyle}>Selected Codes</div>
-    
-                    {selectedEncounter.cptCodes.length > 0 && (
-                      <>
-                        <div style={{ fontSize: '12px', fontWeight: 'bold', color: '#39463A', marginBottom: '8px' }}>
-                          CPT Codes
+                )}
+
+                {batchCompleted && batchReport && (
+                  <div style={{ backgroundColor: colors.white, padding: '24px', borderRadius: '8px', marginBottom: '24px', boxShadow: '0 2px 4px rgba(0,0,0,0.1)' }}>
+                    <h3 style={{ fontSize: '16px', fontWeight: '600', color: colors.deepForest, marginBottom: '16px', marginTop: '0' }}>Batch Report — {batchReport.timestamp}</h3>
+                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr 1fr', gap: '16px', marginBottom: '20px' }}>
+                      {[{label:'Total Records', value: batchReport.total, bg:'#E3F2FD'}, {label:'Successfully Coded', value: batchReport.coded, bg:'#E8F5E9'}, {label:'Failed', value: batchReport.failed, bg:'#FFEBEE'}, {label:'Flagged for Review', value: batchReport.flagged, bg:'#FFF3E0'}].map(stat => (
+                        <div key={stat.label} style={{ padding: '16px', backgroundColor: stat.bg, borderRadius: '8px', textAlign: 'center' }}>
+                          <div style={{ fontSize: '28px', fontWeight: '700', color: colors.charcoal }}>{stat.value}</div>
+                          <div style={{ fontSize: '12px', color: colors.slateBlue, marginTop: '4px' }}>{stat.label}</div>
                         </div>
-                        <div style={codeListStyle}>
-                          {selectedEncounter.cptCodes.map(code => (
-                            <div key={code.code} style={codeTagStyle}>
-                              <div>
-                                <strong>{code.code}</strong> - {code.desc}
-                                {code.confidence > 0 && <span style={{ color: '#AB8A7A' }}> ({code.confidence}%)</span>}
-                              </div>
-                              <button onClick={() => handleRemoveCode('cpt', code.code)} style={removeButtonStyle}>
-                                ×
-                              </button>
-                            </div>
-                          ))}
-                        </div>
-                      </>
+                      ))}
+                    </div>
+                    <p style={{ fontSize: '12px', color: colors.slateBlue, margin: '0' }}>✅ {batchReport.coded} claims added to Claims Queue | 📄 Report saved to Coding Reports | ⚠ {batchReport.flagged} items sent to Flagged tab</p>
+                  </div>
+                )}
+
+                {batchCompleted && batchResults.length > 0 && (
+                  <div style={{ backgroundColor: colors.white, padding: '24px', borderRadius: '8px', boxShadow: '0 2px 4px rgba(0,0,0,0.1)' }}>
+                    <h3 style={{ fontSize: '16px', fontWeight: '600', color: colors.deepForest, marginBottom: '16px', marginTop: '0' }}>Processing Results</h3>
+                    <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+                      <thead><tr>
+                        {['Record', 'Patient', 'CPT', 'ICD-10', 'Confidence', 'Status', 'Flags'].map(h => (
+                          <th key={h} style={{ padding: '12px', borderBottom: '1px solid ' + colors.lightGray, fontSize: '12px', textAlign: 'left', backgroundColor: colors.cream, fontWeight: '600', color: colors.deepForest }}>{h}</th>
+                        ))}
+                      </tr></thead>
+                      <tbody>
+                        {batchResults.map(r => (
+                          <tr key={r.recordId}>
+                            <td style={{ padding: '10px 12px', borderBottom: '1px solid ' + colors.lightGray, fontSize: '13px' }}>{r.recordId}</td>
+                            <td style={{ padding: '10px 12px', borderBottom: '1px solid ' + colors.lightGray, fontSize: '13px' }}>{r.patient}</td>
+                            <td style={{ padding: '10px 12px', borderBottom: '1px solid ' + colors.lightGray, fontSize: '13px' }}><strong>{r.cpt}</strong></td>
+                            <td style={{ padding: '10px 12px', borderBottom: '1px solid ' + colors.lightGray, fontSize: '13px' }}><strong>{r.icd10}</strong></td>
+                            <td style={{ padding: '10px 12px', borderBottom: '1px solid ' + colors.lightGray, fontSize: '13px' }}><span style={{ padding: '3px 8px', borderRadius: '10px', fontSize: '11px', fontWeight: '600', backgroundColor: r.confidence >= 85 ? '#C8E6C9' : '#FFF9C4', color: r.confidence >= 85 ? '#2E7D32' : '#F57F17' }}>{r.confidence}%</span></td>
+                            <td style={{ padding: '10px 12px', borderBottom: '1px solid ' + colors.lightGray, fontSize: '13px' }}><span style={{ padding: '4px 10px', borderRadius: '12px', fontSize: '11px', fontWeight: '600', backgroundColor: r.status === 'Coded' ? '#D4EDDA' : '#F8D7DA', color: r.status === 'Coded' ? '#155724' : '#721C24' }}>{r.status}</span></td>
+                            <td style={{ padding: '10px 12px', borderBottom: '1px solid ' + colors.lightGray, fontSize: '13px', color: r.flags.length > 0 ? '#E65100' : colors.slateBlue }}>{r.flags.length > 0 ? '⚠ Yes' : '—'}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                )}
+              </div>
+            )}
+
+            {/* ===== FLAGGED ITEMS TAB ===== */}
+            {activeMainTab === 'flagged' && (
+              <div>
+                {flaggedItems.length > 0 ? flaggedItems.map(item => (
+                  <div key={item.id} style={{ backgroundColor: colors.white, border: '1px solid ' + colors.lightGray, borderRadius: '8px', padding: '20px', marginBottom: '16px', boxShadow: '0 2px 4px rgba(0,0,0,0.1)' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'start', marginBottom: '12px' }}>
+                      <div>
+                        <h4 style={{ margin: '0 0 4px 0', color: colors.deepForest, fontSize: '15px' }}>{item.patient} — {item.id}</h4>
+                        <p style={{ margin: '0', fontSize: '12px', color: colors.slateBlue }}>DOS: {item.dos} | Provider: {item.provider} | Source: {item.source}</p>
+                      </div>
+                      <span style={{ backgroundColor: '#FFF3E0', color: '#E65100', padding: '4px 10px', borderRadius: '12px', fontSize: '11px', fontWeight: '600' }}>Pending Review</span>
+                    </div>
+                    <div style={{ backgroundColor: '#FFF8E1', border: '1px solid #FFE082', borderRadius: '4px', padding: '12px', marginBottom: '16px' }}>
+                      <p style={{ margin: '0 0 8px 0', fontSize: '13px', fontWeight: '600', color: colors.charcoal }}>AI Recommendation:</p>
+                      <p style={{ margin: '0', fontSize: '13px', color: colors.charcoal }}>{item.reason}</p>
+                    </div>
+                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px', marginBottom: '16px', fontSize: '13px' }}>
+                      <div><strong>Original DX:</strong> {item.originalDx}</div>
+                      <div><strong>Recommended DX:</strong> {item.recommendedDx}</div>
+                    </div>
+                    <div style={{ display: 'flex', gap: '12px' }}>
+                      <button onClick={() => handleFlaggedAction(item.id, 'accept')} style={{ ...btnStyle, backgroundColor: '#388E3C', fontSize: '13px', padding: '10px 20px' }}>Accept & Update Claim</button>
+                      <button onClick={() => handleFlaggedAction(item.id, 'reject')} style={{ ...btnStyle, backgroundColor: colors.slateBlue, fontSize: '13px', padding: '10px 20px' }}>Not Accepted — Keep Original</button>
+                    </div>
+                  </div>
+                )) : (
+                  <div style={{ backgroundColor: colors.white, padding: '40px', borderRadius: '8px', textAlign: 'center', boxShadow: '0 2px 4px rgba(0,0,0,0.1)' }}>
+                    <div style={{ fontSize: '32px', marginBottom: '12px' }}>✅</div>
+                    <p style={{ color: colors.slateBlue, fontSize: '14px' }}>No flagged items. All coding recommendations have been reviewed!</p>
+                  </div>
+                )}
+              </div>
+            )}
+
+            {/* ===== CODING REPORTS TAB ===== */}
+            {activeMainTab === 'reports' && (
+              <div>
+                {showReport ? (
+                  <div style={{ backgroundColor: colors.white, padding: '24px', borderRadius: '8px', boxShadow: '0 2px 4px rgba(0,0,0,0.1)' }}>
+                    <button onClick={() => setShowReport(null)} style={{ ...btnStyle, backgroundColor: colors.slateBlue, fontSize: '12px', padding: '8px 16px', marginBottom: '20px' }}>← Back to Reports</button>
+                    <h3 style={{ color: colors.deepForest, margin: '0 0 16px 0' }}>Coding Report — {showReport.id}</h3>
+                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '12px', marginBottom: '20px', fontSize: '13px' }}>
+                      <div><strong>Date:</strong> {showReport.timestamp}</div>
+                      <div><strong>Provider:</strong> {showReport.provider}</div>
+                      <div><strong>Patient/MRN:</strong> {showReport.patient}</div>
+                      <div><strong>DOS:</strong> {showReport.dos}</div>
+                      <div><strong>Facility:</strong> {showReport.facility}</div>
+                      <div><strong>Insurance:</strong> {showReport.insurance}</div>
+                    </div>
+                    {showReport.isBatch ? (
+                      <div>
+                        <h4 style={{ color: colors.deepForest }}>Batch Summary</h4>
+                        <p style={{ fontSize: '13px' }}>Total: {showReport.batchData.total} | Coded: {showReport.batchData.coded} | Failed: {showReport.batchData.failed} | Flagged: {showReport.batchData.flagged}</p>
+                      </div>
+                    ) : (
+                      <div>
+                        <h4 style={{ color: colors.deepForest, fontSize: '14px' }}>CPT Codes</h4>
+                        {showReport.cptCodes.map((c, i) => <div key={i} style={{ padding: '8px', backgroundColor: colors.cream, borderRadius: '4px', marginBottom: '4px', fontSize: '13px' }}><strong>{c.code}</strong> — {c.desc} ({c.confidence}% confidence, RVU: {c.rvu})</div>)}
+                        <h4 style={{ color: colors.deepForest, fontSize: '14px', marginTop: '16px' }}>ICD-10 Codes</h4>
+                        {showReport.icd10Codes.map((c, i) => <div key={i} style={{ padding: '8px', backgroundColor: colors.cream, borderRadius: '4px', marginBottom: '4px', fontSize: '13px' }}><strong>{c.code}</strong> — {c.desc} ({c.confidence}%)</div>)}
+                        {showReport.flags.length > 0 && <div style={{ marginTop: '16px', backgroundColor: '#FFF8E1', padding: '12px', borderRadius: '4px' }}><h4 style={{ margin: '0 0 8px 0', fontSize: '14px', color: '#E65100' }}>Flags</h4>{showReport.flags.map((f, i) => <p key={i} style={{ margin: '4px 0', fontSize: '13px' }}>• {f}</p>)}</div>}
+                      </div>
                     )}
-    
-                    {selectedEncounter.icd10Codes.length > 0 && (
-                      <>
-                        <div style={{ fontSize: '12px', fontWeight: 'bold', color: '#39463A', marginBottom: '8px', marginTop: '8px' }}>
-                          ICD-10 Codes
+                    <div style={{ marginTop: '16px', padding: '8px', backgroundColor: colors.cream, borderRadius: '4px', fontSize: '12px', color: colors.slateBlue }}>
+                      <strong>Status:</strong> {showReport.status}
+                    </div>
+                  </div>
+                ) : (
+                  <div>
+                    {codingReports.length > 0 ? codingReports.map(rpt => (
+                      <div key={rpt.id} onClick={() => setShowReport(rpt)} style={{ backgroundColor: colors.white, padding: '16px 20px', borderRadius: '8px', marginBottom: '10px', boxShadow: '0 2px 4px rgba(0,0,0,0.1)', cursor: 'pointer', display: 'flex', justifyContent: 'space-between', alignItems: 'center', border: '1px solid ' + colors.lightGray }}>
+                        <div>
+                          <h4 style={{ margin: '0 0 4px 0', fontSize: '14px', color: colors.deepForest }}>{rpt.id} — {rpt.provider}</h4>
+                          <p style={{ margin: '0', fontSize: '12px', color: colors.slateBlue }}>{rpt.timestamp} | Patient: {rpt.patient} | DOS: {rpt.dos}</p>
                         </div>
-                        <div style={codeListStyle}>
-                          {selectedEncounter.icd10Codes.map(code => (
-                            <div key={code.code} style={codeTagStyle}>
-                              <div>
-                                <strong>{code.code}</strong> - {code.desc}
-                                {code.confidence > 0 && <span style={{ color: '#AB8A7A' }}> ({code.confidence}%)</span>}
-                              </div>
-                              <button onClick={() => handleRemoveCode('icd10', code.code)} style={removeButtonStyle}>
-                                ×
-                              </button>
-                            </div>
-                          ))}
-                        </div>
-                      </>
-                    )}
-    
-                    {selectedEncounter.modifiers.length > 0 && (
-                      <>
-                        <div style={{ fontSize: '12px', fontWeight: 'bold', color: '#39463A', marginBottom: '8px', marginTop: '8px' }}>
-                          Modifiers
-                        </div>
-                        <div style={codeListStyle}>
-                          {selectedEncounter.modifiers.map(mod => (
-                            <div key={mod} style={codeTagStyle}>
-                              <strong>{mod}</strong>
-                              <button onClick={() => handleRemoveCode('modifier', mod)} style={removeButtonStyle}>
-                                ×
-                              </button>
-                            </div>
-                          ))}
-                        </div>
-                      </>
-                    )}
-    
-                    {selectedEncounter.cptCodes.length === 0 && selectedEncounter.icd10Codes.length === 0 && (
-                      <div style={{ color: '#999', fontSize: '13px', fontStyle: 'italic' }}>
-                        No codes selected yet. Use the search above or accept AI suggestions to add codes.
+                        <span style={{ padding: '4px 12px', borderRadius: '12px', fontSize: '11px', fontWeight: '600', backgroundColor: rpt.status.includes('Flagged') || rpt.status.includes('flagged') ? '#FFF3E0' : '#D4EDDA', color: rpt.status.includes('Flagged') || rpt.status.includes('flagged') ? '#E65100' : '#155724' }}>{rpt.status}</span>
+                      </div>
+                    )) : (
+                      <div style={{ backgroundColor: colors.white, padding: '40px', borderRadius: '8px', textAlign: 'center' }}>
+                        <p style={{ color: colors.slateBlue, fontSize: '14px' }}>No coding reports yet. Code an encounter or run a batch to generate reports.</p>
                       </div>
                     )}
                   </div>
-                </>
-              ) : (
-                <div style={{ color: '#999', textAlign: 'center', padding: '40px', fontSize: '14px' }}>
-                  Select an encounter from the queue to begin coding
-                </div>
-              )}
-            </div>
-    
-            <div style={cardStyle}>
-              <div style={sectionTitleStyle}>AI Chat Assistant</div>
-              <div style={chatContainerStyle}>
-                <div style={messagesStyle}>
-                  {chatMessages.map((msg, idx) => (
-                    <div key={idx} style={messageStyle(msg.sender === 'user')}>
-                      {msg.text}
-                    </div>
-                  ))}
-                </div>
-                <div style={chatInputAreaStyle}>
-                  <input
-                    type="text"
-                    placeholder="Ask a coding question..."
-                    value={chatInput}
-                    onChange={(e) => setChatInput(e.target.value)}
-                    onKeyDown={(e) => e.key === 'Enter' && handleSendMessage()}
-                    style={chatInputStyle}
-                  />
-                  <button onClick={handleSendMessage} style={sendButtonStyle}>
-                    Send
-                  </button>
-                </div>
+                )}
               </div>
-    
-              <div style={{ marginTop: '20px' }}>
-                <div style={sectionTitleStyle}>Audit Trail</div>
-                <div style={{ maxHeight: '200px', overflowY: 'auto' }}>
-                  {auditTrail.length === 0 ? (
-                    <div style={{ fontSize: '12px', color: '#999' }}>No changes yet</div>
-                  ) : (
-                    auditTrail.map((entry, idx) => (
-                      <div key={idx} style={auditItemStyle}>
-                        <div style={{ fontWeight: 'bold', color: '#39463A' }}>{entry.action}</div>
-                        <div style={{ fontSize: '11px', color: '#999' }}>
-                          {entry.timestamp} by {entry.user}
-                        </div>
-                      </div>
-                    ))
-                  )}
-                </div>
+            )}
+
+            {/* ===== CLAIMS QUEUE TAB ===== */}
+            {activeMainTab === 'queue' && (
+              <div>
+                {codedClaims.length > 0 ? (
+                  <div style={{ backgroundColor: colors.white, padding: '24px', borderRadius: '8px', boxShadow: '0 2px 4px rgba(0,0,0,0.1)' }}>
+                    <h3 style={{ fontSize: '16px', fontWeight: '600', color: colors.deepForest, marginBottom: '16px', marginTop: '0' }}>Claims Queue — {codedClaims.length} claims</h3>
+                    <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+                      <thead><tr>
+                        {['Claim ID', 'Timestamp', 'Provider', 'Patient/MRN', 'CPT', 'ICD-10', 'DOS', 'Confidence', 'Status'].map(h => (
+                          <th key={h} style={{ padding: '10px', borderBottom: '2px solid ' + colors.lightGray, fontSize: '11px', textAlign: 'left', backgroundColor: colors.cream, fontWeight: '600', color: colors.deepForest, textTransform: 'uppercase' }}>{h}</th>
+                        ))}
+                      </tr></thead>
+                      <tbody>
+                        {codedClaims.map(c => (
+                          <tr key={c.id}>
+                            <td style={{ padding: '10px', borderBottom: '1px solid ' + colors.lightGray, fontSize: '12px', fontWeight: '600' }}>{c.id}</td>
+                            <td style={{ padding: '10px', borderBottom: '1px solid ' + colors.lightGray, fontSize: '12px' }}>{c.timestamp}</td>
+                            <td style={{ padding: '10px', borderBottom: '1px solid ' + colors.lightGray, fontSize: '12px' }}>{c.provider}</td>
+                            <td style={{ padding: '10px', borderBottom: '1px solid ' + colors.lightGray, fontSize: '12px' }}>{c.mrn}</td>
+                            <td style={{ padding: '10px', borderBottom: '1px solid ' + colors.lightGray, fontSize: '12px', fontWeight: '600' }}>{(c.cptCodes || []).join(', ')}</td>
+                            <td style={{ padding: '10px', borderBottom: '1px solid ' + colors.lightGray, fontSize: '12px', fontWeight: '600' }}>{(c.icd10Codes || []).join(', ')}</td>
+                            <td style={{ padding: '10px', borderBottom: '1px solid ' + colors.lightGray, fontSize: '12px' }}>{c.dateOfService}</td>
+                            <td style={{ padding: '10px', borderBottom: '1px solid ' + colors.lightGray, fontSize: '12px' }}>{c.confidence ? c.confidence + '%' : '—'}</td>
+                            <td style={{ padding: '10px', borderBottom: '1px solid ' + colors.lightGray, fontSize: '12px' }}>
+                              <span style={{ padding: '3px 8px', borderRadius: '10px', fontSize: '10px', fontWeight: '600', backgroundColor: c.status.includes('Flagged') ? '#FFF3E0' : c.status.includes('Updated') ? '#E8F5E9' : '#E3F2FD', color: c.status.includes('Flagged') ? '#E65100' : c.status.includes('Updated') ? '#2E7D32' : '#1565C0' }}>{c.status}</span>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                ) : (
+                  <div style={{ backgroundColor: colors.white, padding: '40px', borderRadius: '8px', textAlign: 'center' }}>
+                    <p style={{ color: colors.slateBlue, fontSize: '14px' }}>No claims in queue. Code an encounter to add claims here.</p>
+                  </div>
+                )}
               </div>
-            </div>
+            )}
           </div>
         </div>
       );
