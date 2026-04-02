@@ -12406,10 +12406,10 @@
     
     
     const SchedulingPage = () => {
-      const [viewMode, React.useState('week')];
-      const [selectedProvider, React.useState('all')];
-      const [showQuickSchedule, React.useState(false)];
-      const [appointments, React.useState([
+      const [viewMode, setViewMode] = React.useState('week');
+      const [selectedProvider, setSelectedProvider] = React.useState('all');
+      const [showQuickSchedule, setShowQuickSchedule] = React.useState(false);
+      const [appointments, setAppointments] = React.useState([
         { id: 1, patientName: 'Maria Rodriguez', time: '08:00 AM', provider: 'Dr. Chen', type: 'New Patient', insurance: 'Anthem', status: 'Confirmed', day: 'Mon', verified: true },
         { id: 2, patientName: 'James Wilson', time: '08:30 AM', provider: 'Dr. Walsh', type: 'Follow-up', insurance: 'UnitedHealth', status: 'Checked In', day: 'Mon', verified: true },
         { id: 3, patientName: 'Patricia Lee', time: '09:00 AM', provider: 'Dr. Kumar', type: 'Procedure', insurance: 'Cigna', status: 'In Progress', day: 'Mon', verified: true },
@@ -12430,15 +12430,15 @@
         { id: 18, patientName: 'William Clark', time: '11:00 AM', provider: 'Dr. Chen', type: 'Telehealth', insurance: 'UnitedHealth', status: 'Confirmed', day: 'Wed', verified: true },
         { id: 19, patientName: 'Barbara Lewis', time: '11:30 AM', provider: 'Dr. Kumar', type: 'Follow-up', insurance: 'Aetna', status: 'Confirmed', day: 'Wed', verified: true },
         { id: 20, patientName: 'Joseph Walker', time: '01:00 PM', provider: 'Dr. Anderson', type: 'Procedure', insurance: 'Anthem', status: 'Checked In', day: 'Wed', verified: true },
-      ])];
-      const [newAppointment, React.useState({ patient: '', provider: '', date: '', time: '', type: 'Follow-up', duration: '30' })];
-      const [waitlist, React.useState([
+      ]);
+      const [newAppointment, setNewAppointment] = React.useState({ patient: '', provider: '', date: '', time: '', type: 'Follow-up', duration: '30' });
+      const [waitlist, setWaitlist] = React.useState([
         { id: 'W1', patientName: 'Thomas Garcia', preferredDate: 'Today', reason: 'Urgent follow-up', priority: 'High' },
         { id: 'W2', patientName: 'Margaret Young', preferredDate: 'Tomorrow', reason: 'Medication review', priority: 'Medium' },
         { id: 'W3', patientName: 'Steven Hall', preferredDate: 'This week', reason: 'Procedure reschedule', priority: 'High' },
         { id: 'W4', patientName: 'Dorothy Allen', preferredDate: 'This week', reason: 'Lab results discussion', priority: 'Medium' },
         { id: 'W5', patientName: 'Paul King', preferredDate: 'Next week', reason: 'New patient consultation', priority: 'Low' },
-      ])];
+      ]);
     
       const timeSlots = ['08:00 AM', '08:30 AM', '09:00 AM', '09:30 AM', '10:00 AM', '10:30 AM', '11:00 AM', '11:30 AM', '12:00 PM', '12:30 PM', '01:00 PM', '01:30 PM', '02:00 PM', '02:30 PM', '03:00 PM', '03:30 PM', '04:00 PM', '04:30 PM', '05:00 PM'];
       const weekDays = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'];
