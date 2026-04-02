@@ -643,6 +643,417 @@
             animation: shimmer 2s infinite;
             background-size: 200% 100%;
         }
+
+        /* ===== DASHBOARD STYLES ===== */
+        .page-header {
+            margin-bottom: 1.5rem;
+        }
+        .page-header h1 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #39463A;
+            margin-bottom: 0.25rem;
+        }
+        .page-header p {
+            font-size: 0.8125rem;
+            color: #73868A;
+        }
+        .kpi-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        .kpi-card {
+            background: #fff;
+            border-radius: 0.75rem;
+            padding: 1.25rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+        }
+        .kpi-card .label {
+            font-size: 0.6875rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: #73868A;
+            margin-bottom: 0.5rem;
+        }
+        .kpi-card .value {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: #39463A;
+        }
+        .kpi-card .sub {
+            font-size: 0.6875rem;
+            margin-top: 0.25rem;
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+        .kpi-card .sub.up {
+            color: #4CAF50;
+        }
+        .kpi-card .sub.down {
+            color: #E53935;
+        }
+        .kpi-card .sub.neutral {
+            color: #73868A;
+        }
+        .card {
+            background: #fff;
+            border-radius: 0.75rem;
+            padding: 1.25rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+            margin-bottom: 1rem;
+        }
+        .card h3 {
+            font-size: 0.875rem;
+            font-weight: 700;
+            color: #39463A;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .card h3 .badge {
+            font-size: 0.625rem;
+            font-weight: 600;
+            padding: 0.1875rem 0.5rem;
+            border-radius: 1.25rem;
+            background: #F5F1EB;
+            color: #927C67;
+            border: none;
+        }
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+        .grid-3 {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 1rem;
+        }
+        @media (max-width: 1200px) {
+            .grid-2, .grid-3 {
+                grid-template-columns: 1fr;
+            }
+        }
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.75rem;
+        }
+        .data-table th {
+            text-align: left;
+            padding: 0.625rem 0.75rem;
+            background: #F5F1EB;
+            font-weight: 600;
+            color: #39463A;
+            border-bottom: 2px solid #E0D7C7;
+        }
+        .data-table td {
+            padding: 0.625rem 0.75rem;
+            border-bottom: 1px solid #E0D7C7;
+        }
+        .data-table tr:hover {
+            background: rgba(245, 241, 235, 0.5);
+        }
+        .status-pill {
+            display: inline-block;
+            padding: 0.125rem 0.625rem;
+            border-radius: 1.25rem;
+            font-size: 0.625rem;
+            font-weight: 600;
+        }
+        .status-pill.green {
+            background: #E8F5E9;
+            color: #2E7D32;
+        }
+        .status-pill.red {
+            background: #FFEBEE;
+            color: #C62828;
+        }
+        .status-pill.amber {
+            background: #FFF8E1;
+            color: #F57F17;
+        }
+        .status-pill.blue {
+            background: #E3F2FD;
+            color: #1565C0;
+        }
+        .status-pill.gray {
+            background: #F5F5F5;
+            color: #757575;
+        }
+        .progress-bar {
+            height: 0.5rem;
+            background: #E0D7C7;
+            border-radius: 0.25rem;
+            overflow: hidden;
+        }
+        .progress-bar .fill {
+            height: 100%;
+            border-radius: 0.25rem;
+            transition: width 0.5s;
+        }
+        .funnel-stage {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid #E0D7C7;
+        }
+        .funnel-stage:last-child {
+            border-bottom: none;
+        }
+        .funnel-bar {
+            flex: 1;
+            height: 2rem;
+            border-radius: 0.375rem;
+            display: flex;
+            align-items: center;
+            padding: 0 0.75rem;
+            color: #fff;
+            font-size: 0.75rem;
+            font-weight: 600;
+            min-width: 2.5rem;
+        }
+        .funnel-label {
+            width: 7.5rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: #39463A;
+        }
+        .funnel-count {
+            width: 3.75rem;
+            text-align: right;
+            font-size: 0.8125rem;
+            font-weight: 700;
+            color: #39463A;
+        }
+        .alert-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.625rem;
+            padding: 0.625rem 0;
+            border-bottom: 1px solid #E0D7C7;
+            font-size: 0.75rem;
+        }
+        .alert-item:last-child {
+            border-bottom: none;
+        }
+        .alert-dot {
+            width: 0.5rem;
+            height: 0.5rem;
+            border-radius: 50%;
+            margin-top: 0.25rem;
+            flex-shrink: 0;
+        }
+        .kanban {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 0.75rem;
+        }
+        .kanban-col {
+            background: #F5F1EB;
+            border-radius: 0.5rem;
+            padding: 0.75rem;
+        }
+        .kanban-col h4 {
+            font-size: 0.6875rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: #73868A;
+            margin-bottom: 0.625rem;
+            display: flex;
+            justify-content: space-between;
+        }
+        .kanban-col h4 span {
+            background: #AB8A7A;
+            color: #fff;
+            border-radius: 0.625rem;
+            padding: 0.0625rem 0.4375rem;
+            font-size: 0.625rem;
+        }
+        .kanban-card {
+            background: #fff;
+            border-radius: 0.5rem;
+            padding: 0.625rem;
+            margin-bottom: 0.5rem;
+            font-size: 0.6875rem;
+            border-left: 3px solid #AB8A7A;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+        }
+        .kanban-card .name {
+            font-weight: 600;
+            color: #39463A;
+            margin-bottom: 0.125rem;
+        }
+        .kanban-card .meta {
+            color: #73868A;
+            font-size: 0.625rem;
+        }
+        .gauge-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.25rem;
+        }
+        .gauge-ring {
+            width: 5.625rem;
+            height: 5.625rem;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.125rem;
+            font-weight: 700;
+        }
+        .gauge-label {
+            font-size: 0.6875rem;
+            color: #73868A;
+            font-weight: 500;
+            text-align: center;
+        }
+        .heatmap {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 0.125rem;
+            font-size: 0.625rem;
+            text-align: center;
+        }
+        .heatmap .cell {
+            padding: 0.5rem 0.25rem;
+            border-radius: 0.25rem;
+            font-weight: 600;
+        }
+        .heatmap .header {
+            font-weight: 700;
+            color: #73868A;
+            padding: 0.25rem;
+        }
+        .legend {
+            display: flex;
+            gap: 1rem;
+            margin-top: 0.75rem;
+            font-size: 0.6875rem;
+            align-items: center;
+        }
+        .legend-dot {
+            width: 0.625rem;
+            height: 0.625rem;
+            border-radius: 0.125rem;
+            display: inline-block;
+            margin-right: 0.25rem;
+        }
+        .donut-center {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+        }
+        .donut-center .val {
+            font-size: 1.375rem;
+            font-weight: 700;
+            color: #39463A;
+        }
+        .donut-center .lbl {
+            font-size: 0.625rem;
+            color: #73868A;
+        }
+        .mini-chart {
+            display: flex;
+            align-items: flex-end;
+            gap: 0.1875rem;
+            height: 2.5rem;
+        }
+        .mini-bar {
+            width: 0.375rem;
+            border-radius: 0.1875rem 0.1875rem 0 0;
+            background: #AB8A7A;
+            transition: height 0.3s;
+        }
+        .timeline-item {
+            display: flex;
+            gap: 0.75rem;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid #E0D7C7;
+        }
+        .timeline-item:last-child {
+            border-bottom: none;
+        }
+        .timeline-dot {
+            width: 0.625rem;
+            height: 0.625rem;
+            border-radius: 50%;
+            background: #AB8A7A;
+            margin-top: 0.1875rem;
+            flex-shrink: 0;
+        }
+        .timeline-content {
+            font-size: 0.75rem;
+            color: #4A4843;
+        }
+        .timeline-content .time {
+            font-size: 0.625rem;
+            color: #73868A;
+            margin-top: 0.125rem;
+        }
+        .score-card {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem;
+            background: #F5F1EB;
+            border-radius: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+        .score-card .rank {
+            width: 2rem;
+            height: 2rem;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.8125rem;
+            color: #fff;
+        }
+        .score-card .info {
+            flex: 1;
+            font-size: 0.75rem;
+        }
+        .score-card .info .name {
+            font-weight: 600;
+            color: #39463A;
+        }
+        .score-card .info .detail {
+            color: #73868A;
+            font-size: 0.6875rem;
+        }
+        .score-card .metric {
+            text-align: right;
+            font-weight: 700;
+            font-size: 0.875rem;
+        }
+        .rag {
+            display: inline-block;
+            width: 0.625rem;
+            height: 0.625rem;
+            border-radius: 50%;
+        }
+        .rag.r {
+            background: #E53935;
+        }
+        .rag.a {
+            background: #FF9800;
+        }
+        .rag.g {
+            background: #4CAF50;
+        }
     </style>
 </head>
 <body>
@@ -2066,6 +2477,617 @@
     // ============================================================
     // SCHEDULING PAGE
     // ============================================================
+
+    // ============================================================
+    // 12 SPECIALIZED DASHBOARDS (from VanguardRCM_Dashboard_Mockups)
+    // ============================================================
+    const DC={
+      forest:'#39463A',clay:'#AB8A7A',slate:'#73868A',tan:'#927C67',
+      cream:'#E0D7C7',oat:'#F5F1EB',text:'#4A4843',white:'#FFFFFF',
+      green:'#4CAF50',red:'#E53935',amber:'#FF9800',blue:'#2196F3',
+      chartColors:['#39463A','#AB8A7A','#73868A','#927C67','#E0D7C7','#8FBC8F','#B0C4DE','#D2B48C','#A0522D','#708090']
+    };
+
+    const DashKPI=({label,value,sub,trend})=>(
+      <div className="kpi-card">
+        <div className="label">{label}</div>
+        <div className="value">{value}</div>
+        {sub&&<div className={`sub ${trend||'neutral'}`}>{trend==='up'?'▲':trend==='down'?'▼':'●'} {sub}</div>}
+      </div>
+    );
+
+    const DashStatusPill=({status})=>{
+      const map={Paid:'green',Active:'green',Approved:'green',Completed:'green',Open:'green',Submitted:'blue',Pending:'amber','In Progress':'amber',Review:'amber',Denied:'red',Overdue:'red',Expired:'red',Failed:'red',Draft:'gray',New:'gray'};
+      return <span className={`status-pill ${map[status]||'gray'}`}>{status}</span>;
+    };
+
+    const ExecutiveDashboard=()=>{
+      const revData=[{m:'Oct',rev:482000},{m:'Nov',rev:498000},{m:'Dec',rev:510000},{m:'Jan',rev:525000},{m:'Feb',rev:548000},{m:'Mar',rev:562000}];
+      const payerMix=[{name:'Commercial',value:42},{name:'Medicare',value:28},{name:'Medicaid',value:15},{name:'Self-Pay',value:8},{name:'Other',value:7}];
+      const alerts=[
+        {color:DC.red,text:'3 authorizations expiring in 48 hours',time:'2 min ago'},
+        {color:DC.amber,text:'12 claims pending >30 days — follow up needed',time:'15 min ago'},
+        {color:DC.amber,text:'Eligibility lapse detected for 5 patients',time:'1 hr ago'},
+        {color:DC.green,text:'ERA batch processed — 47 payments posted',time:'2 hrs ago'},
+        {color:DC.blue,text:'Monthly MIPS report ready for review',time:'3 hrs ago'},
+      ];
+      return (<>
+        <div className="page-header"><h1>Executive Dashboard</h1><p>Real-time practice performance overview</p></div>
+        <div className="kpi-row">
+          <DashKPI label="Revenue MTD" value="$562,400" sub="+8.2% vs last month" trend="up"/>
+          <DashKPI label="Collection Rate" value="96.3%" sub="+1.1% vs target" trend="up"/>
+          <DashKPI label="Denial Rate" value="4.8%" sub="-0.6% vs last month" trend="up"/>
+          <DashKPI label="Patients Seen" value="1,247" sub="+12% vs forecast" trend="up"/>
+          <DashKPI label="Avg Days to Pay" value="18.4" sub="-2.1 days improvement" trend="up"/>
+          <DashKPI label="AR Balance" value="$284K" sub="$32K decrease" trend="up"/>
+        </div>
+        <div className="grid-2">
+          <div className="card">
+            <h3>Revenue Trend (6 Months) <span className="badge">Monthly</span></h3>
+            <ResponsiveContainer width="100%" height={220}>
+              <AreaChart data={revData}><CartesianGrid strokeDasharray="3 3" stroke={DC.cream}/><XAxis dataKey="m" tick={{fontSize:11}} stroke={DC.slate}/><YAxis tick={{fontSize:11}} stroke={DC.slate} tickFormatter={v=>`$${v/1000}K`}/><Tooltip formatter={v=>[`$${(v/1000).toFixed(0)}K`,'Revenue']}/><Area type="monotone" dataKey="rev" stroke={DC.forest} fill={DC.forest} fillOpacity={0.15} strokeWidth={2}/></AreaChart>
+            </ResponsiveContainer>
+          </div>
+          <div className="card">
+            <h3>Payer Mix <span className="badge">Current Month</span></h3>
+            <div style={{display:'flex',alignItems:'center',gap:20}}>
+              <ResponsiveContainer width="50%" height={200}>
+                <PieChart><Pie data={payerMix} cx="50%" cy="50%" innerRadius={50} outerRadius={80} dataKey="value" paddingAngle={2}>
+                  {payerMix.map((e,i)=><Cell key={i} fill={DC.chartColors[i]}/>)}
+                </Pie></PieChart>
+              </ResponsiveContainer>
+              <div style={{flex:1}}>
+                {payerMix.map((p,i)=><div key={i} style={{display:'flex',alignItems:'center',gap:8,marginBottom:8,fontSize:12}}>
+                  <span style={{width:10,height:10,borderRadius:2,background:DC.chartColors[i],flexShrink:0}}></span>
+                  <span style={{flex:1}}>{p.name}</span><span style={{fontWeight:700}}>{p.value}%</span>
+                </div>)}
+              </div>
+            </div>
+          </div>
+        </div>
+        <div className="card">
+          <h3>Alerts & Notifications <span className="badge">5 Active</span></h3>
+          {alerts.map((a,i)=><div key={i} className="alert-item"><div className="alert-dot" style={{background:a.color}}></div><div style={{flex:1}}>{a.text}</div><div style={{fontSize:10,color:DC.slate,whiteSpace:'nowrap'}}>{a.time}</div></div>)}
+        </div>
+      </>);
+    };
+
+    const RevenueCycleDashboard=()=>{
+      const stages=[
+        {name:'Intake',count:342,pct:100,color:DC.forest},
+        {name:'Eligibility',count:328,pct:96,color:'#4A6B4E'},
+        {name:'Authorization',count:305,pct:89,color:DC.slate},
+        {name:'Scheduled',count:289,pct:85,color:DC.tan},
+        {name:'Billed',count:271,pct:79,color:DC.clay},
+        {name:'Collected',count:248,pct:73,color:'#8FBC8F'},
+      ];
+      const cycleData=[{stage:'Intake',days:1.2},{stage:'Elig.',days:0.8},{stage:'Auth',days:3.4},{stage:'Sched.',days:2.1},{stage:'Bill',days:1.5},{stage:'Collect',days:18.4}];
+      return (<>
+        <div className="page-header"><h1>Revenue Cycle Overview</h1><p>End-to-end pipeline funnel with stage analytics</p></div>
+        <div className="kpi-row">
+          <DashKPI label="Total Pipeline" value="342" sub="Active patients in cycle" trend="neutral"/>
+          <DashKPI label="Conversion Rate" value="72.5%" sub="Intake → Collected" trend="up"/>
+          <DashKPI label="Avg Cycle Time" value="27.4 days" sub="-3.2 days vs benchmark" trend="up"/>
+          <DashKPI label="Drop-off Rate" value="27.5%" sub="Primary: Auth stage" trend="down"/>
+        </div>
+        <div className="grid-2">
+          <div className="card">
+            <h3>Pipeline Funnel <span className="badge">This Month</span></h3>
+            {stages.map((s,i)=><div key={i} className="funnel-stage">
+              <div className="funnel-label">{s.name}</div>
+              <div style={{flex:1}}><div className="funnel-bar" style={{width:`${s.pct}%`,background:s.color}}>{s.pct}%</div></div>
+              <div className="funnel-count">{s.count}</div>
+            </div>)}
+          </div>
+          <div className="card">
+            <h3>Average Days Per Stage <span className="badge">Rolling 30-Day</span></h3>
+            <ResponsiveContainer width="100%" height={260}>
+              <BarChart data={cycleData} layout="vertical"><CartesianGrid strokeDasharray="3 3" stroke={DC.cream}/><XAxis type="number" tick={{fontSize:11}} stroke={DC.slate}/><YAxis dataKey="stage" type="category" tick={{fontSize:11}} stroke={DC.slate} width={55}/><Tooltip/><Bar dataKey="days" fill={DC.clay} radius={[0,4,4,0]} barSize={20}/></BarChart>
+            </ResponsiveContainer>
+          </div>
+        </div>
+        <div className="card">
+          <h3>Stage Bottleneck Identification</h3>
+          <table className="data-table">
+            <thead><tr><th>Stage</th><th>Avg Time</th><th>Benchmark</th><th>Variance</th><th>Status</th><th>Action</th></tr></thead>
+            <tbody>
+              <tr><td>Intake</td><td>1.2 days</td><td>1.0 days</td><td>+0.2</td><td><span className="rag g"></span></td><td>On track</td></tr>
+              <tr><td>Eligibility</td><td>0.8 days</td><td>1.0 days</td><td>-0.2</td><td><span className="rag g"></span></td><td>Exceeding target</td></tr>
+              <tr><td style={{fontWeight:700,color:DC.red}}>Authorization</td><td style={{fontWeight:700,color:DC.red}}>3.4 days</td><td>2.0 days</td><td style={{color:DC.red}}>+1.4</td><td><span className="rag r"></span></td><td style={{color:DC.red}}>⚠ Bottleneck — payer response delays</td></tr>
+              <tr><td>Scheduling</td><td>2.1 days</td><td>2.5 days</td><td>-0.4</td><td><span className="rag g"></span></td><td>On track</td></tr>
+              <tr><td>Billing</td><td>1.5 days</td><td>1.0 days</td><td>+0.5</td><td><span className="rag a"></span></td><td>Monitor — charge entry backlog</td></tr>
+              <tr><td>Collection</td><td>18.4 days</td><td>21.0 days</td><td>-2.6</td><td><span className="rag g"></span></td><td>Exceeding target</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </>);
+    };
+
+    const ClaimsAnalyticsDashboard=()=>{
+      const claimStatus=[{name:'Paid',value:847},{name:'Pending',value:234},{name:'Denied',value:89},{name:'Appealed',value:42},{name:'Submitted',value:156}];
+      const agingData=[{bucket:'0-30',count:156,amt:248000},{bucket:'31-60',count:89,amt:142000},{bucket:'61-90',count:34,amt:54000},{bucket:'90+',count:18,amt:38000}];
+      const denialReasons=[{reason:'Missing Info',count:24},{reason:'Not Covered',count:18},{reason:'Auth Required',count:15},{reason:'Timely Filing',count:12},{reason:'Duplicate',count:8},{reason:'Modifier',count:7},{reason:'Other',count:5}];
+      return (<>
+        <div className="page-header"><h1>Claims Analytics</h1><p>Claim lifecycle tracking with aging analysis</p></div>
+        <div className="kpi-row">
+          <DashKPI label="Clean Claim Rate" value="94.2%" sub="+2.1% vs last quarter" trend="up"/>
+          <DashKPI label="First-Pass Rate" value="87.6%" sub="Industry avg: 80%" trend="up"/>
+          <DashKPI label="Total Claims MTD" value="1,368" sub="+156 from last month" trend="up"/>
+          <DashKPI label="Avg Days to Adjud." value="14.2" sub="-1.8 days improvement" trend="up"/>
+        </div>
+        <div className="grid-2">
+          <div className="card">
+            <h3>Claims by Status <span className="badge">All Active</span></h3>
+            <div style={{display:'flex',alignItems:'center',gap:20}}>
+              <div style={{position:'relative',width:180,height:180}}>
+                <ResponsiveContainer width="100%" height="100%">
+                  <PieChart><Pie data={claimStatus} cx="50%" cy="50%" innerRadius={55} outerRadius={80} dataKey="value" paddingAngle={2}>
+                    {claimStatus.map((e,i)=><Cell key={i} fill={DC.chartColors[i]}/>)}
+                  </Pie></PieChart>
+                </ResponsiveContainer>
+                <div className="donut-center"><div className="val">1,368</div><div className="lbl">Total</div></div>
+              </div>
+              <div style={{flex:1}}>
+                {claimStatus.map((s,i)=><div key={i} style={{display:'flex',alignItems:'center',gap:8,marginBottom:10,fontSize:12}}>
+                  <span style={{width:10,height:10,borderRadius:2,background:DC.chartColors[i],flexShrink:0}}></span>
+                  <span style={{flex:1}}>{s.name}</span><span style={{fontWeight:700}}>{s.value}</span>
+                </div>)}
+              </div>
+            </div>
+          </div>
+          <div className="card">
+            <h3>Top Denial Reason Codes <span className="badge">Last 90 Days</span></h3>
+            <ResponsiveContainer width="100%" height={220}>
+              <BarChart data={denialReasons} layout="vertical"><CartesianGrid strokeDasharray="3 3" stroke={DC.cream}/><XAxis type="number" tick={{fontSize:11}} stroke={DC.slate}/><YAxis dataKey="reason" type="category" tick={{fontSize:10}} stroke={DC.slate} width={80}/><Tooltip/><Bar dataKey="count" fill={DC.red} radius={[0,4,4,0]} barSize={16} fillOpacity={0.8}/></BarChart>
+            </ResponsiveContainer>
+          </div>
+        </div>
+        <div className="card">
+          <h3>Claims Aging Buckets <span className="badge">Outstanding AR</span></h3>
+          <table className="data-table">
+            <thead><tr><th>Aging Bucket</th><th>Count</th><th>Amount</th><th>% of Total</th><th>Distribution</th></tr></thead>
+            <tbody>
+              {agingData.map((a,i)=><tr key={i}><td style={{fontWeight:600}}>{a.bucket} days</td><td>{a.count}</td><td>${(a.amt/1000).toFixed(0)}K</td><td>{((a.count/297)*100).toFixed(1)}%</td>
+                <td><div className="progress-bar" style={{width:160}}><div className="fill" style={{width:`${(a.count/156)*100}%`,background:i<2?DC.green:i===2?DC.amber:DC.red}}></div></div></td></tr>)}
+            </tbody>
+          </table>
+        </div>
+      </>);
+    };
+
+    const DenialManagementDashboard=()=>{
+      const trendData=[{m:'Apr',rate:6.2},{m:'May',rate:5.8},{m:'Jun',rate:5.5},{m:'Jul',rate:6.1},{m:'Aug',rate:5.3},{m:'Sep',rate:5.0},{m:'Oct',rate:4.9},{m:'Nov',rate:5.2},{m:'Dec',rate:4.7},{m:'Jan',rate:4.5},{m:'Feb',rate:4.9},{m:'Mar',rate:4.8}];
+      const byPayer=[{payer:'UHC',denied:28,amt:42000},{payer:'Aetna',denied:18,amt:27000},{payer:'BCBS',denied:14,amt:21000},{payer:'Cigna',denied:12,amt:18000},{payer:'Medicare',denied:9,amt:8500},{payer:'Humana',denied:8,amt:12000}];
+      return (<>
+        <div className="page-header"><h1>Denial Management</h1><p>AI-powered denial analysis with appeal tracking</p></div>
+        <div className="kpi-row">
+          <DashKPI label="Denial Rate" value="4.8%" sub="Target: <5%" trend="up"/>
+          <DashKPI label="Total Denied $" value="$128.5K" sub="89 claims this month" trend="down"/>
+          <DashKPI label="Appeal Success" value="62.3%" sub="+4.8% vs last quarter" trend="up"/>
+          <DashKPI label="Avg Appeal Time" value="22 days" sub="-3 days vs benchmark" trend="up"/>
+        </div>
+        <div className="grid-2">
+          <div className="card">
+            <h3>Denial Rate Trend (12 Months) <span className="badge">Trending Down</span></h3>
+            <ResponsiveContainer width="100%" height={220}>
+              <LineChart data={trendData}><CartesianGrid strokeDasharray="3 3" stroke={DC.cream}/><XAxis dataKey="m" tick={{fontSize:11}} stroke={DC.slate}/><YAxis tick={{fontSize:11}} stroke={DC.slate} domain={[3,7]} tickFormatter={v=>`${v}%`}/><Tooltip formatter={v=>[`${v}%`,'Denial Rate']}/><Line type="monotone" dataKey="rate" stroke={DC.red} strokeWidth={2} dot={{r:4,fill:DC.red}}/></LineChart>
+            </ResponsiveContainer>
+          </div>
+          <div className="card">
+            <h3>Denials by Payer <span className="badge">Last 90 Days</span></h3>
+            <ResponsiveContainer width="100%" height={220}>
+              <BarChart data={byPayer}><CartesianGrid strokeDasharray="3 3" stroke={DC.cream}/><XAxis dataKey="payer" tick={{fontSize:10}} stroke={DC.slate}/><YAxis tick={{fontSize:11}} stroke={DC.slate}/><Tooltip/><Bar dataKey="denied" fill={DC.forest} radius={[4,4,0,0]} barSize={28}/></BarChart>
+            </ResponsiveContainer>
+          </div>
+        </div>
+        <div className="card">
+          <h3>AI-Recommended Actions <span className="badge">Claude AI Powered</span></h3>
+          <table className="data-table">
+            <thead><tr><th>Claim ID</th><th>Patient</th><th>Payer</th><th>Denial Code</th><th>Amount</th><th>AI Recommendation</th><th>Priority</th></tr></thead>
+            <tbody>
+              <tr><td>CLM-4821</td><td>Johnson, R.</td><td>UHC</td><td>CO-4</td><td>$2,450</td><td>Resubmit with modifier 59 — NCCI edit bypass</td><td><DashStatusPill status="Overdue"/></td></tr>
+              <tr><td>CLM-4798</td><td>Martinez, L.</td><td>Aetna</td><td>CO-197</td><td>$1,800</td><td>Appeal with auth reference #AET-9921</td><td><DashStatusPill status="Pending"/></td></tr>
+              <tr><td>CLM-4765</td><td>Chen, W.</td><td>BCBS</td><td>PR-96</td><td>$3,200</td><td>Corrected claim — wrong NPI submitted</td><td><DashStatusPill status="Overdue"/></td></tr>
+              <tr><td>CLM-4712</td><td>Williams, D.</td><td>Cigna</td><td>CO-29</td><td>$950</td><td>Timely filing appeal — proof of original submission</td><td><DashStatusPill status="Pending"/></td></tr>
+              <tr><td>CLM-4688</td><td>Taylor, S.</td><td>Medicare</td><td>CO-16</td><td>$680</td><td>Medical records attachment needed — clinical notes</td><td><DashStatusPill status="New"/></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </>);
+    };
+
+    const PatientFinancialDashboard=()=>{
+      const collData=[{m:'Oct',collected:38000,outstanding:12000},{m:'Nov',collected:41000,outstanding:10500},{m:'Dec',collected:44000,outstanding:9800},{m:'Jan',collected:42000,outstanding:11200},{m:'Feb',collected:46000,outstanding:8900},{m:'Mar',collected:48500,outstanding:7800}];
+      const payMethod=[{name:'Stripe Online',value:58},{name:'In-Office Card',value:22},{name:'Payment Plan',value:12},{name:'Check',value:5},{name:'Cash',value:3}];
+      return (<>
+        <div className="page-header"><h1>Patient Financial Dashboard</h1><p>Collections, payment tracking, and AR management</p></div>
+        <div className="kpi-row">
+          <DashKPI label="Patient Collections MTD" value="$48,500" sub="+14.2% vs last month" trend="up"/>
+          <DashKPI label="Outstanding Balance" value="$7,800" sub="-$1,100 decrease" trend="up"/>
+          <DashKPI label="Collection Rate" value="86.1%" sub="Target: 85%" trend="up"/>
+          <DashKPI label="Avg Copay" value="$42" sub="Per visit average" trend="neutral"/>
+          <DashKPI label="Payment Plans Active" value="67" sub="$34K total balance" trend="neutral"/>
+          <DashKPI label="Bad Debt (90+ days)" value="$3,200" sub="0.5% of total AR" trend="up"/>
+        </div>
+        <div className="grid-2">
+          <div className="card">
+            <h3>Collections vs Outstanding (6 Months) <span className="badge">Stripe + Manual</span></h3>
+            <ResponsiveContainer width="100%" height={220}>
+              <BarChart data={collData}><CartesianGrid strokeDasharray="3 3" stroke={DC.cream}/><XAxis dataKey="m" tick={{fontSize:11}} stroke={DC.slate}/><YAxis tick={{fontSize:11}} stroke={DC.slate} tickFormatter={v=>`$${v/1000}K`}/><Tooltip formatter={v=>[`$${(v/1000).toFixed(1)}K`]}/><Bar dataKey="collected" fill={DC.green} name="Collected" radius={[4,4,0,0]} barSize={20}/><Bar dataKey="outstanding" fill={DC.red} name="Outstanding" radius={[4,4,0,0]} barSize={20} fillOpacity={0.6}/></BarChart>
+            </ResponsiveContainer>
+          </div>
+          <div className="card">
+            <h3>Payment Method Distribution <span className="badge">Current Month</span></h3>
+            <div style={{display:'flex',alignItems:'center',gap:20}}>
+              <ResponsiveContainer width="50%" height={200}>
+                <PieChart><Pie data={payMethod} cx="50%" cy="50%" innerRadius={45} outerRadius={75} dataKey="value" paddingAngle={2}>
+                  {payMethod.map((e,i)=><Cell key={i} fill={DC.chartColors[i]}/>)}
+                </Pie></PieChart>
+              </ResponsiveContainer>
+              <div style={{flex:1}}>
+                {payMethod.map((p,i)=><div key={i} style={{display:'flex',alignItems:'center',gap:8,marginBottom:8,fontSize:12}}>
+                  <span style={{width:10,height:10,borderRadius:2,background:DC.chartColors[i],flexShrink:0}}></span>
+                  <span style={{flex:1}}>{p.name}</span><span style={{fontWeight:700}}>{p.value}%</span>
+                </div>)}
+              </div>
+            </div>
+          </div>
+        </div>
+        <div className="card">
+          <h3>Recent Stripe Transactions <span className="badge">Last 24 Hours</span></h3>
+          <table className="data-table">
+            <thead><tr><th>Patient</th><th>Amount</th><th>Type</th><th>Method</th><th>Label</th><th>Status</th><th>Time</th></tr></thead>
+            <tbody>
+              <tr><td>Adams, K.</td><td>$45.00</td><td>Copay</td><td>Visa ****6411</td><td>03/28/2026-Copay</td><td><DashStatusPill status="Paid"/></td><td>10:42 AM</td></tr>
+              <tr><td>Brown, T.</td><td>$125.00</td><td>Coinsurance</td><td>MC ****8823</td><td>03/28/2026-Copay</td><td><DashStatusPill status="Paid"/></td><td>9:15 AM</td></tr>
+              <tr><td>Davis, M.</td><td>$250.00</td><td>Payment Plan</td><td>Visa ****3104</td><td>03/28/2026-Copay</td><td><DashStatusPill status="Paid"/></td><td>8:30 AM</td></tr>
+              <tr><td>Evans, J.</td><td>$60.00</td><td>Copay</td><td>Link Sent</td><td>—</td><td><DashStatusPill status="Pending"/></td><td>7:45 AM</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </>);
+    };
+
+    const EligibilityDashboard=()=>{
+      const sourceData=[{source:'Availity',success:94,fail:6,avg:'1.2s'},{source:'Optum',success:91,fail:9,avg:'1.8s'},{source:'AdvancedMD',success:88,fail:12,avg:'2.4s'}];
+      const insMix=[{name:'Commercial',value:520},{name:'Medicare',value:345},{name:'Medicaid',value:185},{name:'Self-Pay',value:98},{name:'Workers Comp',value:45},{name:'Tricare',value:28}];
+      return (<>
+        <div className="page-header"><h1>Eligibility & Benefits Analytics</h1><p>Verification success rates and coverage analysis</p></div>
+        <div className="kpi-row">
+          <DashKPI label="Verification Rate" value="97.8%" sub="Auto-verified" trend="up"/>
+          <DashKPI label="Coverage Gaps" value="14" sub="Patients needing follow-up" trend="down"/>
+          <DashKPI label="Avg Response Time" value="1.4s" sub="Tri-source average" trend="up"/>
+          <DashKPI label="Cost Est. Accuracy" value="91.2%" sub="Estimate vs actual" trend="up"/>
+        </div>
+        <div className="grid-2">
+          <div className="card">
+            <h3>Verification Source Performance <span className="badge">Tri-Source</span></h3>
+            <table className="data-table">
+              <thead><tr><th>Source</th><th>Success Rate</th><th>Visual</th><th>Avg Response</th><th>Status</th></tr></thead>
+              <tbody>
+                {sourceData.map((s,i)=><tr key={i}><td style={{fontWeight:600}}>{s.source}</td><td>{s.success}%</td>
+                  <td><div className="progress-bar" style={{width:140}}><div className="fill" style={{width:`${s.success}%`,background:s.success>=93?DC.green:s.success>=90?DC.amber:DC.red}}></div></div></td>
+                  <td>{s.avg}</td><td><DashStatusPill status={s.success>=93?"Active":s.success>=90?"Review":"Failed"}/></td></tr>)}
+              </tbody>
+            </table>
+            <div style={{marginTop:16,padding:12,background:DC.oat,borderRadius:8,fontSize:12}}>
+              <strong>Failover Logic:</strong> Availity (primary) → Optum (secondary) → AdvancedMD (tertiary). If all fail, creates VanguardRCM task for manual verification.
+            </div>
+          </div>
+          <div className="card">
+            <h3>Insurance Mix <span className="badge">Active Patients</span></h3>
+            <ResponsiveContainer width="100%" height={250}>
+              <BarChart data={insMix}><CartesianGrid strokeDasharray="3 3" stroke={DC.cream}/><XAxis dataKey="name" tick={{fontSize:10}} stroke={DC.slate}/><YAxis tick={{fontSize:11}} stroke={DC.slate}/><Tooltip/><Bar dataKey="value" fill={DC.slate} radius={[4,4,0,0]} barSize={32}>
+                {insMix.map((e,i)=><Cell key={i} fill={DC.chartColors[i]}/>)}
+              </Bar></BarChart>
+            </ResponsiveContainer>
+          </div>
+        </div>
+        <div className="card">
+          <h3>Coverage Gap Alerts <span className="badge">Action Required</span></h3>
+          <table className="data-table">
+            <thead><tr><th>Patient</th><th>Insurance</th><th>Issue</th><th>Detected</th><th>Status</th></tr></thead>
+            <tbody>
+              <tr><td>Garcia, A.</td><td>UHC PPO</td><td>Policy terminated 03/15/2026</td><td>2 days ago</td><td><DashStatusPill status="Overdue"/></td></tr>
+              <tr><td>Lee, S.</td><td>Aetna HMO</td><td>Referral required — not on file</td><td>1 day ago</td><td><DashStatusPill status="Pending"/></td></tr>
+              <tr><td>Patel, R.</td><td>BCBS EPO</td><td>Out-of-network provider warning</td><td>Today</td><td><DashStatusPill status="New"/></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </>);
+    };
+
+    const SchedulingDashboard=()=>{
+      const utilData=[{provider:'Dr. Smith',util:92},{provider:'Dr. Jones',util:87},{provider:'Dr. Patel',util:78},{provider:'Dr. Chen',util:95},{provider:'PA Wilson',util:83}];
+      const heatmapData=[
+        ['','Mon','Tue','Wed','Thu','Fri','Sat','Sun'],
+        ['8AM',92,88,95,90,85,40,0],
+        ['9AM',98,95,100,96,92,55,0],
+        ['10AM',100,98,95,100,88,48,0],
+        ['11AM',95,92,88,94,82,35,0],
+        ['1PM',90,88,92,86,78,0,0],
+        ['2PM',85,82,88,80,72,0,0],
+        ['3PM',78,75,80,74,65,0,0],
+        ['4PM',70,68,72,66,58,0,0],
+      ];
+      const getHeatColor=(v)=>v===0?'#F5F5F5':v<50?'#FFF8E1':v<75?'#FFF3E0':v<90?'#E8F5E9':v<98?'#C8E6C9':'#A5D6A7';
+      return (<>
+        <div className="page-header"><h1>Scheduling & Utilization</h1><p>Provider calendars, no-show tracking, and slot optimization</p></div>
+        <div className="kpi-row">
+          <DashKPI label="Utilization Rate" value="87.2%" sub="Target: 85%" trend="up"/>
+          <DashKPI label="No-Show Rate" value="6.4%" sub="-1.2% after Bland AI calls" trend="up"/>
+          <DashKPI label="New Patient Wait" value="4.2 days" sub="Avg scheduling lead time" trend="up"/>
+          <DashKPI label="Bland AI Confirms" value="94.8%" sub="Call completion rate" trend="up"/>
+        </div>
+        <div className="grid-2">
+          <div className="card">
+            <h3>Provider Utilization <span className="badge">This Week</span></h3>
+            {utilData.map((p,i)=><div key={i} style={{display:'flex',alignItems:'center',gap:12,marginBottom:12}}>
+              <div style={{width:90,fontSize:12,fontWeight:600}}>{p.provider}</div>
+              <div style={{flex:1}}><div className="progress-bar"><div className="fill" style={{width:`${p.util}%`,background:p.util>=90?DC.green:p.util>=80?DC.clay:DC.amber}}></div></div></div>
+              <div style={{width:40,textAlign:'right',fontSize:13,fontWeight:700,color:p.util>=90?DC.green:p.util>=80?DC.forest:DC.amber}}>{p.util}%</div>
+            </div>)}
+          </div>
+          <div className="card">
+            <h3>Slot Availability Heatmap <span className="badge">Next Week</span></h3>
+            <div className="heatmap">
+              {heatmapData[0].map((h,i)=><div key={i} className="header">{h}</div>)}
+              {heatmapData.slice(1).map((row,ri)=>row.map((cell,ci)=>
+                ci===0?<div key={`${ri}-${ci}`} className="header" style={{textAlign:'right',paddingRight:8}}>{cell}</div>:
+                <div key={`${ri}-${ci}`} className="cell" style={{background:getHeatColor(cell),color:cell>80?DC.forest:cell>0?DC.tan:'#CCC'}}>{cell>0?`${cell}%`:'-'}</div>
+              ))}
+            </div>
+            <div className="legend">
+              <span><span className="legend-dot" style={{background:'#F5F5F5'}}></span>Closed</span>
+              <span><span className="legend-dot" style={{background:'#FFF8E1'}}></span>&lt;50%</span>
+              <span><span className="legend-dot" style={{background:'#FFF3E0'}}></span>50-75%</span>
+              <span><span className="legend-dot" style={{background:'#E8F5E9'}}></span>75-90%</span>
+              <span><span className="legend-dot" style={{background:'#A5D6A7'}}></span>90%+</span>
+            </div>
+          </div>
+        </div>
+      </>);
+    };
+
+    const PayerPerformanceDashboard=()=>{
+      const payers=[
+        {name:'Medicare',collRate:98.2,denialRate:2.1,daysToPay:14,authDays:0,rag:'g'},
+        {name:'UHC',collRate:94.1,denialRate:5.8,daysToPay:21,authDays:5,rag:'a'},
+        {name:'Aetna',collRate:93.5,denialRate:6.2,daysToPay:24,authDays:4,rag:'a'},
+        {name:'BCBS',collRate:95.8,denialRate:4.1,daysToPay:18,authDays:3,rag:'g'},
+        {name:'Cigna',collRate:91.2,denialRate:7.4,daysToPay:28,authDays:7,rag:'r'},
+        {name:'Humana',collRate:96.1,denialRate:3.5,daysToPay:16,authDays:2,rag:'g'},
+        {name:'Tricare',collRate:97.5,denialRate:2.8,daysToPay:12,authDays:1,rag:'g'},
+        {name:'Medicaid',collRate:89.4,denialRate:8.1,daysToPay:32,authDays:8,rag:'r'},
+      ];
+      const reimbData=[{payer:'Medicare',rate:100},{payer:'BCBS',rate:112},{payer:'UHC',rate:108},{payer:'Aetna',rate:105},{payer:'Cigna',rate:102},{payer:'Humana',rate:95},{payer:'Tricare',rate:88},{payer:'Medicaid',rate:72}];
+      return (<>
+        <div className="page-header"><h1>Payer Performance</h1><p>Per-payer analysis with MPFS benchmarking</p></div>
+        <div className="kpi-row">
+          <DashKPI label="Best Payer" value="Medicare" sub="98.2% collection, 14-day avg" trend="up"/>
+          <DashKPI label="Worst Payer" value="Medicaid" sub="89.4% collection, 32-day avg" trend="down"/>
+          <DashKPI label="Avg Reimbursement" value="97.8%" sub="vs Medicare MPFS rates" trend="neutral"/>
+          <DashKPI label="Payers Tracked" value="37" sub="From payer_knowledge_base.js" trend="neutral"/>
+        </div>
+        <div className="card">
+          <h3>Payer Scorecard <span className="badge">Rolling 90 Days</span></h3>
+          <table className="data-table">
+            <thead><tr><th>Payer</th><th>Collection Rate</th><th>Denial Rate</th><th>Avg Days to Pay</th><th>Auth Turnaround</th><th>RAG</th></tr></thead>
+            <tbody>
+              {payers.map((p,i)=><tr key={i}><td style={{fontWeight:600}}>{p.name}</td>
+                <td style={{color:p.collRate>=95?DC.green:p.collRate>=90?DC.amber:DC.red,fontWeight:600}}>{p.collRate}%</td>
+                <td style={{color:p.denialRate<=4?DC.green:p.denialRate<=6?DC.amber:DC.red}}>{p.denialRate}%</td>
+                <td>{p.daysToPay} days</td><td>{p.authDays} days</td>
+                <td><span className={`rag ${p.rag}`}></span></td></tr>)}
+            </tbody>
+          </table>
+        </div>
+        <div className="card">
+          <h3>Reimbursement Rate vs Medicare MPFS ($33.29 CF) <span className="badge">% of Medicare</span></h3>
+          <ResponsiveContainer width="100%" height={250}>
+            <BarChart data={reimbData}><CartesianGrid strokeDasharray="3 3" stroke={DC.cream}/><XAxis dataKey="payer" tick={{fontSize:10}} stroke={DC.slate}/><YAxis tick={{fontSize:11}} stroke={DC.slate} tickFormatter={v=>`${v}%`} domain={[60,120]}/><Tooltip formatter={v=>[`${v}% of Medicare`]}/><Bar dataKey="rate" radius={[4,4,0,0]} barSize={32}>
+              {reimbData.map((e,i)=><Cell key={i} fill={e.rate>=100?DC.green:e.rate>=90?DC.clay:DC.red}/>)}
+            </Bar></BarChart>
+          </ResponsiveContainer>
+        </div>
+      </>);
+    };
+
+    const CodingComplianceDashboard=()=>{
+      const topCPT=[{code:'99213',desc:'Office Visit (Est, Level 3)',vol:412,rev:148000},{code:'99214',desc:'Office Visit (Est, Level 4)',vol:287,rev:138000},{code:'27447',desc:'Total Knee Arthroplasty',vol:24,rev:312000},{code:'29881',desc:'Knee Arthroscopy',vol:42,rev:168000},{code:'20610',desc:'Joint Injection (Major)',vol:156,rev:62000},{code:'99203',desc:'Office Visit (New, Level 3)',vol:98,rev:48000}];
+      return (<>
+        <div className="page-header"><h1>Coding & Compliance</h1><p>CPT analytics, modifier tracking, and NCCI edit monitoring</p></div>
+        <div className="kpi-row">
+          <DashKPI label="CPT Codes Active" value="9,516" sub="NV Area 00 MPFS loaded" trend="neutral"/>
+          <DashKPI label="Charge Capture" value="98.4%" sub="Auto vs manual entry" trend="up"/>
+          <DashKPI label="NCCI Violations" value="3" sub="Caught before submission" trend="up"/>
+          <DashKPI label="E/M Distribution" value="Compliant" sub="No outlier patterns" trend="up"/>
+        </div>
+        <div className="card">
+          <h3>Top CPT Codes by Volume & Revenue <span className="badge">Month to Date</span></h3>
+          <table className="data-table">
+            <thead><tr><th>CPT Code</th><th>Description</th><th>Volume</th><th>Revenue</th><th>Avg Reimb</th><th>MPFS Rate</th><th>Trend</th></tr></thead>
+            <tbody>
+              {topCPT.map((c,i)=><tr key={i}><td style={{fontWeight:700,color:DC.forest}}>{c.code}</td><td>{c.desc}</td><td>{c.vol}</td><td>${(c.rev/1000).toFixed(0)}K</td><td>${(c.rev/c.vol).toFixed(0)}</td><td style={{color:DC.slate,fontSize:11}}>MPFS lookup</td>
+                <td><div className="mini-chart">{[65,72,68,78,82,88,92].map((v,j)=><div key={j} className="mini-bar" style={{height:`${v}%`}}></div>)}</div></td></tr>)}
+            </tbody>
+          </table>
+        </div>
+        <div className="grid-2">
+          <div className="card">
+            <h3>NCCI Edit Alerts <span className="badge">Auto-Detected</span></h3>
+            {[
+              {codes:'29881 + 29880',patient:'Johnson, R.',issue:'Column 1/Column 2 conflict',action:'Add modifier 59'},
+              {codes:'99213 + 20610',patient:'Lee, M.',issue:'Bundled procedure alert',action:'Append modifier 25'},
+              {codes:'27447 + 27486',patient:'Davis, K.',issue:'MUE limit exceeded',action:'Review medical necessity'},
+            ].map((a,i)=><div key={i} className="alert-item">
+              <div className="alert-dot" style={{background:DC.red}}></div>
+              <div style={{flex:1}}><div style={{fontWeight:600}}>{a.codes}</div><div style={{fontSize:11,color:DC.slate}}>{a.patient} — {a.issue}</div></div>
+              <DashStatusPill status="Pending"/>
+            </div>)}
+          </div>
+          <div className="card">
+            <h3>E/M Code Distribution <span className="badge">Bell Curve Analysis</span></h3>
+            <ResponsiveContainer width="100%" height={180}>
+              <BarChart data={[{code:'99211',pct:2},{code:'99212',pct:12},{code:'99213',pct:38},{code:'99214',pct:35},{code:'99215',pct:13}]}>
+                <CartesianGrid strokeDasharray="3 3" stroke={DC.cream}/><XAxis dataKey="code" tick={{fontSize:11}} stroke={DC.slate}/><YAxis tick={{fontSize:11}} stroke={DC.slate} tickFormatter={v=>`${v}%`}/><Tooltip/>
+                <Bar dataKey="pct" fill={DC.forest} radius={[4,4,0,0]} barSize={36}/>
+              </BarChart>
+            </ResponsiveContainer>
+            <div style={{textAlign:'center',fontSize:11,color:DC.green,fontWeight:600,marginTop:8}}>Distribution within normal range — no audit risk detected</div>
+          </div>
+        </div>
+      </>);
+    };
+
+    const AuthReferralDashboard=()=>(
+      <>
+        <div className="page-header"><h1>Authorization & Referral Tracking</h1><p>Pipeline kanban board with authorization lifecycle</p></div>
+        <div className="kpi-row">
+          <DashKPI label="Pending Auths" value="47" sub="Avg 3.2 day turnaround" trend="neutral"/>
+          <DashKPI label="Approved Rate" value="89.4%" sub="+2.1% vs last month" trend="up"/>
+          <DashKPI label="Expiring (30 days)" value="23" sub="Action required" trend="down"/>
+          <DashKPI label="Referral → Appt" value="78.5%" sub="Conversion rate" trend="up"/>
+        </div>
+        <div className="card">
+          <h3>VanguardRCM Referral Pipeline <span className="badge">Built-in Kanban</span></h3>
+          <div className="kanban">
+            <div className="kanban-col">
+              <h4>New Referrals <span>8</span></h4>
+              {[{n:'Thompson, A.',m:'UHC PPO • MRI Knee'},{n:'Garcia, L.',m:'Aetna HMO • Ortho Consult'},{n:'Park, J.',m:'BCBS • Shoulder Surgery'}].map((c,i)=>
+                <div key={i} className="kanban-card"><div className="name">{c.n}</div><div className="meta">{c.m}</div></div>)}
+            </div>
+            <div className="kanban-col">
+              <h4>Insurance Verify <span>12</span></h4>
+              {[{n:'Roberts, M.',m:'Medicare • Hip Replace'},{n:'Singh, P.',m:'Cigna PPO • Spine Consult'},{n:'Brown, D.',m:'Tricare • ACL Repair'}].map((c,i)=>
+                <div key={i} className="kanban-card" style={{borderLeftColor:DC.amber}}><div className="name">{c.n}</div><div className="meta">{c.m}</div></div>)}
+            </div>
+            <div className="kanban-col">
+              <h4>Pre-Authorization <span>15</span></h4>
+              {[{n:'Wilson, K.',m:'UHC • TKA — Pending 4 days'},{n:'Chen, Y.',m:'Aetna • Arthroscopy — Pending 2 days'},{n:'Miller, R.',m:'BCBS • Fusion — Pending 6 days'}].map((c,i)=>
+                <div key={i} className="kanban-card" style={{borderLeftColor:DC.slate}}><div className="name">{c.n}</div><div className="meta">{c.m}</div></div>)}
+            </div>
+            <div className="kanban-col">
+              <h4>Approved <span>22</span></h4>
+              {[{n:'Taylor, S.',m:'Medicare • Knee Scope — Ready'},{n:'Adams, J.',m:'Humana • Joint Inj — Ready'},{n:'Lewis, C.',m:'BCBS • Consult — Ready'}].map((c,i)=>
+                <div key={i} className="kanban-card" style={{borderLeftColor:DC.green}}><div className="name">{c.n}</div><div className="meta">{c.m}</div></div>)}
+            </div>
+          </div>
+        </div>
+        <div className="card">
+          <h3>Expiring Authorizations <span className="badge">Next 30 Days</span></h3>
+          <table className="data-table">
+            <thead><tr><th>Patient</th><th>Auth #</th><th>Payer</th><th>Procedure</th><th>Expires</th><th>Days Left</th><th>Status</th></tr></thead>
+            <tbody>
+              <tr><td>Harris, B.</td><td>AUTH-8842</td><td>UHC</td><td>27447 - TKA</td><td>04/02/2026</td><td style={{color:DC.red,fontWeight:700}}>5</td><td><DashStatusPill status="Overdue"/></td></tr>
+              <tr><td>Clark, N.</td><td>AUTH-8756</td><td>Aetna</td><td>29881 - Scope</td><td>04/08/2026</td><td style={{color:DC.amber,fontWeight:700}}>11</td><td><DashStatusPill status="Pending"/></td></tr>
+              <tr><td>Wright, P.</td><td>AUTH-8701</td><td>Cigna</td><td>20610 - Inject</td><td>04/15/2026</td><td>18</td><td><DashStatusPill status="Active"/></td></tr>
+              <tr><td>Young, E.</td><td>AUTH-8689</td><td>BCBS</td><td>27446 - Revision</td><td>04/22/2026</td><td>25</td><td><DashStatusPill status="Active"/></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </>
+    );
+
+    const OperationalDashboard=()=>{
+      const taskData=[{m:'Mon',completed:42,pending:8},{m:'Tue',completed:38,pending:12},{m:'Wed',completed:45,pending:5},{m:'Thu',completed:41,pending:9},{m:'Fri',completed:36,pending:14}];
+      return (<>
+        <div className="page-header"><h1>Operational Efficiency</h1><p>Task management, productivity metrics, and automation tracking</p></div>
+        <div className="kpi-row">
+          <DashKPI label="Tasks Completed" value="202" sub="This week" trend="up"/>
+          <DashKPI label="Automation Rate" value="73.4%" sub="Steps auto-handled" trend="up"/>
+          <DashKPI label="Error Rate" value="1.2%" sub="-0.4% vs last week" trend="up"/>
+          <DashKPI label="Avg Task Time" value="4.2 min" sub="-1.8 min with AI assist" trend="up"/>
+        </div>
+        <div className="grid-2">
+          <div className="card">
+            <h3>Tasks: Completed vs Pending <span className="badge">This Week</span></h3>
+            <ResponsiveContainer width="100%" height={200}>
+              <BarChart data={taskData}><CartesianGrid strokeDasharray="3 3" stroke={DC.cream}/><XAxis dataKey="m" tick={{fontSize:11}} stroke={DC.slate}/><YAxis tick={{fontSize:11}} stroke={DC.slate}/><Tooltip/><Bar dataKey="completed" fill={DC.green} name="Completed" radius={[4,4,0,0]} barSize={16} stackId="a"/><Bar dataKey="pending" fill={DC.amber} name="Pending" radius={[4,4,0,0]} barSize={16} stackId="a"/></BarChart>
+            </ResponsiveContainer>
+          </div>
+          <div className="card">
+            <h3>Process Automation Rates <span className="badge">By Module</span></h3>
+            {[{name:'Eligibility Verification',rate:96},{name:'Cost Share Estimation',rate:94},{name:'Appointment Confirmation (Bland AI)',rate:89},{name:'Payment Link Generation',rate:92},{name:'Claim Submission',rate:78},{name:'Denial Detection',rate:85},{name:'Document Generation',rate:91}].map((p,i)=>
+              <div key={i} style={{display:'flex',alignItems:'center',gap:10,marginBottom:10}}>
+                <div style={{width:200,fontSize:11,fontWeight:500}}>{p.name}</div>
+                <div style={{flex:1}}><div className="progress-bar"><div className="fill" style={{width:`${p.rate}%`,background:p.rate>=90?DC.green:p.rate>=80?DC.clay:DC.amber}}></div></div></div>
+                <div style={{width:35,textAlign:'right',fontSize:12,fontWeight:700}}>{p.rate}%</div>
+              </div>)}
+          </div>
+        </div>
+        <div className="card">
+          <h3>Recent Activity Feed <span className="badge">Live</span></h3>
+          {[
+            {text:'Auto-posted 3 Stripe payments to claim queue',time:'2 min ago'},
+            {text:'Bland AI completed 12 appointment confirmation calls',time:'15 min ago'},
+            {text:'Eligibility batch verified 28 patients via Availity',time:'32 min ago'},
+            {text:'Claude AI flagged NCCI edit on CLM-4821 before submission',time:'1 hr ago'},
+            {text:'Auto-generated 8 authorization request forms',time:'1.5 hrs ago'},
+            {text:'Claim status batch check — 42 claims updated via Optum 276/277',time:'2 hrs ago'},
+          ].map((item,i)=><div key={i} className="timeline-item">
+            <div className="timeline-dot" style={{background:i===0?DC.green:DC.clay}}></div>
+            <div className="timeline-content"><div>{item.text}</div><div className="time">{item.time}</div></div>
+          </div>)}
+        </div>
+      </>);
+    };
+
+    const BenchmarkingDashboard=()=>{
+      const benchmarks=[
+        {metric:'Clean Claim Rate',practice:'94.2%',industry:'85.0%',status:'g'},
+        {metric:'Denial Rate',practice:'4.8%',industry:'8.0%',status:'g'},
+        {metric:'Days in AR',practice:'28.4',industry:'35.0',status:'g'},
+        {metric:'Collection Rate',practice:'96.3%',industry:'92.0%',status:'g'},
+        {metric:'No-Show Rate',practice:'6.4%',industry:'5.5%',status:'a'},
+        {metric:'First-Pass Rate',practice:'87.6%',industry:'80.0%',status:'g'},
+        {metric:'Cost to Collect',practice:'3.8%',industry:'5.0%',status:'g'},
+        {metric:'Patient Satisfaction',practice:'4.6/5',industry:'4.2/5',status:'g'},
+      ];
+      const yoyData=[{q:'Q1 2025',rev:1420000},{q:'Q2 2025',rev:1510000},{q:'Q3 2025',rev:1580000},{q:'Q4 2025',rev:1620000},{q:'Q1 2026',rev:1690000}];
+      return (<>
+        <div className="page-header"><h1>Practice Benchmarking Report</h1><p>Industry comparisons, MIPS tracking, and growth metrics</p></div>
+        <div className="kpi-row">
+          <DashKPI label="YOY Revenue Growth" value="+19.0%" sub="Q1 2026 vs Q1 2025" trend="up"/>
+          <DashKPI label="MIPS Score" value="87/100" sub="Above reporting threshold" trend="up"/>
+          <DashKPI label="Above Benchmark" value="7 of 8" sub="Key metrics exceeding industry" trend="up"/>
+          <DashKPI label="Provider Count" value="5" sub="3 MD + 2 PA/NP" trend="neutral"/>
+        </div>
+        <div className="card">
+          <h3>Practice vs Industry Benchmarks <span className="badge">MGMA 2025 Data</span></h3>
+          <table className="data-table">
+            <thead><tr><th>Metric</th><th>Your Practice</th><th>Industry Avg</th><th>Variance</th><th>Status</th></tr></thead>
+            <tbody>
+              {benchmarks.map((b,i)=><tr key={i}><td style={{fontWeight:600}}>{b.metric}</td><td style={{fontWeight:700,color:DC.forest}}>{b.practice}</td><td>{b.industry}</td>
+                <td style={{color:b.status==='g'?DC.green:DC.amber,fontWeight:600}}>{b.status==='g'?'Outperforming':'Monitor'}</td>
+                <td><span className={`rag ${b.status}`}></span></td></tr>)}
+            </tbody>
+          </table>
+        </div>
+        <div className="grid-2">
+          <div className="card">
+            <h3>Revenue Growth (Quarterly) <span className="badge">5 Quarters</span></h3>
+            <ResponsiveContainer width="100%" height={200}>
+              <AreaChart data={yoyData}><CartesianGrid strokeDasharray="3 3" stroke={DC.cream}/><XAxis dataKey="q" tick={{fontSize:10}} stroke={DC.slate}/><YAxis tick={{fontSize:11}} stroke={DC.slate} tickFormatter={v=>`$${(v/1000000).toFixed(1)}M`}/><Tooltip formatter={v=>[`$${(v/1000000).toFixed(2)}M`,'Revenue']}/><Area type="monotone" dataKey="rev" stroke={DC.forest} fill={DC.forest} fillOpacity={0.12} strokeWidth={2}/></AreaChart>
+            </ResponsiveContainer>
+          </div>
+          <div className="card">
+            <h3>Provider Performance Cards <span className="badge">Current Quarter</span></h3>
+            {[
+              {name:'Dr. Smith',spec:'Total Joint',rev:'$412K',rank:1,color:DC.green},
+              {name:'Dr. Chen',spec:'Sports Medicine',rev:'$385K',rank:2,color:DC.forest},
+              {name:'Dr. Jones',spec:'Spine',rev:'$348K',rank:3,color:DC.clay},
+              {name:'Dr. Patel',spec:'Hand/Wrist',rev:'$292K',rank:4,color:DC.tan},
+              {name:'PA Wilson',spec:'General Ortho',rev:'$184K',rank:5,color:DC.slate},
+            ].map((p,i)=><div key={i} className="score-card">
+              <div className="rank" style={{background:p.color}}>{p.rank}</div>
+              <div className="info"><div className="name">{p.name}</div><div className="detail">{p.spec}</div></div>
+              <div className="metric" style={{color:DC.forest}}>{p.rev}</div>
+            </div>)}
+          </div>
+        </div>
+      </>);
+    };
 
     // ========== NEW PAGES - Phase 1 ==========
 
@@ -16120,6 +17142,7 @@
     const App = () => {
         const [page, setPage] = React.useState('dashboard');
         const [sidebarOpen, setSidebarOpen] = React.useState(true);
+        const [dashExpanded, setDashExpanded] = React.useState(false);
         const savedConfig = window.RCM_CONFIG || {};
         const [apiKey, setApiKey] = React.useState(savedConfig.apiKey || '');
         const [showKey, setShowKey] = React.useState(true);
@@ -16142,7 +17165,21 @@
         const [practices, setPractices] = React.useState(() => PracticeStorageManager.getPractices());
 
         const nav = [
-            { id: 'dashboard', label: 'Dashboard', icon: '📊' },
+            { id: 'dashboard', label: 'Dashboard', icon: '📊', children: [
+                { id: 'dash-main', label: 'Overview' },
+                { id: 'dash-executive', label: 'Executive' },
+                { id: 'dash-revenue', label: 'Revenue Cycle' },
+                { id: 'dash-claims', label: 'Claims Analytics' },
+                { id: 'dash-denials', label: 'Denial Mgmt' },
+                { id: 'dash-financial', label: 'Patient Financial' },
+                { id: 'dash-eligibility', label: 'Eligibility' },
+                { id: 'dash-scheduling', label: 'Scheduling' },
+                { id: 'dash-payer', label: 'Payer Performance' },
+                { id: 'dash-coding', label: 'Coding & Compliance' },
+                { id: 'dash-auth', label: 'Auth & Referral' },
+                { id: 'dash-ops', label: 'Operations' },
+                { id: 'dash-benchmark', label: 'Benchmarking' },
+            ]},
             { id: 'practice', label: 'Practice Profile', icon: '🏢' },
             { id: 'intake', label: 'Intake', icon: '📥' },
             { id: 'patients', label: 'Patient Lookup', icon: '🔍' },
@@ -16164,6 +17201,19 @@
         const renderPage = () => {
             switch (page) {
                 case 'dashboard': return <Dashboard />;
+                case 'dash-main': return <Dashboard />;
+                case 'dash-executive': return <ExecutiveDashboard />;
+                case 'dash-revenue': return <RevenueCycleDashboard />;
+                case 'dash-claims': return <ClaimsAnalyticsDashboard />;
+                case 'dash-denials': return <DenialManagementDashboard />;
+                case 'dash-financial': return <PatientFinancialDashboard />;
+                case 'dash-eligibility': return <EligibilityDashboard />;
+                case 'dash-scheduling': return <SchedulingDashboard />;
+                case 'dash-payer': return <PayerPerformanceDashboard />;
+                case 'dash-coding': return <CodingComplianceDashboard />;
+                case 'dash-auth': return <AuthReferralDashboard />;
+                case 'dash-ops': return <OperationalDashboard />;
+                case 'dash-benchmark': return <BenchmarkingDashboard />;
                 case 'practice': return <PracticeProfilePage />;
                 case 'intake': return <IntakePage />;
                 case 'patients': return <PatientPage />;
@@ -16200,7 +17250,48 @@
                     {sidebarOpen && <div style={{ padding: '.75rem 1rem 0', marginBottom: '-.25rem' }}><p style={{ fontSize: '.65rem', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.08em', color: '#9B9590', padding: '0 .75rem' }}>Navigation</p></div>}
                     <nav className="flex-1 overflow-y-auto" style={{ padding: '.5rem .75rem' }}>
                         <div className="space-y-1">
-                            {nav.map(item => (<button key={item.id} onClick={() => setPage(item.id)} className={`sidebar-item w-full flex items-center gap-3 rounded-lg ${page === item.id ? 'active' : ''}`} style={{ padding: '.625rem .75rem' }} title={!sidebarOpen ? item.label : ''}><span style={{ fontSize: '1.1rem', width: '1.5rem', textAlign: 'center' }}>{item.icon}</span>{sidebarOpen && <span style={{ fontSize: '.8125rem', fontWeight: page === item.id ? 600 : 500 }}>{item.label}</span>}</button>))}
+                            {nav.map(item => (
+                                <div key={item.id}>
+                                    <button
+                                        onClick={() => {
+                                            if (item.children) {
+                                                setDashExpanded(!dashExpanded);
+                                                setPage(item.children[0].id);
+                                            } else {
+                                                setPage(item.id);
+                                                setDashExpanded(false);
+                                            }
+                                        }}
+                                        className={`sidebar-item w-full flex items-center gap-3 rounded-lg ${page === item.id || (item.children && item.children.some(c => c.id === page)) ? 'active' : ''}`}
+                                        style={{ padding: '.625rem .75rem' }}
+                                        title={!sidebarOpen ? item.label : ''}
+                                    >
+                                        <span style={{ fontSize: '1.1rem', width: '1.5rem', textAlign: 'center' }}>{item.icon}</span>
+                                        {sidebarOpen && <span style={{ fontSize: '.8125rem', fontWeight: page === item.id || (item.children && item.children.some(c => c.id === page)) ? 600 : 500, flex: 1 }}>{item.label}</span>}
+                                        {sidebarOpen && item.children && <span style={{ fontSize: '.65rem', transition: 'transform .2s', transform: dashExpanded ? 'rotate(180deg)' : 'rotate(0)' }}>▼</span>}
+                                    </button>
+                                    {item.children && dashExpanded && sidebarOpen && (
+                                        <div style={{ paddingLeft: '2.25rem', marginTop: '2px', marginBottom: '4px' }}>
+                                            {item.children.map(child => (
+                                                <button
+                                                    key={child.id}
+                                                    onClick={() => setPage(child.id)}
+                                                    style={{
+                                                        display: 'block', width: '100%', textAlign: 'left', padding: '.375rem .75rem',
+                                                        fontSize: '.75rem', fontWeight: page === child.id ? 600 : 400,
+                                                        color: page === child.id ? '#39463A' : '#9B9590',
+                                                        background: page === child.id ? 'rgba(171,138,122,0.15)' : 'transparent',
+                                                        border: 'none', borderRadius: '6px', cursor: 'pointer', transition: 'all .15s',
+                                                        borderLeft: page === child.id ? '2px solid #AB8A7A' : '2px solid transparent'
+                                                    }}
+                                                >
+                                                    {child.label}
+                                                </button>
+                                            ))}
+                                        </div>
+                                    )}
+                                </div>
+                            ))}
                         </div>
                     </nav>
                     <div style={{ borderTop: '1px solid #E0D7C7', padding: '1rem' }}>
