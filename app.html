@@ -8682,332 +8682,333 @@
      * React functional component for managing practice and provider profiles
      * Part of VanguardRCM platform
      */
-    
-    const PracticeProfilePage = () => {
-      const [practices, setPractices] = React.useState([
-        {
-          id: 1,
-          organizationName: 'Primary Care Network',
-          groupNPI: '1234567890',
-          practiceName: 'Downtown Medical Center',
-          address: '123 Main Street',
-          city: 'Springfield',
-          state: 'IL',
-          zip: '62701',
-          taxID: '45-1234567',
-          phone: '(217) 555-0100',
-          fax: '(217) 555-0101',
-          facilities: [
-            { id: 1, name: 'Downtown Clinic', address: '123 Main St', city: 'Springfield', state: 'IL', zip: '62701', npi: '1111111111', phone: '(217) 555-0100' }
-          ],
-          providers: [
-            { id: 1, name: 'Dr. John Smith', npi: '2222222222', specialty: 'Internal Medicine', credentials: 'MD', status: 'Active' }
-          ]
-        },
-        {
-          id: 2,
-          organizationName: 'Suburban Health Systems',
-          groupNPI: '0987654321',
-          practiceName: 'Westside Family Practice',
-          address: '456 Oak Avenue',
-          city: 'Springfield',
-          state: 'IL',
-          zip: '62702',
-          taxID: '45-9876543',
-          phone: '(217) 555-0200',
-          fax: '(217) 555-0201',
-          facilities: [],
-          providers: []
-        }
-      ]);
 
-      const [formData, setFormData] = React.useState({
-        organizationName: '', groupNPI: '', practiceName: '', address: '', city: '', state: '', zip: '', taxID: '', phone: '', fax: '', facilities: [], providers: []
+    const PracticeProfilePage = () => {
+      const colors = { deepForest: '#39463A', warmClay: '#AB8A7A', cream: '#F5F3F0', slateBlue: '#73868A', charcoal: '#2D2D2D', white: '#FFFFFF', lightGray: '#E8E5E0', border: '#D4CFC8', accent: '#5B8C5A', danger: '#C0392B' };
+
+      const posCodesList = [
+        { code: '02', label: 'Telehealth' }, { code: '10', label: 'Telehealth - Home' }, { code: '11', label: 'Office' }, { code: '12', label: 'Home' },
+        { code: '19', label: 'Off Campus-Outpatient' }, { code: '20', label: 'Urgent Care' }, { code: '21', label: 'Inpatient Hospital' }, { code: '22', label: 'On Campus-Outpatient' },
+        { code: '23', label: 'Emergency Room' }, { code: '24', label: 'Ambulatory Surgical' }, { code: '25', label: 'Birthing Center' }, { code: '31', label: 'Skilled Nursing' },
+        { code: '32', label: 'Nursing Facility' }, { code: '33', label: 'Custodial Care' }, { code: '34', label: 'Hospice' }, { code: '41', label: 'Ambulance - Land' },
+        { code: '42', label: 'Ambulance - Air/Water' }, { code: '49', label: 'Independent Clinic' }, { code: '50', label: 'FQHC' }, { code: '51', label: 'Inpatient Psych' },
+        { code: '52', label: 'Psych Partial Hosp' }, { code: '53', label: 'Community MH Center' }, { code: '55', label: 'Residential Sub Abuse' }, { code: '56', label: 'Psych Residential' },
+        { code: '57', label: 'Non-Res Sub Abuse' }, { code: '61', label: 'Comp Inpatient Rehab' }, { code: '62', label: 'Comp Outpatient Rehab' }, { code: '65', label: 'ESRD Facility' },
+        { code: '71', label: 'State/Local Public Health' }, { code: '72', label: 'Rural Health Clinic' }, { code: '81', label: 'Independent Lab' }, { code: '99', label: 'Other' }
+      ];
+
+      const providerTypeOptions = ['Physician', 'PA', 'NP', 'CRNA', 'CNM', 'Psychologist', 'LCSW', 'PT', 'OT', 'SLP'];
+      const specialtyOptions = ['Orthopedics & Spine', 'Family Medicine', 'Internal Medicine', 'Cardiology', 'Dermatology', 'Gastroenterology', 'Neurology', 'Oncology', 'Pediatrics', 'Psychiatry', 'Radiology', 'Surgery', 'Urology', 'Emergency Medicine', 'Anesthesiology', 'Pain Management', 'Physical Medicine', 'Podiatry'];
+
+      const [practice, setPractice] = React.useState({
+        name: 'AMIT PAREKH DO PLLC',
+        groupNPI: '1730871377',
+        tin: '880721411',
+        ptan: 'V79393',
+        specialty: 'Orthopedics & Spine',
+        practiceAddress: { street: '1701 N Green Valley Pkwy Ste 4B', city: 'Henderson', state: 'NV', zip: '890745886' },
+        payToAddress: { street: '1701 N Green Valley Pkwy Ste 4B', city: 'Henderson', state: 'NV', zip: '89074' }
       });
 
-      const [activeTab, setActiveTab] = React.useState('new');
-      const [selectedPractice, setSelectedPractice] = React.useState(null);
-      const [newFacility, setNewFacility] = React.useState({ name: '', address: '', city: '', state: '', zip: '', npi: '', phone: '' });
-      const [newProvider, setNewProvider] = React.useState({ name: '', npi: '', specialty: '', credentials: '', status: 'Active' });
-      const [expandedSections, setExpandedSections] = React.useState({ newForm: true, facilities: true, providers: true });
+      const [facilities, setFacilities] = React.useState([
+        { id: 1, name: 'Green Valley Spine and Orthopedics', npi: '1730871377', tin: '880721411', pos: ['11'], address: '1701 N Green Valley Pkwy Ste 4B, Henderson, NV 89074' },
+        { id: 2, name: 'Valley Hospital Medical Center', npi: '1063490164', tin: '880196103', pos: ['21', '22', '23'], address: '620 Shadow Ln, Las Vegas, NV 89106' },
+        { id: 3, name: 'Spring Valley Medical Center', npi: '', tin: '', pos: ['21', '22'], address: 'Spring Valley, NV' },
+        { id: 4, name: 'Dignity - St Rose Sienna', npi: '1700979786', tin: '953643036', pos: ['21', '22', '24'], address: '3001 St Rose Pkwy, Henderson, NV 89052' },
+        { id: 5, name: 'Henderson Hospital', npi: '1134643497', tin: '880196103', pos: ['21', '22', '23'], address: '1050 W Galleria Dr, Henderson, NV 89011' },
+        { id: 6, name: 'Southern Hills Hospital and Medical Center', npi: '1891780045', tin: '880196103', pos: ['21', '22', '24'], address: '9300 W Sunset Rd, Las Vegas, NV 89148' },
+        { id: 7, name: 'MountainView Hospital', npi: '1588769752', tin: '880196103', pos: ['21', '22', '23', '24'], address: '3100 N Tenaya Way, Las Vegas, NV 89128' }
+      ]);
 
-      const colors = { deepForest: '#39463A', warmClay: '#AB8A7A', cream: '#F5F3F0', slateBlue: '#73868A', charcoal: '#2D2D2D', lightGray: '#EFEFEF', white: '#FFFFFF', border: '#D5D0CC' };
+      const [providers, setProviders] = React.useState([
+        { id: 1, name: 'Shain Howard', type: 'Physician', npi: '1891172441', specialty: 'Orthopedics & Spine', license: '', licenseState: 'NV', taxonomy: '207X00000X', ptan: 'V95544' },
+        { id: 2, name: 'Christopher Catapano', type: 'Physician', npi: '1689732998', specialty: 'Orthopedics & Spine', license: '', licenseState: 'NV', taxonomy: '207XS0117X', ptan: 'V97098' },
+        { id: 3, name: 'Alicia Lee', type: 'PA', npi: '1346017530', specialty: 'Orthopedics & Spine', license: '', licenseState: 'NV', taxonomy: '363A00000X', ptan: 'VB4987' }
+      ]);
 
-      const handleInputChange = (e) => {
-        const { name, value } = e.target;
-        setFormData(prev => ({ ...prev, [name]: value }));
+      const [showAddFacility, setShowAddFacility] = React.useState(false);
+      const [showAddProvider, setShowAddProvider] = React.useState(false);
+      const [editingPractice, setEditingPractice] = React.useState(false);
+      const [newFacility, setNewFacility] = React.useState({ name: '', npi: '', tin: '', pos: [], street: '', city: '', state: 'NV', zip: '', zip4: '' });
+      const [newProvider, setNewProvider] = React.useState({ name: '', npi: '', license: '', licenseState: 'NV', ptan: '', taxonomy: '', type: 'Physician', specialty: 'Orthopedics & Spine' });
+
+      const toggleFacilityPOS = (code) => {
+        setNewFacility(prev => ({ ...prev, pos: prev.pos.includes(code) ? prev.pos.filter(c => c !== code) : [...prev.pos, code] }));
       };
 
-      const handleAddFacility = () => {
-        if (newFacility.name && newFacility.npi) {
-          setFormData(prev => ({ ...prev, facilities: [...prev.facilities, { ...newFacility, id: Date.now() }] }));
-          setNewFacility({ name: '', address: '', city: '', state: '', zip: '', npi: '', phone: '' });
-        }
+      const addFacility = () => {
+        if (!newFacility.name) return;
+        setFacilities(prev => [...prev, { id: Date.now(), name: newFacility.name, npi: newFacility.npi, tin: newFacility.tin, pos: newFacility.pos, address: [newFacility.street, newFacility.city, newFacility.state, newFacility.zip].filter(Boolean).join(', ') }]);
+        setNewFacility({ name: '', npi: '', tin: '', pos: [], street: '', city: '', state: 'NV', zip: '', zip4: '' });
+        setShowAddFacility(false);
       };
 
-      const handleAddProvider = () => {
-        if (newProvider.name && newProvider.npi) {
-          setFormData(prev => ({ ...prev, providers: [...prev.providers, { ...newProvider, id: Date.now() }] }));
-          setNewProvider({ name: '', npi: '', specialty: '', credentials: '', status: 'Active' });
-        }
+      const addProvider = () => {
+        if (!newProvider.name) return;
+        setProviders(prev => [...prev, { id: Date.now(), ...newProvider }]);
+        setNewProvider({ name: '', npi: '', license: '', licenseState: 'NV', ptan: '', taxonomy: '', type: 'Physician', specialty: 'Orthopedics & Spine' });
+        setShowAddProvider(false);
       };
 
-      const handleSavePractice = () => {
-        if (formData.organizationName && formData.practiceName) {
-          setPractices(prev => [...prev, { ...formData, id: Date.now() }]);
-          setFormData({ organizationName: '', groupNPI: '', practiceName: '', address: '', city: '', state: '', zip: '', taxID: '', phone: '', fax: '', facilities: [], providers: [] });
-          alert('Practice profile saved successfully!');
-        }
-      };
+      const removeFacility = (id) => setFacilities(prev => prev.filter(f => f.id !== id));
+      const removeProvider = (id) => setProviders(prev => prev.filter(p => p.id !== id));
 
-      const toggleSection = (section) => {
-        setExpandedSections(prev => ({ ...prev, [section]: !prev[section] }));
-      };
-
-      const removeFacility = (id) => {
-        setFormData(prev => ({ ...prev, facilities: prev.facilities.filter(f => f.id !== id) }));
-      };
-
-      const removeProvider = (id) => {
-        setFormData(prev => ({ ...prev, providers: prev.providers.filter(p => p.id !== id) }));
-      };
-
-      const inputStyle = { width: '100%', padding: '10px 12px', border: '1px solid ' + colors.border, borderRadius: '4px', fontSize: '13px', boxSizing: 'border-box' };
-      const labelStyle = { display: 'block', color: colors.charcoal, fontSize: '13px', fontWeight: '600', marginBottom: '8px' };
+      const inputStyle = { width: '100%', padding: '9px 12px', border: '1px solid ' + colors.border, borderRadius: '6px', fontSize: '13px', color: colors.charcoal, backgroundColor: colors.white, outline: 'none', boxSizing: 'border-box' };
+      const labelStyle = { display: 'block', fontSize: '12px', fontWeight: '600', color: colors.slateBlue, marginBottom: '4px', textTransform: 'uppercase', letterSpacing: '0.5px' };
+      const cardStyle = { backgroundColor: colors.white, borderRadius: '8px', border: '1px solid ' + colors.border, padding: '20px', marginBottom: '16px' };
+      const headerStyle = { fontSize: '18px', fontWeight: '700', color: colors.deepForest, marginBottom: '4px' };
+      const btnPrimary = { padding: '8px 20px', backgroundColor: colors.deepForest, color: colors.white, border: 'none', borderRadius: '6px', fontSize: '13px', fontWeight: '600', cursor: 'pointer' };
+      const btnSecondary = { padding: '8px 20px', backgroundColor: 'transparent', color: colors.deepForest, border: '1px solid ' + colors.deepForest, borderRadius: '6px', fontSize: '13px', fontWeight: '600', cursor: 'pointer' };
 
       return (
-        <div style={{ backgroundColor: colors.cream, minHeight: '100vh', padding: '30px' }}>
-          <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
-            <div style={{ marginBottom: '40px' }}>
-              <h1 style={{ color: colors.deepForest, fontSize: '32px', fontWeight: '700', margin: '0 0 10px 0' }}>Practice Profiles</h1>
-              <p style={{ color: colors.slateBlue, fontSize: '14px', margin: '0' }}>Manage your practice profiles, facility locations, and billing providers</p>
+        <div style={{ padding: '24px', backgroundColor: colors.cream, minHeight: '100vh' }}>
+          <div style={{ maxWidth: '1100px', margin: '0 auto' }}>
+            {/* Page Header */}
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
+              <div>
+                <h1 style={{ fontSize: '24px', fontWeight: '700', color: colors.deepForest, margin: '0' }}>Practice Profile</h1>
+                <p style={{ fontSize: '13px', color: colors.slateBlue, margin: '4px 0 0' }}>Manage your practice information, facilities, and providers</p>
+              </div>
+              {!editingPractice && (
+                <button onClick={() => setEditingPractice(true)} style={btnSecondary}>Edit Practice Info</button>
+              )}
             </div>
 
-            <div style={{ display: 'flex', borderBottom: '2px solid ' + colors.border, marginBottom: '30px', gap: '20px' }}>
-              <button onClick={() => setActiveTab('new')} style={{ padding: '12px 20px', background: activeTab === 'new' ? colors.warmClay : 'transparent', color: activeTab === 'new' ? colors.white : colors.slateBlue, border: 'none', cursor: 'pointer', fontSize: '14px', fontWeight: '600', borderBottom: activeTab === 'new' ? '3px solid ' + colors.deepForest : 'none' }}>New Practice Profile</button>
-              <button onClick={() => setActiveTab('existing')} style={{ padding: '12px 20px', background: activeTab === 'existing' ? colors.warmClay : 'transparent', color: activeTab === 'existing' ? colors.white : colors.slateBlue, border: 'none', cursor: 'pointer', fontSize: '14px', fontWeight: '600', borderBottom: activeTab === 'existing' ? '3px solid ' + colors.deepForest : 'none' }}>Existing Practices ({practices.length})</button>
-            </div>
-
-            {activeTab === 'new' && (
-              <div style={{ backgroundColor: colors.white, borderRadius: '8px', padding: '30px', boxShadow: '0 2px 4px rgba(0,0,0,0.1)' }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px', paddingBottom: '15px', borderBottom: '1px solid ' + colors.border }}>
-                  <h2 style={{ color: colors.deepForest, fontSize: '20px', fontWeight: '700', margin: '0' }}>New Practice Profile</h2>
-                  <button onClick={() => toggleSection('newForm')} style={{ background: 'none', border: 'none', fontSize: '18px', cursor: 'pointer', color: colors.slateBlue }}>{expandedSections.newForm ? '▼' : '▶'}</button>
-                </div>
-
-                {expandedSections.newForm && (
-                  <>
-                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px', marginBottom: '20px' }}>
-                      <div>
-                        <label style={labelStyle}>Organization</label>
-                        <input type="text" name="organizationName" value={formData.organizationName} onChange={handleInputChange} style={inputStyle} placeholder="Organization Name" />
-                      </div>
-                      <div>
-                        <label style={labelStyle}>Group NPI or Legal</label>
-                        <input type="text" name="groupNPI" value={formData.groupNPI} onChange={handleInputChange} style={inputStyle} placeholder="NPI or Legal Name" />
-                      </div>
-                    </div>
-
-                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px', marginBottom: '20px' }}>
-                      <div>
-                        <label style={labelStyle}>Practice Name</label>
-                        <input type="text" name="practiceName" value={formData.practiceName} onChange={handleInputChange} style={inputStyle} placeholder="Practice Name" />
-                      </div>
-                      <div></div>
-                    </div>
-
-                    <div style={{ marginBottom: '20px', paddingBottom: '20px', borderBottom: '1px solid ' + colors.border }}>
-                      <h3 style={{ color: colors.charcoal, fontSize: '13px', fontWeight: '700', marginBottom: '15px', marginTop: '0' }}>Practice Address</h3>
-                      <div style={{ marginBottom: '15px' }}>
-                        <label style={labelStyle}>Address Line</label>
-                        <input type="text" name="address" value={formData.address} onChange={handleInputChange} style={inputStyle} placeholder="Street Address" />
-                      </div>
-                      <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr 1fr', gap: '15px' }}>
-                        <div>
-                          <label style={labelStyle}>City</label>
-                          <input type="text" name="city" value={formData.city} onChange={handleInputChange} style={inputStyle} placeholder="City" />
-                        </div>
-                        <div>
-                          <label style={labelStyle}>State</label>
-                          <input type="text" name="state" value={formData.state} onChange={handleInputChange} style={inputStyle} placeholder="State" />
-                        </div>
-                        <div>
-                          <label style={labelStyle}>Zip</label>
-                          <input type="text" name="zip" value={formData.zip} onChange={handleInputChange} style={inputStyle} placeholder="Zip" />
-                        </div>
-                      </div>
-                    </div>
-
-                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px', marginBottom: '20px' }}>
-                      <div>
-                        <label style={labelStyle}>Tax ID</label>
-                        <input type="text" name="taxID" value={formData.taxID} onChange={handleInputChange} style={inputStyle} placeholder="Tax ID" />
-                      </div>
-                      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px' }}>
-                        <div>
-                          <label style={labelStyle}>Phone</label>
-                          <input type="text" name="phone" value={formData.phone} onChange={handleInputChange} style={inputStyle} placeholder="Phone" />
-                        </div>
-                        <div>
-                          <label style={labelStyle}>Fax</label>
-                          <input type="text" name="fax" value={formData.fax} onChange={handleInputChange} style={inputStyle} placeholder="Fax" />
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Facility Locations Section */}
-                    <div style={{ marginBottom: '20px', paddingBottom: '20px', borderBottom: '1px solid ' + colors.border }}>
-                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '15px' }}>
-                        <h3 style={{ color: colors.deepForest, fontSize: '14px', fontWeight: '700', margin: '0' }}>Facility Locations (CMS)</h3>
-                        <button onClick={() => toggleSection('facilities')} style={{ background: 'none', border: 'none', fontSize: '16px', cursor: 'pointer', color: colors.slateBlue }}>{expandedSections.facilities ? '▼' : '▶'}</button>
-                      </div>
-
-                      {expandedSections.facilities && (
-                        <>
-                          {formData.facilities.length > 0 && (
-                            <div style={{ marginBottom: '20px', overflowX: 'auto' }}>
-                              <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '12px' }}>
-                                <thead>
-                                  <tr style={{ backgroundColor: colors.lightGray }}>
-                                    {['Facility Name', 'Address', 'City', 'State', 'Zip', 'NPI', 'Phone', 'Action'].map(h => (
-                                      <th key={h} style={{ padding: '10px', textAlign: h === 'Action' ? 'center' : 'left', color: colors.charcoal, fontWeight: '600', borderBottom: '1px solid ' + colors.border }}>{h}</th>
-                                    ))}
-                                  </tr>
-                                </thead>
-                                <tbody>
-                                  {formData.facilities.map(facility => (
-                                    <tr key={facility.id} style={{ borderBottom: '1px solid ' + colors.border }}>
-                                      <td style={{ padding: '10px', color: colors.charcoal }}>{facility.name}</td>
-                                      <td style={{ padding: '10px', color: colors.charcoal }}>{facility.address}</td>
-                                      <td style={{ padding: '10px', color: colors.charcoal }}>{facility.city}</td>
-                                      <td style={{ padding: '10px', color: colors.charcoal }}>{facility.state}</td>
-                                      <td style={{ padding: '10px', color: colors.charcoal }}>{facility.zip}</td>
-                                      <td style={{ padding: '10px', color: colors.charcoal }}>{facility.npi}</td>
-                                      <td style={{ padding: '10px', color: colors.charcoal }}>{facility.phone}</td>
-                                      <td style={{ padding: '10px', textAlign: 'center' }}>
-                                        <button onClick={() => removeFacility(facility.id)} style={{ background: 'none', border: 'none', color: '#DC3545', cursor: 'pointer', fontSize: '12px', fontWeight: '600' }}>Remove</button>
-                                      </td>
-                                    </tr>
-                                  ))}
-                                </tbody>
-                              </table>
-                            </div>
-                          )}
-                          <div style={{ backgroundColor: colors.lightGray, padding: '15px', borderRadius: '4px', marginTop: '15px' }}>
-                            <h4 style={{ color: colors.charcoal, fontSize: '12px', fontWeight: '700', marginTop: '0', marginBottom: '15px' }}>Add New Facility</h4>
-                            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr 1fr 1fr 1fr 1fr', gap: '10px', marginBottom: '15px' }}>
-                              <input type="text" value={newFacility.name} onChange={(e) => setNewFacility({...newFacility, name: e.target.value})} placeholder="Facility Name" style={{ padding: '8px', border: '1px solid ' + colors.border, borderRadius: '4px', fontSize: '12px', boxSizing: 'border-box' }} />
-                              <input type="text" value={newFacility.address} onChange={(e) => setNewFacility({...newFacility, address: e.target.value})} placeholder="Address" style={{ padding: '8px', border: '1px solid ' + colors.border, borderRadius: '4px', fontSize: '12px', boxSizing: 'border-box' }} />
-                              <input type="text" value={newFacility.city} onChange={(e) => setNewFacility({...newFacility, city: e.target.value})} placeholder="City" style={{ padding: '8px', border: '1px solid ' + colors.border, borderRadius: '4px', fontSize: '12px', boxSizing: 'border-box' }} />
-                              <input type="text" value={newFacility.state} onChange={(e) => setNewFacility({...newFacility, state: e.target.value})} placeholder="State" style={{ padding: '8px', border: '1px solid ' + colors.border, borderRadius: '4px', fontSize: '12px', boxSizing: 'border-box' }} />
-                              <input type="text" value={newFacility.zip} onChange={(e) => setNewFacility({...newFacility, zip: e.target.value})} placeholder="Zip" style={{ padding: '8px', border: '1px solid ' + colors.border, borderRadius: '4px', fontSize: '12px', boxSizing: 'border-box' }} />
-                              <input type="text" value={newFacility.npi} onChange={(e) => setNewFacility({...newFacility, npi: e.target.value})} placeholder="NPI" style={{ padding: '8px', border: '1px solid ' + colors.border, borderRadius: '4px', fontSize: '12px', boxSizing: 'border-box' }} />
-                              <input type="text" value={newFacility.phone} onChange={(e) => setNewFacility({...newFacility, phone: e.target.value})} placeholder="Phone" style={{ padding: '8px', border: '1px solid ' + colors.border, borderRadius: '4px', fontSize: '12px', boxSizing: 'border-box' }} />
-                            </div>
-                            <button onClick={handleAddFacility} style={{ padding: '8px 16px', backgroundColor: colors.warmClay, color: colors.white, border: 'none', borderRadius: '4px', cursor: 'pointer', fontSize: '12px', fontWeight: '600' }}>+ Add Facility</button>
-                          </div>
-                        </>
-                      )}
-                    </div>
-
-                    {/* Billing Providers Section */}
-                    <div style={{ marginBottom: '30px' }}>
-                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '15px' }}>
-                        <h3 style={{ color: colors.deepForest, fontSize: '14px', fontWeight: '700', margin: '0' }}>Billing Providers</h3>
-                        <button onClick={() => toggleSection('providers')} style={{ background: 'none', border: 'none', fontSize: '16px', cursor: 'pointer', color: colors.slateBlue }}>{expandedSections.providers ? '▼' : '▶'}</button>
-                      </div>
-
-                      {expandedSections.providers && (
-                        <>
-                          {formData.providers.length > 0 && (
-                            <div style={{ marginBottom: '20px', overflowX: 'auto' }}>
-                              <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '12px' }}>
-                                <thead>
-                                  <tr style={{ backgroundColor: colors.lightGray }}>
-                                    {['Provider Name', 'NPI', 'Specialty', 'Credentials', 'Status', 'Action'].map(h => (
-                                      <th key={h} style={{ padding: '10px', textAlign: h === 'Action' ? 'center' : 'left', color: colors.charcoal, fontWeight: '600', borderBottom: '1px solid ' + colors.border }}>{h}</th>
-                                    ))}
-                                  </tr>
-                                </thead>
-                                <tbody>
-                                  {formData.providers.map(provider => (
-                                    <tr key={provider.id} style={{ borderBottom: '1px solid ' + colors.border }}>
-                                      <td style={{ padding: '10px', color: colors.charcoal }}>{provider.name}</td>
-                                      <td style={{ padding: '10px', color: colors.charcoal }}>{provider.npi}</td>
-                                      <td style={{ padding: '10px', color: colors.charcoal }}>{provider.specialty}</td>
-                                      <td style={{ padding: '10px', color: colors.charcoal }}>{provider.credentials}</td>
-                                      <td style={{ padding: '10px' }}>
-                                        <span style={{ padding: '4px 12px', borderRadius: '20px', backgroundColor: provider.status === 'Active' ? '#D4EDDA' : '#F8D7DA', color: provider.status === 'Active' ? '#155724' : '#721C24', fontSize: '11px', fontWeight: '600' }}>{provider.status}</span>
-                                      </td>
-                                      <td style={{ padding: '10px', textAlign: 'center' }}>
-                                        <button onClick={() => removeProvider(provider.id)} style={{ background: 'none', border: 'none', color: '#DC3545', cursor: 'pointer', fontSize: '12px', fontWeight: '600' }}>Remove</button>
-                                      </td>
-                                    </tr>
-                                  ))}
-                                </tbody>
-                              </table>
-                            </div>
-                          )}
-                          <div style={{ backgroundColor: colors.lightGray, padding: '15px', borderRadius: '4px', marginTop: '15px' }}>
-                            <h4 style={{ color: colors.charcoal, fontSize: '12px', fontWeight: '700', marginTop: '0', marginBottom: '15px' }}>Add New Provider</h4>
-                            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr 1fr 1fr', gap: '10px', marginBottom: '15px' }}>
-                              <input type="text" value={newProvider.name} onChange={(e) => setNewProvider({...newProvider, name: e.target.value})} placeholder="Provider Name" style={{ padding: '8px', border: '1px solid ' + colors.border, borderRadius: '4px', fontSize: '12px', boxSizing: 'border-box' }} />
-                              <input type="text" value={newProvider.npi} onChange={(e) => setNewProvider({...newProvider, npi: e.target.value})} placeholder="NPI" style={{ padding: '8px', border: '1px solid ' + colors.border, borderRadius: '4px', fontSize: '12px', boxSizing: 'border-box' }} />
-                              <input type="text" value={newProvider.specialty} onChange={(e) => setNewProvider({...newProvider, specialty: e.target.value})} placeholder="Specialty" style={{ padding: '8px', border: '1px solid ' + colors.border, borderRadius: '4px', fontSize: '12px', boxSizing: 'border-box' }} />
-                              <input type="text" value={newProvider.credentials} onChange={(e) => setNewProvider({...newProvider, credentials: e.target.value})} placeholder="Credentials" style={{ padding: '8px', border: '1px solid ' + colors.border, borderRadius: '4px', fontSize: '12px', boxSizing: 'border-box' }} />
-                              <select value={newProvider.status} onChange={(e) => setNewProvider({...newProvider, status: e.target.value})} style={{ padding: '8px', border: '1px solid ' + colors.border, borderRadius: '4px', fontSize: '12px', boxSizing: 'border-box' }}>
-                                <option value="Active">Active</option>
-                                <option value="Inactive">Inactive</option>
-                              </select>
-                            </div>
-                            <button onClick={handleAddProvider} style={{ padding: '8px 16px', backgroundColor: colors.warmClay, color: colors.white, border: 'none', borderRadius: '4px', cursor: 'pointer', fontSize: '12px', fontWeight: '600' }}>+ Add Provider</button>
-                          </div>
-                        </>
-                      )}
-                    </div>
-
-                    <div style={{ display: 'flex', gap: '10px', justifyContent: 'flex-end' }}>
-                      <button onClick={() => setFormData({ organizationName: '', groupNPI: '', practiceName: '', address: '', city: '', state: '', zip: '', taxID: '', phone: '', fax: '', facilities: [], providers: [] })} style={{ padding: '12px 24px', backgroundColor: colors.lightGray, color: colors.charcoal, border: '1px solid ' + colors.border, borderRadius: '4px', cursor: 'pointer', fontSize: '13px', fontWeight: '600' }}>Clear</button>
-                      <button onClick={handleSavePractice} style={{ padding: '12px 24px', backgroundColor: colors.warmClay, color: colors.white, border: 'none', borderRadius: '4px', cursor: 'pointer', fontSize: '13px', fontWeight: '600' }}>Save Practice Profile</button>
-                    </div>
-                  </>
+            {/* Practice Information Card */}
+            <div style={cardStyle}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
+                <h2 style={headerStyle}>Practice Information</h2>
+                {editingPractice && (
+                  <div style={{ display: 'flex', gap: '8px' }}>
+                    <button onClick={() => setEditingPractice(false)} style={btnPrimary}>Save</button>
+                    <button onClick={() => setEditingPractice(false)} style={btnSecondary}>Cancel</button>
+                  </div>
                 )}
               </div>
-            )}
 
-            {activeTab === 'existing' && (
-              <div>
-                {practices.map(practice => (
-                  <div key={practice.id} style={{ backgroundColor: colors.white, borderRadius: '8px', padding: '20px', marginBottom: '15px', boxShadow: '0 2px 4px rgba(0,0,0,0.1)', cursor: 'pointer', border: selectedPractice && selectedPractice.id === practice.id ? '2px solid ' + colors.warmClay : '1px solid ' + colors.border }} onClick={() => setSelectedPractice(selectedPractice && selectedPractice.id === practice.id ? null : practice)}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                      <div>
-                        <h3 style={{ color: colors.deepForest, fontSize: '16px', fontWeight: '700', margin: '0 0 5px 0' }}>{practice.practiceName}</h3>
-                        <p style={{ color: colors.slateBlue, fontSize: '13px', margin: '0' }}>{practice.organizationName} | {practice.city}, {practice.state}</p>
-                      </div>
-                      <span style={{ color: colors.slateBlue, fontSize: '18px' }}>{selectedPractice && selectedPractice.id === practice.id ? '▼' : '▶'}</span>
+              {editingPractice ? (
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
+                  <div><label style={labelStyle}>Practice Name</label><input value={practice.name} onChange={e => setPractice(p => ({...p, name: e.target.value}))} style={inputStyle} /></div>
+                  <div><label style={labelStyle}>Specialty</label>
+                    <select value={practice.specialty} onChange={e => setPractice(p => ({...p, specialty: e.target.value}))} style={inputStyle}>
+                      {specialtyOptions.map(s => <option key={s} value={s}>{s}</option>)}
+                    </select>
+                  </div>
+                  <div><label style={labelStyle}>Group NPI</label><input value={practice.groupNPI} onChange={e => setPractice(p => ({...p, groupNPI: e.target.value}))} style={inputStyle} /></div>
+                  <div><label style={labelStyle}>Tax ID (TIN)</label><input value={practice.tin} onChange={e => setPractice(p => ({...p, tin: e.target.value}))} style={inputStyle} /></div>
+                  <div><label style={labelStyle}>PTAN</label><input value={practice.ptan} onChange={e => setPractice(p => ({...p, ptan: e.target.value}))} style={inputStyle} /></div>
+                  <div></div>
+                  <div style={{ gridColumn: '1 / -1' }}><h3 style={{ fontSize: '14px', fontWeight: '600', color: colors.deepForest, margin: '8px 0' }}>Practice Address</h3></div>
+                  <div style={{ gridColumn: '1 / -1' }}><label style={labelStyle}>Street</label><input value={practice.practiceAddress.street} onChange={e => setPractice(p => ({...p, practiceAddress: {...p.practiceAddress, street: e.target.value}}))} style={inputStyle} /></div>
+                  <div><label style={labelStyle}>City</label><input value={practice.practiceAddress.city} onChange={e => setPractice(p => ({...p, practiceAddress: {...p.practiceAddress, city: e.target.value}}))} style={inputStyle} /></div>
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px' }}>
+                    <div><label style={labelStyle}>State</label><input value={practice.practiceAddress.state} onChange={e => setPractice(p => ({...p, practiceAddress: {...p.practiceAddress, state: e.target.value}}))} style={inputStyle} /></div>
+                    <div><label style={labelStyle}>ZIP</label><input value={practice.practiceAddress.zip} onChange={e => setPractice(p => ({...p, practiceAddress: {...p.practiceAddress, zip: e.target.value}}))} style={inputStyle} /></div>
+                  </div>
+                  <div style={{ gridColumn: '1 / -1' }}><h3 style={{ fontSize: '14px', fontWeight: '600', color: colors.deepForest, margin: '8px 0' }}>Pay-To Address</h3></div>
+                  <div style={{ gridColumn: '1 / -1' }}><label style={labelStyle}>Street</label><input value={practice.payToAddress.street} onChange={e => setPractice(p => ({...p, payToAddress: {...p.payToAddress, street: e.target.value}}))} style={inputStyle} /></div>
+                  <div><label style={labelStyle}>City</label><input value={practice.payToAddress.city} onChange={e => setPractice(p => ({...p, payToAddress: {...p.payToAddress, city: e.target.value}}))} style={inputStyle} /></div>
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px' }}>
+                    <div><label style={labelStyle}>State</label><input value={practice.payToAddress.state} onChange={e => setPractice(p => ({...p, payToAddress: {...p.payToAddress, state: e.target.value}}))} style={inputStyle} /></div>
+                    <div><label style={labelStyle}>ZIP</label><input value={practice.payToAddress.zip} onChange={e => setPractice(p => ({...p, payToAddress: {...p.payToAddress, zip: e.target.value}}))} style={inputStyle} /></div>
+                  </div>
+                </div>
+              ) : (
+                <div>
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '20px', marginBottom: '20px' }}>
+                    <div>
+                      <div style={labelStyle}>Practice Name</div>
+                      <div style={{ fontSize: '15px', fontWeight: '600', color: colors.charcoal }}>{practice.name}</div>
                     </div>
-                    {selectedPractice && selectedPractice.id === practice.id && (
-                      <div style={{ marginTop: '20px', paddingTop: '20px', borderTop: '1px solid ' + colors.border }}>
-                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px', marginBottom: '20px' }}>
-                          <div><p style={{ color: colors.slateBlue, fontSize: '12px', fontWeight: '600', margin: '0 0 5px 0' }}>Group NPI</p><p style={{ color: colors.charcoal, fontSize: '13px', margin: '0' }}>{practice.groupNPI}</p></div>
-                          <div><p style={{ color: colors.slateBlue, fontSize: '12px', fontWeight: '600', margin: '0 0 5px 0' }}>Tax ID</p><p style={{ color: colors.charcoal, fontSize: '13px', margin: '0' }}>{practice.taxID}</p></div>
-                          <div><p style={{ color: colors.slateBlue, fontSize: '12px', fontWeight: '600', margin: '0 0 5px 0' }}>Phone</p><p style={{ color: colors.charcoal, fontSize: '13px', margin: '0' }}>{practice.phone}</p></div>
-                          <div><p style={{ color: colors.slateBlue, fontSize: '12px', fontWeight: '600', margin: '0 0 5px 0' }}>Fax</p><p style={{ color: colors.charcoal, fontSize: '13px', margin: '0' }}>{practice.fax}</p></div>
+                    <div>
+                      <div style={labelStyle}>Specialty</div>
+                      <div style={{ fontSize: '14px', color: colors.charcoal }}>{practice.specialty}</div>
+                    </div>
+                    <div>
+                      <div style={labelStyle}>Group NPI</div>
+                      <div style={{ fontSize: '14px', color: colors.charcoal, fontFamily: 'monospace' }}>{practice.groupNPI}</div>
+                    </div>
+                  </div>
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '20px', marginBottom: '20px' }}>
+                    <div>
+                      <div style={labelStyle}>Tax ID (TIN)</div>
+                      <div style={{ fontSize: '14px', color: colors.charcoal, fontFamily: 'monospace' }}>{practice.tin}</div>
+                    </div>
+                    <div>
+                      <div style={labelStyle}>PTAN</div>
+                      <div style={{ fontSize: '14px', color: colors.charcoal, fontFamily: 'monospace' }}>{practice.ptan}</div>
+                    </div>
+                    <div></div>
+                  </div>
+                  <div style={{ borderTop: '1px solid ' + colors.border, paddingTop: '16px', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
+                    <div>
+                      <div style={labelStyle}>Practice Address</div>
+                      <div style={{ fontSize: '13px', color: colors.charcoal, lineHeight: '1.5' }}>{practice.practiceAddress.street}<br />{practice.practiceAddress.city}, {practice.practiceAddress.state} {practice.practiceAddress.zip}</div>
+                    </div>
+                    <div>
+                      <div style={labelStyle}>Pay-To Address</div>
+                      <div style={{ fontSize: '13px', color: colors.charcoal, lineHeight: '1.5' }}>{practice.payToAddress.street}<br />{practice.payToAddress.city}, {practice.payToAddress.state} {practice.payToAddress.zip}</div>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* Facilities Section */}
+            <div style={cardStyle}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
+                <div>
+                  <h2 style={headerStyle}>Facilities</h2>
+                  <p style={{ fontSize: '12px', color: colors.slateBlue, margin: '2px 0 0' }}>{facilities.length} / 50 facilities</p>
+                </div>
+                <button onClick={() => setShowAddFacility(!showAddFacility)} style={showAddFacility ? btnSecondary : btnPrimary}>
+                  {showAddFacility ? 'Cancel' : '+ Add Facility'}
+                </button>
+              </div>
+
+              {showAddFacility && (
+                <div style={{ backgroundColor: colors.cream, border: '1px solid ' + colors.border, borderRadius: '8px', padding: '20px', marginBottom: '16px' }}>
+                  <h3 style={{ fontSize: '14px', fontWeight: '600', color: colors.deepForest, marginTop: 0, marginBottom: '16px' }}>New Facility</h3>
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '12px', marginBottom: '16px' }}>
+                    <div><label style={labelStyle}>Facility Name *</label><input value={newFacility.name} onChange={e => setNewFacility(f => ({...f, name: e.target.value}))} style={inputStyle} placeholder="Facility name" /></div>
+                    <div><label style={labelStyle}>NPI</label><input value={newFacility.npi} onChange={e => setNewFacility(f => ({...f, npi: e.target.value}))} style={inputStyle} placeholder="10-digit NPI" /></div>
+                    <div><label style={labelStyle}>TIN</label><input value={newFacility.tin} onChange={e => setNewFacility(f => ({...f, tin: e.target.value}))} style={inputStyle} placeholder="Tax ID" /></div>
+                  </div>
+                  <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr 0.5fr 1fr 0.5fr', gap: '12px', marginBottom: '16px' }}>
+                    <div><label style={labelStyle}>Street</label><input value={newFacility.street} onChange={e => setNewFacility(f => ({...f, street: e.target.value}))} style={inputStyle} /></div>
+                    <div><label style={labelStyle}>City</label><input value={newFacility.city} onChange={e => setNewFacility(f => ({...f, city: e.target.value}))} style={inputStyle} /></div>
+                    <div><label style={labelStyle}>State</label><input value={newFacility.state} onChange={e => setNewFacility(f => ({...f, state: e.target.value}))} style={inputStyle} /></div>
+                    <div><label style={labelStyle}>ZIP</label><input value={newFacility.zip} onChange={e => setNewFacility(f => ({...f, zip: e.target.value}))} style={inputStyle} /></div>
+                    <div><label style={labelStyle}>ZIP+4</label><input value={newFacility.zip4} onChange={e => setNewFacility(f => ({...f, zip4: e.target.value}))} style={inputStyle} /></div>
+                  </div>
+                  <div style={{ marginBottom: '16px' }}>
+                    <label style={labelStyle}>Place of Service (POS) Codes</label>
+                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px', marginTop: '6px' }}>
+                      {posCodesList.map(p => (
+                        <button key={p.code} onClick={() => toggleFacilityPOS(p.code)}
+                          style={{ padding: '4px 10px', fontSize: '11px', fontWeight: '600', borderRadius: '14px', cursor: 'pointer', border: newFacility.pos.includes(p.code) ? '1px solid ' + colors.deepForest : '1px solid ' + colors.border, backgroundColor: newFacility.pos.includes(p.code) ? colors.deepForest : colors.white, color: newFacility.pos.includes(p.code) ? colors.white : colors.charcoal, transition: 'all 0.15s' }}>
+                          {p.code}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                  <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '8px' }}>
+                    <button onClick={() => setShowAddFacility(false)} style={btnSecondary}>Cancel</button>
+                    <button onClick={addFacility} style={btnPrimary}>Add Facility</button>
+                  </div>
+                </div>
+              )}
+
+              <div style={{ display: 'grid', gap: '12px' }}>
+                {facilities.map(fac => (
+                  <div key={fac.id} style={{ backgroundColor: colors.cream, borderRadius: '8px', border: '1px solid ' + colors.border, padding: '16px' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                      <div style={{ flex: 1 }}>
+                        <div style={{ fontSize: '15px', fontWeight: '600', color: colors.deepForest, marginBottom: '8px' }}>{fac.name}</div>
+                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '8px', marginBottom: '8px' }}>
+                          <div><span style={{ fontSize: '11px', color: colors.slateBlue, textTransform: 'uppercase', letterSpacing: '0.5px' }}>NPI</span><div style={{ fontSize: '13px', color: colors.charcoal, fontFamily: 'monospace' }}>{fac.npi || '—'}</div></div>
+                          <div><span style={{ fontSize: '11px', color: colors.slateBlue, textTransform: 'uppercase', letterSpacing: '0.5px' }}>TIN</span><div style={{ fontSize: '13px', color: colors.charcoal, fontFamily: 'monospace' }}>{fac.tin || '—'}</div></div>
+                          <div><span style={{ fontSize: '11px', color: colors.slateBlue, textTransform: 'uppercase', letterSpacing: '0.5px' }}>POS</span>
+                            <div style={{ display: 'flex', gap: '4px', flexWrap: 'wrap', marginTop: '2px' }}>
+                              {fac.pos.map(code => (
+                                <span key={code} style={{ padding: '2px 8px', backgroundColor: colors.deepForest, color: colors.white, borderRadius: '10px', fontSize: '11px', fontWeight: '600' }}>{code}</span>
+                              ))}
+                            </div>
+                          </div>
                         </div>
-                        <p style={{ color: colors.slateBlue, fontSize: '12px', fontWeight: '600', margin: '15px 0 10px 0' }}>Address</p>
-                        <p style={{ color: colors.charcoal, fontSize: '13px', margin: '0' }}>{practice.address}, {practice.city}, {practice.state} {practice.zip}</p>
+                        {fac.address && <div style={{ fontSize: '12px', color: colors.slateBlue }}>{fac.address}</div>}
                       </div>
-                    )}
+                      <div style={{ display: 'flex', gap: '12px', marginLeft: '16px' }}>
+                        <button style={{ background: 'none', border: 'none', color: colors.warmClay, cursor: 'pointer', fontSize: '12px', fontWeight: '600' }}>Edit</button>
+                        <button onClick={() => removeFacility(fac.id)} style={{ background: 'none', border: 'none', color: colors.danger, cursor: 'pointer', fontSize: '12px', fontWeight: '600' }}>Remove</button>
+                      </div>
+                    </div>
                   </div>
                 ))}
               </div>
-            )}
+            </div>
+
+            {/* Providers Section */}
+            <div style={cardStyle}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
+                <div>
+                  <h2 style={headerStyle}>Billing Providers</h2>
+                  <p style={{ fontSize: '12px', color: colors.slateBlue, margin: '2px 0 0' }}>{providers.length} / 50 providers</p>
+                </div>
+                <button onClick={() => setShowAddProvider(!showAddProvider)} style={showAddProvider ? btnSecondary : btnPrimary}>
+                  {showAddProvider ? 'Cancel' : '+ Add Provider'}
+                </button>
+              </div>
+
+              {showAddProvider && (
+                <div style={{ backgroundColor: colors.cream, border: '1px solid ' + colors.border, borderRadius: '8px', padding: '20px', marginBottom: '16px' }}>
+                  <h3 style={{ fontSize: '14px', fontWeight: '600', color: colors.deepForest, marginTop: 0, marginBottom: '16px' }}>New Provider</h3>
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '12px', marginBottom: '12px' }}>
+                    <div><label style={labelStyle}>Full Name *</label><input value={newProvider.name} onChange={e => setNewProvider(p => ({...p, name: e.target.value}))} style={inputStyle} placeholder="Provider name" /></div>
+                    <div><label style={labelStyle}>Individual NPI</label><input value={newProvider.npi} onChange={e => setNewProvider(p => ({...p, npi: e.target.value}))} style={inputStyle} placeholder="10-digit NPI" /></div>
+                    <div><label style={labelStyle}>Provider Type</label>
+                      <select value={newProvider.type} onChange={e => setNewProvider(p => ({...p, type: e.target.value}))} style={inputStyle}>
+                        {providerTypeOptions.map(t => <option key={t} value={t}>{t}</option>)}
+                      </select>
+                    </div>
+                  </div>
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '12px', marginBottom: '12px' }}>
+                    <div><label style={labelStyle}>Specialty</label>
+                      <select value={newProvider.specialty} onChange={e => setNewProvider(p => ({...p, specialty: e.target.value}))} style={inputStyle}>
+                        {specialtyOptions.map(s => <option key={s} value={s}>{s}</option>)}
+                      </select>
+                    </div>
+                    <div><label style={labelStyle}>Provider License #</label><input value={newProvider.license} onChange={e => setNewProvider(p => ({...p, license: e.target.value}))} style={inputStyle} /></div>
+                    <div><label style={labelStyle}>License State</label><input value={newProvider.licenseState} onChange={e => setNewProvider(p => ({...p, licenseState: e.target.value}))} style={inputStyle} /></div>
+                  </div>
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px', marginBottom: '16px' }}>
+                    <div><label style={labelStyle}>PTAN</label><input value={newProvider.ptan} onChange={e => setNewProvider(p => ({...p, ptan: e.target.value}))} style={inputStyle} /></div>
+                    <div><label style={labelStyle}>Taxonomy Code</label><input value={newProvider.taxonomy} onChange={e => setNewProvider(p => ({...p, taxonomy: e.target.value}))} style={inputStyle} /></div>
+                  </div>
+                  <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '8px' }}>
+                    <button onClick={() => setShowAddProvider(false)} style={btnSecondary}>Cancel</button>
+                    <button onClick={addProvider} style={btnPrimary}>Add Provider</button>
+                  </div>
+                </div>
+              )}
+
+              <div style={{ display: 'grid', gap: '12px' }}>
+                {providers.map(prov => (
+                  <div key={prov.id} style={{ backgroundColor: colors.cream, borderRadius: '8px', border: '1px solid ' + colors.border, padding: '16px' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                      <div style={{ flex: 1 }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '8px' }}>
+                          <span style={{ fontSize: '15px', fontWeight: '600', color: colors.deepForest }}>{prov.name}</span>
+                          <span style={{ padding: '2px 10px', backgroundColor: prov.type === 'Physician' ? '#D4EDDA' : '#E3F0FF', color: prov.type === 'Physician' ? '#155724' : '#1A5276', borderRadius: '10px', fontSize: '11px', fontWeight: '600' }}>{prov.type}</span>
+                        </div>
+                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr 1fr', gap: '8px' }}>
+                          <div><span style={{ fontSize: '11px', color: colors.slateBlue, textTransform: 'uppercase', letterSpacing: '0.5px' }}>NPI</span><div style={{ fontSize: '13px', color: colors.charcoal, fontFamily: 'monospace' }}>{prov.npi}</div></div>
+                          <div><span style={{ fontSize: '11px', color: colors.slateBlue, textTransform: 'uppercase', letterSpacing: '0.5px' }}>Taxonomy</span><div style={{ fontSize: '13px', color: colors.charcoal, fontFamily: 'monospace' }}>{prov.taxonomy}</div></div>
+                          <div><span style={{ fontSize: '11px', color: colors.slateBlue, textTransform: 'uppercase', letterSpacing: '0.5px' }}>PTAN</span><div style={{ fontSize: '13px', color: colors.charcoal, fontFamily: 'monospace' }}>{prov.ptan}</div></div>
+                          <div><span style={{ fontSize: '11px', color: colors.slateBlue, textTransform: 'uppercase', letterSpacing: '0.5px' }}>Specialty</span><div style={{ fontSize: '13px', color: colors.charcoal }}>{prov.specialty}</div></div>
+                        </div>
+                        {(prov.license || prov.licenseState) && (
+                          <div style={{ marginTop: '8px', display: 'flex', gap: '20px' }}>
+                            {prov.license && <div><span style={{ fontSize: '11px', color: colors.slateBlue, textTransform: 'uppercase', letterSpacing: '0.5px' }}>License #</span><div style={{ fontSize: '13px', color: colors.charcoal }}>{prov.license}</div></div>}
+                            {prov.licenseState && <div><span style={{ fontSize: '11px', color: colors.slateBlue, textTransform: 'uppercase', letterSpacing: '0.5px' }}>License State</span><div style={{ fontSize: '13px', color: colors.charcoal }}>{prov.licenseState}</div></div>}
+                          </div>
+                        )}
+                      </div>
+                      <div style={{ display: 'flex', gap: '12px', marginLeft: '16px' }}>
+                        <button style={{ background: 'none', border: 'none', color: colors.warmClay, cursor: 'pointer', fontSize: '12px', fontWeight: '600' }}>Edit</button>
+                        <button onClick={() => removeProvider(prov.id)} style={{ background: 'none', border: 'none', color: colors.danger, cursor: 'pointer', fontSize: '12px', fontWeight: '600' }}>Remove</button>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
           </div>
         </div>
       );
     };
-    
-    
+
+
     const PipelinePage = () => {
       const [expandedStage, setExpandedStage] = React.useState(null);
       const [filterPayer, setFilterPayer] = React.useState('All');
