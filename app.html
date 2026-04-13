@@ -1067,7 +1067,37 @@
         getPractices: () => {
             try {
                 const data = window.localStorage.getItem('rcm_practices');
-                return data ? JSON.parse(data) : [];
+                if (data) {
+                    const parsed = JSON.parse(data);
+                    if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+                }
+                // Seed default practice so CodingPro dropdowns populate on first load
+                const defaultPractice = [{
+                    id: 'practice_1730871377',
+                    name: 'AMIT PAREKH DO PLLC',
+                    groupNPI: '1730871377',
+                    tin: '880721411',
+                    ptan: 'V79393',
+                    specialty: 'Podiatry',
+                    practiceAddress: '',
+                    payToAddress: '',
+                    providers: [
+                        { id: '1', name: 'Shain Howard', npi: '1891172441', ptan: 'V95544', taxonomy: '207X00000X', providerType: 'Physician', specialty: 'Podiatry', licenseState: 'NV' },
+                        { id: '2', name: 'Christopher Catapano', npi: '1689732998', ptan: 'V97098', taxonomy: '207XS0117X', providerType: 'Physician', specialty: 'Foot & Ankle Surgery', licenseState: 'NV' },
+                        { id: '3', name: 'Alicia Lee PA', npi: '1346017530', ptan: 'VB4987', taxonomy: '363A00000X', providerType: 'PA', specialty: 'Physician Assistant', licenseState: 'NV' }
+                    ],
+                    facilities: [
+                        { id: '1', name: 'Green Valley Spine', state: 'NV', address: '' },
+                        { id: '2', name: 'Valley Hospital', state: 'NV', address: '' },
+                        { id: '3', name: 'Spring Valley', state: 'NV', address: '' },
+                        { id: '4', name: 'Dignity St Rose Sienna', state: 'NV', address: '' },
+                        { id: '5', name: 'Henderson Hospital', state: 'NV', address: '' },
+                        { id: '6', name: 'Southern Hills Hospital', state: 'NV', address: '' },
+                        { id: '7', name: 'MountainView Hospital', state: 'NV', address: '' }
+                    ]
+                }];
+                try { window.localStorage.setItem('rcm_practices', JSON.stringify(defaultPractice)); } catch (e) {}
+                return defaultPractice;
             } catch (e) {
                 return [];
             }
@@ -9740,7 +9770,12 @@
         };
 
         const processBatch = async () => {
-            if (!apiKey || batchFiles.length === 0) return;
+            if (batchFiles.length === 0) return;
+            if (!apiKey) {
+                setAiStatus('ERROR: No API key found. Go to Settings and paste your Anthropic API key, then try again.');
+                setBatchFiles(prev => prev.map(f => ({ ...f, status: 'error', error: 'No API key — set in Settings' })));
+                return;
+            }
             setBatchProgress({ current: 0, total: batchFiles.length, processing: true });
             const newResults = [];
             let totalQueued = 0;
@@ -17740,7 +17775,7 @@
     };
     
     
-    const SettingsPage = () => {
+    const SettingsPage = ({ apiKey: appApiKey, setApiKey: setAppApiKey } = {}) => {
       const [activeTab, setActiveTab] = React.useState('general');
       const [orgName, setOrgName] = React.useState('VanguardRCM Inc.');
       const [address, setAddress] = React.useState('123 Healthcare Drive, Boston, MA 02115');
@@ -17750,8 +17785,20 @@
       const [dateFormat, setDateFormat] = React.useState('MM/DD/YYYY');
       const [businessHoursStart, setBusinessHoursStart] = React.useState('09:00');
       const [businessHoursEnd, setBusinessHoursEnd] = React.useState('17:00');
-      const [apiKey, setApiKey] = React.useState('sk-proj-••••••••••••••••••••');
+      const [apiKey, setApiKey] = React.useState(() => {
+        try { return appApiKey || window.localStorage.getItem('rcm_api_key') || ''; }
+        catch(e) { return appApiKey || ''; }
+      });
       const [showApiKey, setShowApiKey] = React.useState(false);
+      // Persist apiKey to localStorage + push to App-level state so CodingPro receives it
+      React.useEffect(() => {
+        try {
+          if (apiKey && !apiKey.includes('•')) {
+            window.localStorage.setItem('rcm_api_key', apiKey);
+            if (typeof setAppApiKey === 'function') setAppApiKey(apiKey);
+          }
+        } catch(e) {}
+      }, [apiKey]);
       const [aiModel, setAiModel] = React.useState('claude-opus');
       const [autoCoding, setAutoCoding] = React.useState(true);
       const [smartDenial, setSmartDenial] = React.useState(true);
@@ -18781,7 +18828,10 @@
         const [sidebarOpen, setSidebarOpen] = React.useState(true);
         const [dashExpanded, setDashExpanded] = React.useState(false);
         const savedConfig = window.RCM_CONFIG || {};
-        const [apiKey, setApiKey] = React.useState(savedConfig.apiKey || '');
+        const [apiKey, setApiKey] = React.useState(() => {
+            try { return savedConfig.apiKey || window.localStorage.getItem('rcm_api_key') || ''; }
+            catch(e) { return savedConfig.apiKey || ''; }
+        });
         const [showKey, setShowKey] = React.useState(true);
         const [configSaved, setConfigSaved] = React.useState(false);
         const saveConfig = () => {
@@ -18867,7 +18917,7 @@
                 case 'analytics': return <AnalyticsPage />;
                 case 'credentialing': return <CredentialingPage />;
                 case 'billing': return <PatientBillingPage />;
-                case 'settings': return <SettingsPage />;
+                case 'settings': return <SettingsPage apiKey={apiKey} setApiKey={setApiKey} />;
                 default: return <Dashboard />;
             }
         };
